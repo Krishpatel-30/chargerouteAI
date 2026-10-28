@@ -1,0 +1,144 @@
+[
+  {
+    "manufacturer": "Tata",
+    "model": "Nexon EV Long Range",
+    "model_year": 2024,
+    "battery_capacity_kwh": 40.5,
+    "usable_battery_capacity_kwh": 38.0,
+    "consumption_kwh_100km": 15.2,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-70%": 50.0,
+      "70-80%": 35.0,
+      "80-90%": 20.0,
+      "90-100%": 10.0
+    },
+    "range_reference_km": 320.0,
+    "source": "Tata Motors Official Spec Sheet (MIDC calibrated for real highway)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Punch EV Long Range",
+    "model_year": 2024,
+    "battery_capacity_kwh": 35.0,
+    "usable_battery_capacity_kwh": 33.0,
+    "consumption_kwh_100km": 14.0,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 35.0,
+    "charging_curve": {
+      "0-80%": 35.0,
+      "80-100%": 15.0
+    },
+    "range_reference_km": 270.0,
+    "source": "Tata Motors Official Acti.ev Architecture Reference"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Tiago EV Medium Range",
+    "model_year": 2024,
+    "battery_capacity_kwh": 19.2,
+    "usable_battery_capacity_kwh": 18.0,
+    "consumption_kwh_100km": 12.8,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 25.0,
+    "charging_curve": {
+      "0-80%": 25.0,
+      "80-100%": 8.0
+    },
+    "range_reference_km": 160.0,
+    "source": "Tata Motors Technical Manual"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "ZS EV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 50.3,
+    "usable_battery_capacity_kwh": 48.0,
+    "consumption_kwh_100km": 16.2,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-75%": 50.0,
+      "75-85%": 30.0,
+      "85-100%": 12.0
+    },
+    "range_reference_km": 340.0,
+    "source": "MG Motor India Technical Spec Sheet"
+  },
+  {
+    "manufacturer": "Hyundai",
+    "model": "Ioniq 5",
+    "model_year": 2024,
+    "battery_capacity_kwh": 72.6,
+    "usable_battery_capacity_kwh": 70.0,
+    "consumption_kwh_100km": 17.0,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 230.0,
+    "charging_curve": {
+      "0-70%": 230.0,
+      "70-80%": 150.0,
+      "80-90%": 50.0,
+      "90-100%": 25.0
+    },
+    "range_reference_km": 460.0,
+    "source": "Hyundai E-GMP 800V Architecture Specification"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "Atto 3",
+    "model_year": 2024,
+    "battery_capacity_kwh": 60.48,
+    "usable_battery_capacity_kwh": 58.0,
+    "consumption_kwh_100km": 15.6,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 80.0,
+    "charging_curve": {
+      "0-80%": 80.0,
+      "80-100%": 25.0
+    },
+    "range_reference_km": 410.0,
+    "source": "BYD Blade Battery Specification"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "XUV400 Pro",
+    "model_year": 2024,
+    "battery_capacity_kwh": 39.4,
+    "usable_battery_capacity_kwh": 37.5,
+    "consumption_kwh_100km": 16.0,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 15.0
+    },
+    "range_reference_km": 290.0,
+    "source": "Mahindra Electric Mobility Technical Document"
+  },
+  {
+    "manufacturer": "Kia",
+    "model": "EV6 Long Range",
+    "model_year": 2024,
+    "battery_capacity_kwh": 77.4,
+    "usable_battery_capacity_kwh": 74.0,
+    "consumption_kwh_100km": 17.5,
+    "connector_types": ["CCS2", "Type 2"],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 240.0,
+    "charging_curve": {
+      "0-70%": 240.0,
+      "70-80%": 150.0,
+      "80-100%": 35.0
+    },
+    "range_reference_km": 490.0,
+    "source": "Kia Motors India EV6 Spec"
+  }
+]

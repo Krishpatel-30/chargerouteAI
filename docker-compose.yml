@@ -1,0 +1,57 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4-alpine
+    container_name: voltplan-db
+    restart: always
+    environment:
+      POSTGRES_USER: voltplan
+      POSTGRES_PASSWORD: voltplan_secure_password_2026
+      POSTGRES_DB: voltplan
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voltplan -d voltplan"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: voltplan-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+asyncpg://voltplan:voltplan_secure_password_2026@db:5432/voltplan
+      SECRET_KEY: chargeroute-super-secret-key-change-in-production-2026-gujarat
+      ENVIRONMENT: production
+      DEBUG: "false"
+      OSRM_ROUTING_URL: https://router.project-osrm.org
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: voltplan-frontend
+    restart: always
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8000/api/v1
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:

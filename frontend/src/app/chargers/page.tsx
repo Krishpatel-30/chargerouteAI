@@ -15,7 +15,6 @@ import {
   Clock,
   Shield,
   Layers,
-  ExternalLink,
   Loader2,
   Navigation,
   RefreshCw,
@@ -721,21 +720,13 @@ function ChargersContent() {
                           {st.dataset_snapshot || "BEE Directory 2025"}
                         </span>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center">
                           <Link
                             href={`/plan?destination_lat=${st.latitude}&destination_lng=${st.longitude}&destination_name=${encodeURIComponent(st.name)}`}
-                            className="font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 text-[11px]"
+                            className="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 hover:underline text-xs"
                             title="Plan route to this station"
                           >
-                            <span>Plan Route</span>
-                          </Link>
-
-                          <Link
-                            href={`/chargers/${st.id}`}
-                            className="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 hover:underline"
-                          >
-                            <span>Details &amp; Backups</span>
-                            <ExternalLink className="w-3 h-3" />
+                            <span>Plan Route &rarr;</span>
                           </Link>
                         </div>
                       </div>

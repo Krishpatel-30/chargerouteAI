@@ -215,7 +215,7 @@ export const GoogleRouteMap: React.FC<GoogleRouteMapProps> = ({
                     ${ch.live_status.toUpperCase()}
                   </span>
                 </div>
-                <a href="/chargers/${ch.id}" style="color:#059669; font-weight:600; text-decoration:none;">View Station Details &rarr;</a>
+                <a href="/plan?destination_lat=${ch.latitude}&destination_lng=${ch.longitude}&destination_name=${encodeURIComponent(ch.name)}" style="color:#059669; font-weight:600; text-decoration:none;">Plan Route &rarr;</a>
               </div>
             `,
           });

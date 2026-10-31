@@ -133,7 +133,7 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
             </div>
             <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
               <span class="text-[10px] text-slate-400">${ch.dataset_snapshot || 'BEE Directory 2025'}</span>
-              <a href="/chargers/${ch.id}" class="text-emerald-700 font-bold hover:underline">View Station &rarr;</a>
+              <a href="/plan?destination_lat=${ch.latitude}&destination_lng=${ch.longitude}&destination_name=${encodeURIComponent(ch.name)}" class="text-emerald-700 font-bold hover:underline">Plan Route &rarr;</a>
             </div>
           </div>
         `);

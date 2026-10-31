@@ -22,16 +22,7 @@ export const ChargingStopCard: React.FC<ChargingStopCardProps> = ({ stop }) => {
             {stop.stop_number}
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h4 className="font-bold text-slate-900 text-base">{stop.station_name}</h4>
-              <Link
-                href={`/chargers/${stop.station_id}`}
-                className="text-slate-400 hover:text-emerald-600 transition-colors"
-                title="View station details"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </Link>
-            </div>
+            <h4 className="font-bold text-slate-900 text-base">{stop.station_name}</h4>
             <span className="text-xs font-medium text-slate-500">
               {stop.operator} • Located at km {stop.distance_from_start_km}
             </span>

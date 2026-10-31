@@ -5,6 +5,7 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import { VehicleModel } from "@/lib/types";
 import { AuthGate } from "@/components/auth/AuthGate";
+import { getVehicleImage } from "@/lib/vehicleImages";
 import {
   Car,
   Zap,
@@ -249,24 +250,44 @@ function VehiclesContent() {
             {processedVehicles.map((veh) => (
               <div
                 key={veh.id}
-                className="p-5 rounded-2xl border border-slate-200 bg-white hover:shadow-md transition-all flex flex-col justify-between space-y-4 group"
+                className="p-4 sm:p-5 rounded-2xl border border-slate-200 bg-white hover:shadow-lg transition-all flex flex-col justify-between space-y-4 group overflow-hidden"
               >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-200">
+                {/* Real Vehicle Image Header */}
+                <div className="relative h-40 w-full overflow-hidden rounded-xl bg-slate-900 border border-slate-100">
+                  <img
+                    src={getVehicleImage(veh.manufacturer, veh.model)}
+                    alt={`${veh.manufacturer} ${veh.model}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
+                  <div className="absolute top-2.5 left-2.5">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/20">
                       {veh.manufacturer}
                     </span>
-                    {veh.is_custom ? (
-                      <span className="text-[10px] font-bold bg-amber-100 text-amber-900 px-2 py-0.5 rounded">
-                        Custom User Profile
+                  </div>
+                  {veh.is_custom ? (
+                    <div className="absolute top-2.5 right-2.5">
+                      <span className="text-[10px] font-bold bg-amber-500 text-white px-2 py-0.5 rounded shadow-xs">
+                        Custom
                       </span>
-                    ) : (
-                      <span className="text-[10px] font-semibold text-slate-400">
+                    </div>
+                  ) : (
+                    <div className="absolute top-2.5 right-2.5">
+                      <span className="text-[10px] font-semibold text-white/90 bg-black/50 px-2 py-0.5 rounded">
                         Model Year {veh.model_year}
                       </span>
-                    )}
+                    </div>
+                  )}
+                  <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-white text-xs">
+                    <span className="font-extrabold text-emerald-400">~{veh.range_reference_km} km Highway</span>
+                    <span className="text-[10px] bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/20">
+                      {veh.max_dc_power_kw} kW DC
+                    </span>
                   </div>
+                </div>
 
+                <div className="space-y-3">
                   <div>
                     <h3 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-emerald-700 transition-colors">
                       {veh.model}

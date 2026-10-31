@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { VehicleModel } from "@/lib/types";
+import { getVehicleImage } from "@/lib/vehicleImages";
 import {
   Car,
   Search,
@@ -146,37 +147,48 @@ export const VehicleSearchSelector: React.FC<VehicleSearchSelectorProps> = ({
         </div>
       </div>
 
-      {/* Trigger Button: Shows Active Vehicle */}
+      {/* Trigger Button: Shows Active Vehicle with Real Thumbnail */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="w-full text-left p-3 rounded-xl border border-slate-300 hover:border-emerald-500 bg-white hover:bg-slate-50/70 transition-all shadow-2xs group flex items-center justify-between gap-3"
+        className="w-full text-left p-2.5 sm:p-3 rounded-xl border border-slate-300 hover:border-emerald-500 bg-white hover:bg-slate-50/70 transition-all shadow-2xs group flex items-center justify-between gap-3"
       >
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-900 text-white">
-              {selectedVehicle?.manufacturer || "Tata"}
-            </span>
-            <span className="font-bold text-slate-900 text-sm truncate">
-              {selectedVehicle?.model || "Select Vehicle"}
-            </span>
-            <span className="text-xs text-slate-400">({selectedVehicle?.model_year || 2024})</span>
-          </div>
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           {selectedVehicle && (
-            <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px] text-slate-600">
-              <span className="font-medium">
-                🔋 <strong>{selectedVehicle.usable_battery_capacity_kwh} kWh</strong> Usable
-              </span>
-              <span>•</span>
-              <span className="font-medium">
-                🛣️ ~<strong>{selectedVehicle.range_reference_km} km</strong> Range
-              </span>
-              <span>•</span>
-              <span className="font-medium text-emerald-700">
-                ⚡ Max <strong>{selectedVehicle.max_dc_power_kw} kW</strong> DC
-              </span>
+            <div className="w-14 h-11 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
+              <img
+                src={getVehicleImage(selectedVehicle.manufacturer, selectedVehicle.model)}
+                alt={selectedVehicle.model}
+                className="w-full h-full object-cover"
+              />
             </div>
           )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-slate-900 text-white">
+                {selectedVehicle?.manufacturer || "Tata"}
+              </span>
+              <span className="font-bold text-slate-900 text-sm truncate">
+                {selectedVehicle?.model || "Select Vehicle"}
+              </span>
+              <span className="text-xs text-slate-400">({selectedVehicle?.model_year || 2024})</span>
+            </div>
+            {selectedVehicle && (
+              <div className="mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-slate-600">
+                <span className="font-medium">
+                  🔋 <strong>{selectedVehicle.usable_battery_capacity_kwh} kWh</strong> Usable
+                </span>
+                <span>•</span>
+                <span className="font-medium text-emerald-700">
+                  🛣️ ~<strong>{selectedVehicle.range_reference_km} km</strong> Range
+                </span>
+                <span>•</span>
+                <span className="font-medium text-slate-700">
+                  ⚡ Max <strong>{selectedVehicle.max_dc_power_kw} kW</strong> DC
+                </span>
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
           <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-200 group-hover:bg-emerald-100 transition-colors">
@@ -317,42 +329,45 @@ export const VehicleSearchSelector: React.FC<VehicleSearchSelectorProps> = ({
                     key={veh.id}
                     type="button"
                     onClick={() => handleSelect(veh.id)}
-                    className={`w-full text-left p-3 rounded-xl transition-all flex items-center justify-between gap-3 ${
+                    className={`w-full text-left p-2.5 sm:p-3 rounded-xl transition-all flex items-center justify-between gap-3 ${
                       isSelected
                         ? "bg-emerald-50/90 border border-emerald-300"
                         : "hover:bg-slate-50 border border-transparent"
                     }`}
                   >
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase bg-slate-800 text-white tracking-wider">
-                          {veh.manufacturer}
-                        </span>
-                        <span className="font-bold text-slate-900 text-xs truncate">
-                          {veh.model}
-                        </span>
-                        <span className="text-[10px] text-slate-400">({veh.model_year})</span>
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      <div className="w-12 h-9 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
+                        <img
+                          src={getVehicleImage(veh.manufacturer, veh.model)}
+                          alt={veh.model}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
                       </div>
-
-                      <div className="mt-1.5 flex flex-wrap items-center gap-3 text-[11px] text-slate-600">
-                        <span className="flex items-center gap-1 font-semibold text-slate-800">
-                          🔋 {veh.usable_battery_capacity_kwh} kWh
-                          <span className="text-[10px] text-slate-400 font-normal">
-                            ({veh.battery_capacity_kwh} Gross)
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-extrabold uppercase bg-slate-800 text-white tracking-wider">
+                            {veh.manufacturer}
                           </span>
-                        </span>
-                        <span>•</span>
-                        <span className="text-slate-700">
-                          🛣️ ~<strong>{veh.range_reference_km} km</strong>
-                        </span>
-                        <span>•</span>
-                        <span className="text-emerald-700 font-semibold">
-                          ⚡ <strong>{veh.max_dc_power_kw} kW</strong> Fast Charge
-                        </span>
-                        <span>•</span>
-                        <span className="text-slate-500 text-[10px]">
-                          {veh.consumption_kwh_100km} kWh/100km
-                        </span>
+                          <span className="font-bold text-slate-900 text-xs truncate">
+                            {veh.model}
+                          </span>
+                          <span className="text-[10px] text-slate-400">({veh.model_year})</span>
+                        </div>
+
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-[10px] sm:text-[11px] text-slate-600">
+                          <span className="font-semibold text-slate-800">
+                            🔋 {veh.usable_battery_capacity_kwh} kWh
+                          </span>
+                          <span>•</span>
+                          <span className="text-slate-700">
+                            🛣️ ~<strong>{veh.range_reference_km} km</strong>
+                          </span>
+                          <span>•</span>
+                          <span className="text-emerald-700 font-semibold">
+                            ⚡ <strong>{veh.max_dc_power_kw} kW</strong>
+                          </span>
+                        </div>
                       </div>
                     </div>
 

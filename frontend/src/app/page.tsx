@@ -57,7 +57,7 @@ export default function LandingPage() {
     }
   };
 
-  // Featured Indian Electric Vehicle Models with verified images and engineering benchmarks
+  // Featured Indian Electric Vehicle Models with real verified photos and engineering benchmarks
   const featuredModels = [
     {
       id: "curvv-55",
@@ -65,7 +65,7 @@ export default function LandingPage() {
       brand: "TATA",
       category: "Coupe SUV",
       tag: "New Flagship 2024",
-      image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80",
+      image: "/images/vehicles/tata-curvv-ev.jpg",
       grossKwh: "55.0 kWh",
       usableKwh: "51.8 kWh",
       highwayRange: "~450 km",
@@ -81,7 +81,7 @@ export default function LandingPage() {
       brand: "TATA",
       category: "Compact SUV",
       tag: "India's #1 Best-Seller",
-      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80",
+      image: "/images/vehicles/tata-nexon-ev.png",
       grossKwh: "45.0 kWh",
       usableKwh: "42.5 kWh",
       highwayRange: "~365 km",
@@ -97,7 +97,7 @@ export default function LandingPage() {
       brand: "MAHINDRA",
       category: "Electric SUV",
       tag: "Dual-Zone Climate Pack",
-      image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=600&q=80",
+      image: "/images/vehicles/mahindra-xuv400.jpg",
       grossKwh: "39.4 kWh",
       usableKwh: "37.2 kWh",
       highwayRange: "~310 km",
@@ -113,7 +113,7 @@ export default function LandingPage() {
       brand: "MG MOTOR",
       category: "Premium EV",
       tag: "Panoramic Glass Roof",
-      image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=600&q=80",
+      image: "/images/vehicles/mg-zs-ev.jpg",
       grossKwh: "50.3 kWh",
       usableKwh: "47.5 kWh",
       highwayRange: "~380 km",
@@ -129,7 +129,7 @@ export default function LandingPage() {
       brand: "HYUNDAI",
       category: "800V Luxury Crossover",
       tag: "Ultra-Fast 800V Architecture",
-      image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=600&q=80",
+      image: "/images/vehicles/hyundai-ioniq-5.jpg",
       grossKwh: "72.6 kWh",
       usableKwh: "70.0 kWh",
       highwayRange: "~510 km",
@@ -145,7 +145,7 @@ export default function LandingPage() {
       brand: "BYD",
       category: "Blade Battery EV",
       tag: "Ultra-Safe Blade Cells",
-      image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80",
+      image: "/images/vehicles/byd-atto-3.jpg",
       grossKwh: "60.5 kWh",
       usableKwh: "58.0 kWh",
       highwayRange: "~430 km",
@@ -154,6 +154,38 @@ export default function LandingPage() {
       chargeTime: "10–80% in 45 min",
       consumption: "14.9 kWh / 100km",
       badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
+    },
+    {
+      id: "punch-ev",
+      name: "Tata Punch EV (Empowered+ LR)",
+      brand: "TATA",
+      category: "Micro SUV",
+      tag: "act.ev Architecture",
+      image: "/images/vehicles/tata-punch-ev.png",
+      grossKwh: "35.0 kWh",
+      usableKwh: "33.2 kWh",
+      highwayRange: "~290 km",
+      claimedRange: "421 km MIDC",
+      dcSpeed: "50 kW DC",
+      chargeTime: "10–80% in 56 min",
+      consumption: "13.2 kWh / 100km",
+      badgeColor: "bg-indigo-50 text-indigo-800 border-indigo-200",
+    },
+    {
+      id: "tiago-ev",
+      name: "Tata Tiago EV (XZ+ Tech LUX)",
+      brand: "TATA",
+      category: "Electric Hatchback",
+      tag: "Urban City Commuter",
+      image: "/images/vehicles/tata-tiago-ev.jpg",
+      grossKwh: "24.0 kWh",
+      usableKwh: "22.5 kWh",
+      highwayRange: "~210 km",
+      claimedRange: "315 km MIDC",
+      dcSpeed: "25 kW DC",
+      chargeTime: "10–80% in 57 min",
+      consumption: "12.5 kWh / 100km",
+      badgeColor: "bg-violet-50 text-violet-800 border-violet-200",
     },
   ];
 
@@ -412,7 +444,144 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 2. SHOWCASE OF INDIAN EV CAR MODELS (WITH IMAGES & BENCHMARK SPECS) */}
+      {/* 2. VISUAL SHOWCASE: THE PLATFORM MODEL WE MADE (WHAT USERS SEE AFTER LOGIN) */}
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 text-white border-b border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Inside The System Model • Unlocked After Driver Login</span>
+            </div>
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+              The Planning Model We Built
+            </h2>
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              Explore the exact system interface unlocked once you sign in. From live highway corridor route planning to real-time outage risk simulations and custom vehicle engineering.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* Card 1: Interactive Trip Planner with Route & Risk Score */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-2xl flex flex-col group hover:border-emerald-500/50 transition-all">
+              <div className="p-6 space-y-2 border-b border-slate-800">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Route className="w-3.5 h-3.5" />
+                    <span>01 • Interactive Trip Planner</span>
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
+                    Active System Preview
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Risk-Aware Highway Route &amp; 0–100 Outage Engine
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Real-time simulation of departure battery, arrival safety cushions, and turn-by-turn charging halts. The model maps 269+ verified charging plazas and scores outage risks to ensure you never get stranded.
+                </p>
+              </div>
+              <div className="relative flex-1 bg-slate-950 overflow-hidden flex items-center justify-center p-3 sm:p-5">
+                <img
+                  src="/images/model/live-trip-planner.png"
+                  alt="Risk-Aware EV Trip Planner Interface Model"
+                  className="rounded-2xl border border-slate-800/80 shadow-2xl w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                />
+              </div>
+              <div className="p-4 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">
+                  Full access at <code className="text-emerald-400 font-mono">/plan</code> after sign-in
+                </span>
+                <Link
+                  href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
+                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
+                >
+                  <span>{isAuthenticated ? "Launch Interactive Planner" : "Sign In to Test Model"}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Card 2: Custom EV Builder / Manual Car Details */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-2xl flex flex-col group hover:border-emerald-500/50 transition-all">
+              <div className="p-6 space-y-2 border-b border-slate-800">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <SlidersHorizontal className="w-3.5 h-3.5" />
+                    <span>02 • Custom Vehicle Builder</span>
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
+                    Custom EV Analytics
+                  </span>
+                </div>
+                <h3 className="text-xl font-bold text-white">
+                  Add Any Custom Car / Manual Specifications
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Have an unreleased model, imported EV, or custom battery pack? Tap <strong>+ Add Manual Car</strong> to quick-pick vehicle size, drag battery size (25–90 kWh) &amp; range sliders, and simulate route consumption instantly.
+                </p>
+              </div>
+              <div className="relative flex-1 bg-slate-950 overflow-hidden flex items-center justify-center p-3 sm:p-5">
+                <img
+                  src="/images/model/custom-ev-builder-model.jpg"
+                  alt="Custom EV Builder Model Dialog"
+                  className="rounded-2xl border border-slate-800/80 shadow-2xl max-h-[380px] w-auto object-contain group-hover:scale-[1.02] transition-transform duration-500"
+                />
+              </div>
+              <div className="p-4 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">
+                  Integrated inside planner via <code className="text-emerald-400 font-mono">+ Add Manual Car</code>
+                </span>
+                <Link
+                  href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
+                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
+                >
+                  <span>{isAuthenticated ? "Configure Custom EV" : "Sign In to Build EV"}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Lower Showcase: 141+ EV Directory with Authentic Photos & Specs */}
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center group hover:border-emerald-500/50 transition-all">
+            <div className="p-6 sm:p-8 space-y-3 lg:w-5/12">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Car className="w-3.5 h-3.5" />
+                  <span>03 • 141+ EV Directory &amp; Range Specs</span>
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
+                  Real Car Photos
+                </span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-white">
+                Authentic Indian Electric Vehicle Directory
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Every vehicle includes authentic car images, real highway range reference at 100+ km/h with Indian 40°C AC load, net usable vs. gross kWh battery sizes, and brand filtering across Tata, Mahindra, MG, Hyundai, BYD, and more.
+              </p>
+              <div className="pt-2">
+                <Link
+                  href={isAuthenticated ? "/vehicles" : "/login?redirect=/vehicles"}
+                  className="inline-flex px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
+                >
+                  <span>{isAuthenticated ? "Explore EV Catalog" : "Sign In to Browse Models"}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+            <div className="lg:w-7/12 p-3 sm:p-5 bg-slate-950 flex items-center justify-center">
+              <img
+                src="/images/model/live-vehicles-catalog.png"
+                alt="141+ EV Directory and Model Specs"
+                className="rounded-2xl border border-slate-800 shadow-2xl w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SHOWCASE OF INDIAN EV CAR MODELS (WITH IMAGES & BENCHMARK SPECS) */}
       <section className="py-16 sm:py-24 bg-white border-b border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="max-w-3xl mx-auto text-center space-y-3">

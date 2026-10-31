@@ -62,24 +62,21 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. HERO SECTION WITH CINEMATIC SUNSET EV BACKGROUND & EMBEDDED AUTHENTICATION */}
+      {/* 1. HERO SECTION WITH CLEAR CINEMATIC EV BACKGROUND (ZERO FADE) */}
       <section className="relative overflow-hidden py-14 sm:py-24 border-b border-slate-800 bg-slate-950">
-        {/* Background Image Container with Gradient Overlays */}
+        {/* Real Authentic Background Image with Zero Fade */}
         <div className="absolute inset-0 z-0">
           <img
             src="/images/hero-bg.jpg"
             alt="ChargeRoute AI EV Highway Corridor Sunset"
-            className="w-full h-full object-cover object-center opacity-60 scale-105"
+            className="w-full h-full object-cover object-center"
           />
-          {/* Deep dark cinematic gradients so text & controls pop with razor-sharp contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/65" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-slate-950/70" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Hero Copy */}
-            <div className="lg:col-span-7 space-y-6 text-left">
+            {/* Left Hero Copy - Sleek frosted glass panel showcasing clear image behind */}
+            <div className="lg:col-span-7 space-y-6 text-left bg-slate-950/65 backdrop-blur-md p-6 sm:p-9 rounded-3xl border border-white/15 shadow-2xl">
               {/* Attribution Pill */}
               <a
                 href="https://ksvisualsagency.vercel.app/"

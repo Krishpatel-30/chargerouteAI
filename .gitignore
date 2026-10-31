@@ -13,6 +13,8 @@ backend/.pytest_cache/
 *.pyc
 
 # Database & Environment
+*.db
+*.sqlite
 backend/*.db
 backend/*.sqlite
 .env

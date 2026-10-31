@@ -170,7 +170,7 @@ async def forgot_password(request: ForgotPasswordRequest, db: AsyncSession = Dep
         logger.info(f"Password reset requested for non-existing email: {email}")
 
     return PasswordResetResponse(
-        message="If an account with that email exists, password reset instructions have been sent to your email.",
+        message=f"Password reset instructions have been sent to {email}. Please check your mail inbox or spam folder.",
         reset_url_dev=dev_url,
     )
 

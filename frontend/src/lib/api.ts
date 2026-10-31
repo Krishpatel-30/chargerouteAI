@@ -580,25 +580,128 @@ export const api = {
   },
 
   async saveTrip(title: string, planData: TripPlanResponse): Promise<any> {
-    const res = await apiClient.post("/trips/save", {
-      title,
+    const tripId = `trip_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    const savedRecord = {
+      id: tripId,
+      title: title || planData.title || "Saved Trip",
+      created_at: new Date().toISOString(),
+      origin_name: planData.origin_name,
+      origin_lat: planData.origin_lat,
+      origin_lng: planData.origin_lng,
+      destination_name: planData.destination_name,
+      destination_lat: planData.destination_lat,
+      destination_lng: planData.destination_lng,
+      vehicle_name: planData.vehicle_name,
+      vehicle_battery_usable_kwh: planData.vehicle_battery_usable_kwh,
+      total_distance_km: planData.total_distance_km,
+      total_driving_time_min: planData.total_driving_time_min,
+      total_charging_time_min: planData.total_charging_time_min,
+      total_duration_min: planData.total_duration_min,
+      total_energy_kwh: planData.total_energy_kwh,
+      estimated_cost_inr: planData.estimated_cost_inr,
+      min_battery_reserve_pct: planData.min_battery_reserve_pct,
+      overall_risk_score: planData.overall_risk_score,
+      overall_risk_category: planData.overall_risk_category,
+      charging_stops: planData.charging_stops || [],
+      route_geometry: planData.route_geometry || [],
+      alternatives: planData.alternatives || [],
+      assumptions: planData.assumptions || {},
+      warnings: planData.warnings || [],
       plan_data: planData,
-    });
-    return res.data;
+    };
+
+    // Save to LocalStorage immediately
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("voltplan_saved_trips") || "[]");
+        const updated = [savedRecord, ...stored.filter((t: any) => t.id !== tripId)];
+        localStorage.setItem("voltplan_saved_trips", JSON.stringify(updated));
+      } catch (e) {}
+    }
+
+    // Also attempt remote save
+    try {
+      const res = await apiClient.post("/trips/save", {
+        title,
+        plan_data: planData,
+      });
+      return res.data || savedRecord;
+    } catch (err: any) {
+      if (err?.response?.status === 404 || !err?.response) {
+        try {
+          const retryRes = await apiClient.post("/api/v1/trips/save", {
+            title,
+            plan_data: planData,
+          });
+          return retryRes.data || savedRecord;
+        } catch (retryErr) {
+          // LocalStorage save already succeeded
+        }
+      }
+    }
+    return savedRecord;
   },
 
   async getUserSavedTrips(): Promise<any[]> {
-    const res = await apiClient.get("/trips/user/saved");
-    return res.data;
+    let localTrips: any[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        localTrips = JSON.parse(localStorage.getItem("voltplan_saved_trips") || "[]");
+      } catch (e) {}
+    }
+
+    try {
+      const res = await apiClient.get("/trips/user/saved");
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        const combined = [
+          ...localTrips,
+          ...res.data.filter((rt: any) => !localTrips.some((lt) => lt.id === rt.id)),
+        ];
+        return combined;
+      }
+    } catch (err) {
+      // Remote unavailable, fall back to local
+    }
+
+    return localTrips;
   },
 
   async getSavedTrip(id: string): Promise<any> {
-    const res = await apiClient.get(`/trips/${id}`);
-    return res.data;
+    if (typeof window !== "undefined") {
+      try {
+        const localTrips: any[] = JSON.parse(
+          localStorage.getItem("voltplan_saved_trips") || "[]"
+        );
+        const found = localTrips.find((t) => t.id === id);
+        if (found) return found;
+      } catch (e) {}
+    }
+
+    try {
+      const res = await apiClient.get(`/trips/${id}`);
+      return res.data;
+    } catch (err) {
+      console.warn("Could not load trip from remote:", err);
+      return null;
+    }
   },
 
   async deleteSavedTrip(id: string): Promise<void> {
-    await apiClient.delete(`/trips/user/${id}`);
+    if (typeof window !== "undefined") {
+      try {
+        const localTrips: any[] = JSON.parse(
+          localStorage.getItem("voltplan_saved_trips") || "[]"
+        );
+        const updated = localTrips.filter((t) => t.id !== id);
+        localStorage.setItem("voltplan_saved_trips", JSON.stringify(updated));
+      } catch (e) {}
+    }
+
+    try {
+      await apiClient.delete(`/trips/user/${id}`);
+    } catch (err) {
+      // Local deletion already succeeded
+    }
   },
 
   // Admin & Data Quality

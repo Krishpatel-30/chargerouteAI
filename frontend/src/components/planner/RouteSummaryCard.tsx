@@ -7,12 +7,14 @@ interface RouteSummaryCardProps {
   plan: TripPlanResponse;
   onSave?: () => void;
   isSaving?: boolean;
+  isSaved?: boolean;
 }
 
 export const RouteSummaryCard: React.FC<RouteSummaryCardProps> = ({
   plan,
   onSave,
   isSaving = false,
+  isSaved = false,
 }) => {
   const riskColors = getRiskColorClass(plan.overall_risk_category);
 
@@ -140,9 +142,17 @@ export const RouteSummaryCard: React.FC<RouteSummaryCardProps> = ({
           <button
             onClick={onSave}
             disabled={isSaving}
-            className="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors shadow-xs"
+            className={`px-4 py-2 rounded-lg font-semibold text-xs transition-colors shadow-xs ${
+              isSaved
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                : "bg-slate-900 hover:bg-slate-800 text-white"
+            }`}
           >
-            {isSaving ? "Saving Trip..." : "Save Route to My Dashboard"}
+            {isSaving
+              ? "Saving Trip..."
+              : isSaved
+              ? "Saved to Dashboard ✓"
+              : "Save Route to My Dashboard"}
           </button>
         )}
       </div>

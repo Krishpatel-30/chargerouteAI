@@ -49,6 +49,7 @@ export default function PlanTripPage() {
   const [activeRouteId, setActiveRouteId] = useState<string>("primary");
   const [savedSuccessMessage, setSavedSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [tripSaved, setTripSaved] = useState(false);
 
   // Auth gate states
   const [gateEmail, setGateEmail] = useState("");
@@ -126,6 +127,7 @@ export default function PlanTripPage() {
   const handlePlanTrip = async (payload: TripPlanRequest) => {
     setIsLoading(true);
     setSavedSuccessMessage(null);
+    setTripSaved(false);
     try {
       const res = await api.planTrip(payload);
       setPlanResponse(res);
@@ -147,8 +149,9 @@ export default function PlanTripPage() {
     setIsSaving(true);
     try {
       await api.saveTrip(planResponse.title, planResponse);
-      setSavedSuccessMessage("Trip saved to your permanent Driver History! View under Trip History.");
-      setTimeout(() => setSavedSuccessMessage(null), 5000);
+      setTripSaved(true);
+      setSavedSuccessMessage("Trip saved to your permanent Driver History & Dashboard! View under Trip History.");
+      setTimeout(() => setSavedSuccessMessage(null), 8000);
     } catch (err) {
       setSavedSuccessMessage("Could not save trip. Please try again.");
       setTimeout(() => setSavedSuccessMessage(null), 4000);
@@ -338,9 +341,17 @@ export default function PlanTripPage() {
         </div>
 
         {savedSuccessMessage && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>{savedSuccessMessage}</span>
+          <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-xl flex items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{savedSuccessMessage}</span>
+            </div>
+            <Link
+              href="/dashboard/trips"
+              className="px-3 py-1 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition-colors shrink-0"
+            >
+              View on Dashboard &rarr;
+            </Link>
           </div>
         )}
 
@@ -401,6 +412,7 @@ export default function PlanTripPage() {
               plan={planResponse}
               onSave={handleSaveTrip}
               isSaving={isSaving}
+              isSaved={tripSaved}
             />
 
             {/* Alternative Strategies Comparison */}

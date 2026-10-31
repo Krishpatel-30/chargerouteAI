@@ -67,27 +67,60 @@ apiClient.interceptors.request.use((config) => {
 export const api = {
   // Authentication & Driver Profile
   async login(credentials: { email: string; password: string }): Promise<AuthResponse> {
-    const res = await apiClient.post<AuthResponse>("/auth/login", credentials);
-    if (typeof window !== "undefined" && res.data?.access_token) {
-      localStorage.setItem("voltplan_token", res.data.access_token);
+    try {
+      const res = await apiClient.post<AuthResponse>("/auth/login", credentials);
+      if (typeof window !== "undefined" && res.data?.access_token) {
+        localStorage.setItem("voltplan_token", res.data.access_token);
+      }
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        const retryRes = await apiClient.post<AuthResponse>("/api/v1/auth/login", credentials);
+        if (typeof window !== "undefined" && retryRes.data?.access_token) {
+          localStorage.setItem("voltplan_token", retryRes.data.access_token);
+        }
+        return retryRes.data;
+      }
+      throw err;
     }
-    return res.data;
   },
 
   async register(data: { email: string; password: string; full_name?: string }): Promise<AuthResponse> {
-    const res = await apiClient.post<AuthResponse>("/auth/register", data);
-    if (typeof window !== "undefined" && res.data?.access_token) {
-      localStorage.setItem("voltplan_token", res.data.access_token);
+    try {
+      const res = await apiClient.post<AuthResponse>("/auth/register", data);
+      if (typeof window !== "undefined" && res.data?.access_token) {
+        localStorage.setItem("voltplan_token", res.data.access_token);
+      }
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        const retryRes = await apiClient.post<AuthResponse>("/api/v1/auth/register", data);
+        if (typeof window !== "undefined" && retryRes.data?.access_token) {
+          localStorage.setItem("voltplan_token", retryRes.data.access_token);
+        }
+        return retryRes.data;
+      }
+      throw err;
     }
-    return res.data;
   },
 
   async loginWithGoogle(data: GoogleAuthData): Promise<AuthResponse> {
-    const res = await apiClient.post<AuthResponse>("/auth/google", data);
-    if (typeof window !== "undefined" && res.data?.access_token) {
-      localStorage.setItem("voltplan_token", res.data.access_token);
+    try {
+      const res = await apiClient.post<AuthResponse>("/auth/google", data);
+      if (typeof window !== "undefined" && res.data?.access_token) {
+        localStorage.setItem("voltplan_token", res.data.access_token);
+      }
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        const retryRes = await apiClient.post<AuthResponse>("/api/v1/auth/google", data);
+        if (typeof window !== "undefined" && retryRes.data?.access_token) {
+          localStorage.setItem("voltplan_token", retryRes.data.access_token);
+        }
+        return retryRes.data;
+      }
+      throw err;
     }
-    return res.data;
   },
 
   async loginWithFirebase(data: {
@@ -97,17 +130,29 @@ export const api = {
     firebase_uid?: string;
     avatar_url?: string;
   }): Promise<AuthResponse> {
-    const res = await apiClient.post<AuthResponse>("/auth/google", {
+    const payload = {
       id_token: data.id_token,
       email: data.email,
       full_name: data.full_name,
       google_id: data.firebase_uid,
       avatar_url: data.avatar_url,
-    });
-    if (typeof window !== "undefined" && res.data?.access_token) {
-      localStorage.setItem("voltplan_token", res.data.access_token);
+    };
+    try {
+      const res = await apiClient.post<AuthResponse>("/auth/google", payload);
+      if (typeof window !== "undefined" && res.data?.access_token) {
+        localStorage.setItem("voltplan_token", res.data.access_token);
+      }
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        const retryRes = await apiClient.post<AuthResponse>("/api/v1/auth/google", payload);
+        if (typeof window !== "undefined" && retryRes.data?.access_token) {
+          localStorage.setItem("voltplan_token", retryRes.data.access_token);
+        }
+        return retryRes.data;
+      }
+      throw err;
     }
-    return res.data;
   },
 
   async forgotPassword(email: string): Promise<{ message: string; reset_url_dev?: string }> {

@@ -51,8 +51,9 @@ async def health_check():
     }
 
 
-# Mount API V1
+# Mount API V1 with /api/v1 prefix and also at root to ensure zero 404s on direct endpoints
 app.include_router(api_router, prefix=settings.API_V1_STR)
+app.include_router(api_router)
 
 
 @app.exception_handler(Exception)

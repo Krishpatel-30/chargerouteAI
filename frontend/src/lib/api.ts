@@ -439,6 +439,18 @@ export const api = {
     return res.data;
   },
 
+  deleteCustomVehicle(id: string): void {
+    if (typeof window !== "undefined") {
+      try {
+        const stored: VehicleModel[] = JSON.parse(
+          localStorage.getItem("voltplan_custom_vehicles") || "[]"
+        );
+        const updated = stored.filter((v) => v.id !== id);
+        localStorage.setItem("voltplan_custom_vehicles", JSON.stringify(updated));
+      } catch (e) {}
+    }
+  },
+
   async createCustomVehicle(data: Partial<VehicleModel>): Promise<VehicleModel> {
     const saveToLocalStorage = (veh: VehicleModel) => {
       if (typeof window !== "undefined") {

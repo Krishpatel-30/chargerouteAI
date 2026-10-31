@@ -49,8 +49,16 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [routePresetTab, setRoutePresetTab] = useState<"highway" | "city">("highway");
 
-  // Sync default vehicle id if props load asynchronously
+  // Sync vehicle id from URL query param or props
   React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryVehId = urlParams.get("vehicle_id");
+      if (queryVehId && vehicles.some((v) => v.id === queryVehId)) {
+        setSelectedVehicleId(queryVehId);
+        return;
+      }
+    }
     if (!selectedVehicleId && vehicles.length > 0) {
       setSelectedVehicleId(vehicles[0].id);
     }

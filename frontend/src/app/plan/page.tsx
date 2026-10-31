@@ -96,6 +96,11 @@ export default function PlanTripPage() {
         setVehicles(vehs);
         setAllChargers(chargers);
 
+        // Check if a specific vehicle_id is requested in the URL
+        const urlParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+        const queryVehId = urlParams?.get("vehicle_id");
+        const defaultVeh = (queryVehId && vehs.find((v) => v.id === queryVehId)) || vehs[0];
+
         // Run default demonstration plan: New Delhi to Agra on Yamuna Expressway
         if (vehs.length > 0) {
           handlePlanTrip({
@@ -105,7 +110,7 @@ export default function PlanTripPage() {
             destination_name: "Agra, Uttar Pradesh",
             destination_lat: 27.1767,
             destination_lng: 78.0081,
-            vehicle_id: vehs[0].id,
+            vehicle_id: defaultVeh.id,
             start_battery_pct: 85,
             min_arrival_battery_pct: 15,
             preference: "lowest_risk",

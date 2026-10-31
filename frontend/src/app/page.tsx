@@ -62,9 +62,21 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. HERO SECTION WITH EMBEDDED AUTHENTICATION & AGENCY ATTRIBUTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white py-12 sm:py-20 border-b border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 1. HERO SECTION WITH CINEMATIC SUNSET EV BACKGROUND & EMBEDDED AUTHENTICATION */}
+      <section className="relative overflow-hidden py-14 sm:py-24 border-b border-slate-800 bg-slate-950">
+        {/* Background Image Container with Gradient Overlays */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="/images/hero-bg.jpg"
+            alt="ChargeRoute AI EV Highway Corridor Sunset"
+            className="w-full h-full object-cover object-center opacity-60 scale-105"
+          />
+          {/* Deep dark cinematic gradients so text & controls pop with razor-sharp contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/65" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-slate-950/70" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Left Hero Copy */}
             <div className="lg:col-span-7 space-y-6 text-left">
@@ -73,37 +85,37 @@ export default function LandingPage() {
                 href="https://ksvisualsagency.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100/90 hover:bg-emerald-200/90 text-emerald-950 border border-emerald-300 shadow-2xs transition-colors group"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md shadow-lg transition-colors group"
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                <span>Made by <strong className="underline group-hover:text-emerald-800">KSVISUALSAGENCY</strong> ↗ • Pan-India EV Planning Platform</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Made by <strong className="underline group-hover:text-emerald-200">KSVISUALSAGENCY</strong> ↗ • Pan-India EV Planning Platform</span>
               </a>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] drop-shadow-md">
                 Plan Your EV Journey.{" "}
-                <span className="text-emerald-600 block mt-1">Predict Range &amp; Outage Backups.</span>
+                <span className="text-emerald-400 block mt-1">Predict Range &amp; Outage Backups.</span>
               </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-xl leading-relaxed">
+              <p className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-xl leading-relaxed drop-shadow-xs">
                 India&apos;s intelligent electric vehicle navigation platform. Calculate deterministic battery range, discover verified charging stations across 35 states, and secure safe backup stops before you hit the road.
               </p>
 
               {/* Key Features Quick Grid */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-slate-200/80 text-xs">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-slate-700/80 text-xs">
                 <div className="space-y-1">
-                  <div className="text-emerald-600 font-extrabold text-lg sm:text-xl">141+</div>
-                  <strong className="block text-slate-900 font-bold text-xs">Indian EV Models</strong>
-                  <span className="text-slate-500 text-[11px] block">With custom car builder</span>
+                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl">141+</div>
+                  <strong className="block text-white font-bold text-xs">Indian EV Models</strong>
+                  <span className="text-slate-400 text-[11px] block">With custom car builder</span>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-emerald-600 font-extrabold text-lg sm:text-xl">269</div>
-                  <strong className="block text-slate-900 font-bold text-xs">City &amp; Highway Hubs</strong>
-                  <span className="text-slate-500 text-[11px] block">Verified 24/7 chargers</span>
+                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl">269</div>
+                  <strong className="block text-white font-bold text-xs">City &amp; Highway Hubs</strong>
+                  <span className="text-slate-400 text-[11px] block">Verified 24/7 chargers</span>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-emerald-600 font-extrabold text-lg sm:text-xl">0–100</div>
-                  <strong className="block text-slate-900 font-bold text-xs">Explainable Risk</strong>
-                  <span className="text-slate-500 text-[11px] block">Outage &amp; queue safety</span>
+                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl">0–100</div>
+                  <strong className="block text-white font-bold text-xs">Explainable Risk</strong>
+                  <span className="text-slate-400 text-[11px] block">Outage &amp; queue safety</span>
                 </div>
               </div>
 
@@ -112,16 +124,16 @@ export default function LandingPage() {
                 <div className="flex flex-wrap items-center gap-3 pt-2 text-xs">
                   <Link
                     href="/chargers"
-                    className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold border border-slate-200 hover:border-slate-300 transition-colors shadow-2xs flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 hover:border-slate-600 transition-colors shadow-sm flex items-center gap-1.5 backdrop-blur-md"
                   >
-                    <Compass className="w-3.5 h-3.5 text-emerald-600" />
+                    <Compass className="w-3.5 h-3.5 text-emerald-400" />
                     <span>Browse 269 Charging Stations</span>
                   </Link>
                   <Link
                     href="/vehicles"
-                    className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold border border-slate-200 hover:border-slate-300 transition-colors shadow-2xs flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 hover:border-slate-600 transition-colors shadow-sm flex items-center gap-1.5 backdrop-blur-md"
                   >
-                    <Car className="w-3.5 h-3.5 text-emerald-600" />
+                    <Car className="w-3.5 h-3.5 text-emerald-400" />
                     <span>141 EV Directory &amp; Specs</span>
                   </Link>
                 </div>
@@ -132,7 +144,7 @@ export default function LandingPage() {
             <div className="lg:col-span-5">
               {!isAuthenticated ? (
                 /* Unauthenticated View: Sign In with Google Device ID or Email */
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-7 space-y-5 relative">
+                <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-white/30 shadow-2xl p-6 sm:p-7 space-y-5 relative">
                   <div className="text-center space-y-1.5 pb-1">
                     <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-600/30 mb-1">
                       <Zap className="w-5 h-5 fill-white" />
@@ -238,7 +250,7 @@ export default function LandingPage() {
                 </div>
               ) : (
                 /* Authenticated View: Active Driver Command Center */
-                <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-7 space-y-5">
+                <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-white/30 shadow-2xl p-6 sm:p-7 space-y-5">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center shadow-md shadow-emerald-600/30">

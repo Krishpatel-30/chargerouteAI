@@ -21,3 +21,4 @@ backend/*.sqlite
 # IDE
 .vscode/
 .idea/
+*.tsbuildinfo

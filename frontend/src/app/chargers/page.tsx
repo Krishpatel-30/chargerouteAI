@@ -23,6 +23,7 @@ import {
   Building2,
   CheckCircle2,
   RotateCcw,
+  X,
 } from "lucide-react";
 
 export default function ChargersPage() {
@@ -85,8 +86,22 @@ function ChargersContent() {
     fetchInitialData();
   }, []);
 
+  // Fallback states list derived dynamically from stations if API is warming up
+  const effectiveStatesList = useMemo(() => {
+    if (statesList.length > 0) return statesList;
+    const set = new Set<string>();
+    chargers.forEach((c) => {
+      if (c.state && c.state.trim()) set.add(c.state.trim());
+    });
+    return Array.from(set).sort().map((name) => ({
+      name,
+      code: name.substring(0, 2).toUpperCase(),
+      stations: 0,
+    }));
+  }, [statesList, chargers]);
+
   // Main Station Loader
-  const loadChargers = async () => {
+  const loadChargers = async (forcedSearch?: string) => {
     setIsLoading(true);
     setLocationError(null);
     try {
@@ -100,13 +115,14 @@ function ChargersContent() {
           min_power_kw: minPowerKw ? Number(minPowerKw) : undefined,
           connector_type: connectorType || undefined,
           vehicle_id: selectedVehicleId || undefined,
-          limit: 100,
+          limit: 150,
         });
         setChargers(data);
       } else {
         // Standard Parametric Query
+        const effectiveSearch = forcedSearch !== undefined ? forcedSearch : search;
         const data = await api.getChargers({
-          search: search || undefined,
+          search: effectiveSearch ? effectiveSearch.trim() : undefined,
           state: selectedState || undefined,
           city: selectedCity || undefined,
           operator: operator || undefined,
@@ -114,7 +130,7 @@ function ChargersContent() {
           current: currentType === "all" ? undefined : currentType,
           min_power_kw: minPowerKw ? Number(minPowerKw) : undefined,
           vehicle_id: selectedVehicleId || undefined,
-          limit: 500,
+          limit: 1000,
         });
         setChargers(data);
       }
@@ -125,6 +141,7 @@ function ChargersContent() {
     }
   };
 
+  // Re-query when dropdown filters change
   useEffect(() => {
     loadChargers();
   }, [
@@ -138,6 +155,14 @@ function ChargersContent() {
     userLocation,
     gpsRadiusKm,
   ]);
+
+  // Debounce background server query when typing search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      loadChargers();
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -192,20 +217,118 @@ function ChargersContent() {
     }
   };
 
-  // Dynamically extract unique cities from active list
+  // Dynamically extract unique cities from active list or selected state
   const availableCities = useMemo(() => {
     const set = new Set<string>();
-    chargers.forEach((c) => {
-      if (c.city && c.city.trim() !== "") set.add(c.city.trim());
+    const pool = selectedState
+      ? chargers.filter((c) => c.state?.toLowerCase() === selectedState.toLowerCase())
+      : chargers;
+    pool.forEach((c) => {
+      const city = c.city?.trim();
+      const district = c.district?.trim();
+      if (city) set.add(city);
+      else if (district) set.add(district);
     });
     return Array.from(set).sort();
-  }, [chargers]);
+  }, [chargers, selectedState]);
 
-  // Hub Type Filter (City vs Expressway)
+  const selectedVehicleObj = useMemo(() => {
+    return vehiclesList.find((v) => v.id === selectedVehicleId);
+  }, [vehiclesList, selectedVehicleId]);
+
+  // Real-time Instant Multi-criteria Filter (0ms latency on client side)
   const filteredChargers = useMemo(() => {
-    if (hubType === "all") return chargers;
+    let result = chargers;
+
+    // 1. Text Search Filter (name, address, city, district, state, operator, highway code)
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      result = result.filter((c) => {
+        const full = `${c.name || ""} ${c.address || ""} ${c.city || ""} ${c.district || ""} ${c.state || ""} ${c.operator || ""} ${c.source_provider || ""}`.toLowerCase();
+        return full.includes(q);
+      });
+    }
+
+    // 2. State Filter
+    if (selectedState) {
+      const stQuery = selectedState.toLowerCase();
+      result = result.filter((c) => c.state?.toLowerCase() === stQuery);
+    }
+
+    // 3. City Filter
+    if (selectedCity) {
+      const cityQuery = selectedCity.toLowerCase();
+      result = result.filter(
+        (c) => c.city?.toLowerCase() === cityQuery || c.district?.toLowerCase() === cityQuery
+      );
+    }
+
+    // 4. Operator Filter
+    if (operator) {
+      const opQuery = operator.toLowerCase();
+      result = result.filter((c) => c.operator?.toLowerCase().includes(opQuery));
+    }
+
+    // 5. Connector Type Filter
+    if (connectorType) {
+      const connQuery = connectorType.toLowerCase();
+      result = result.filter((c) => {
+        if (!c.connector_types) return false;
+        return c.connector_types.some((ct: any) => {
+          const typeStr = typeof ct === "object" ? ct.type : ct;
+          return typeStr?.toLowerCase().includes(connQuery);
+        });
+      });
+    }
+
+    // 6. Current Type (DC Fast vs AC Destination)
+    if (currentType === "DC") {
+      result = result.filter((c) => {
+        if ((c.max_power_kw || 0) >= 25) return true;
+        if (c.currents && c.currents.includes("DC")) return true;
+        if (c.connector_types) {
+          return c.connector_types.some((conn: any) => {
+            const typeStr = typeof conn === "object" ? conn.type : conn;
+            return ["ccs2", "chademo", "dc"].some((t) => typeStr?.toLowerCase().includes(t));
+          });
+        }
+        return false;
+      });
+    } else if (currentType === "AC") {
+      result = result.filter((c) => {
+        if ((c.max_power_kw || 0) < 25) return true;
+        if (c.currents && c.currents.includes("AC")) return true;
+        if (c.connector_types) {
+          return c.connector_types.some((conn: any) => {
+            const typeStr = typeof conn === "object" ? conn.type : conn;
+            return ["type 2", "ac"].some((t) => typeStr?.toLowerCase().includes(t));
+          });
+        }
+        return false;
+      });
+    }
+
+    // 7. Minimum Power (kW)
+    if (minPowerKw !== "") {
+      const minP = Number(minPowerKw);
+      result = result.filter((c) => (c.max_power_kw || 0) >= minP);
+    }
+
+    // 8. Vehicle Connector Compatibility
+    if (selectedVehicleObj && selectedVehicleObj.connector_types) {
+      const supported = selectedVehicleObj.connector_types.map((t) => t.toLowerCase());
+      result = result.filter((c) => {
+        if (!c.connector_types || c.connector_types.length === 0) return true;
+        return c.connector_types.some((conn: any) => {
+          const typeStr = (typeof conn === "object" ? conn.type : conn)?.toLowerCase() || "";
+          return supported.some((s) => typeStr.includes(s) || s.includes(typeStr));
+        });
+      });
+    }
+
+    // 9. Hub Type (All / Urban Hubs / Expressways & NH)
     if (hubType === "city") {
-      return chargers.filter(
+      result = result.filter(
         (c) =>
           c.source_provider?.toLowerCase().includes("city") ||
           c.access_restrictions?.toLowerCase().includes("mall") ||
@@ -215,8 +338,8 @@ function ChargersContent() {
           c.address?.toLowerCase().includes("park") ||
           c.address?.toLowerCase().includes("road")
       );
-    } else {
-      return chargers.filter(
+    } else if (hubType === "highway") {
+      result = result.filter(
         (c) =>
           c.source_provider?.toLowerCase().includes("corridor") ||
           c.name?.toLowerCase().includes("expressway") ||
@@ -224,14 +347,24 @@ function ChargersContent() {
           c.address?.toLowerCase().includes("nh-") ||
           c.address?.toLowerCase().includes("expressway") ||
           c.address?.toLowerCase().includes("ne-1") ||
-          c.address?.toLowerCase().includes("toll")
+          c.address?.toLowerCase().includes("toll") ||
+          c.address?.toLowerCase().includes("plaza")
       );
     }
-  }, [chargers, hubType]);
 
-  const selectedVehicleObj = useMemo(() => {
-    return vehiclesList.find((v) => v.id === selectedVehicleId);
-  }, [vehiclesList, selectedVehicleId]);
+    return result;
+  }, [
+    chargers,
+    search,
+    selectedState,
+    selectedCity,
+    operator,
+    connectorType,
+    currentType,
+    minPowerKw,
+    selectedVehicleObj,
+    hubType,
+  ]);
 
   return (
     <div className="flex-1 bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -374,12 +507,25 @@ function ChargersContent() {
                 placeholder="Search station name, highway (e.g. NH-48, NE-1, Expressway), operator, or city..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
               />
+              {search && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    loadChargers("");
+                  }}
+                  className="absolute right-3 top-2.5 p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
+                  title="Clear search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
             <button
               type="submit"
-              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs"
+              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs cursor-pointer"
             >
               Search
             </button>
@@ -447,8 +593,8 @@ function ChargersContent() {
                 }}
                 className="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 font-semibold"
               >
-                <option value="">All States ({statesList.length || 36})</option>
-                {statesList.map((st) => (
+                <option value="">All States ({effectiveStatesList.length || 36})</option>
+                {effectiveStatesList.map((st) => (
                   <option key={st.code || st.name} value={st.name}>
                     {st.name} {st.stations ? `(${st.stations.toLocaleString()})` : ""}
                   </option>
@@ -575,9 +721,9 @@ function ChargersContent() {
                 setSelectedVehicleId("");
                 setHubType("all");
                 setUserLocation(null);
-                loadChargers();
+                loadChargers("");
               }}
-              className="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 hover:underline"
+              className="font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 hover:underline cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Reset All Filters</span>

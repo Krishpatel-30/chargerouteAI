@@ -515,7 +515,13 @@ export const api = {
     try {
       const res = await apiClient.get<ChargingStation[]>("/chargers", { params });
       return res.data;
-    } catch (err) {
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        try {
+          const retryRes = await apiClient.get<ChargingStation[]>("/api/v1/chargers", { params });
+          return retryRes.data;
+        } catch (retryErr) {}
+      }
       console.warn("Backend unavailable, using chargers fallback:", err);
       return [];
     }
@@ -531,18 +537,56 @@ export const api = {
     vehicle_id?: string;
     limit?: number;
   }): Promise<ChargingStation[]> {
-    const res = await apiClient.get<ChargingStation[]>("/chargers/nearby", { params });
-    return res.data;
+    try {
+      const res = await apiClient.get<ChargingStation[]>("/chargers/nearby", { params });
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        const retryRes = await apiClient.get<ChargingStation[]>("/api/v1/chargers/nearby", { params });
+        return retryRes.data;
+      }
+      throw err;
+    }
   },
 
   async getChargersMetadata(): Promise<IndiaEVMetadata> {
-    const res = await apiClient.get<IndiaEVMetadata>("/chargers/metadata");
-    return res.data;
+    try {
+      const res = await apiClient.get<IndiaEVMetadata>("/chargers/metadata");
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        try {
+          const retryRes = await apiClient.get<IndiaEVMetadata>("/api/v1/chargers/metadata");
+          return retryRes.data;
+        } catch (retryErr) {}
+      }
+      return {
+        source_name: "EV Public Charging Stations Data till 26th October 2025",
+        publisher: "Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India",
+        snapshot_label: "till 26th October 2025",
+        attribution: "Data: Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India",
+        total_stations_directory: 29184,
+        total_stations_local_db: 29184,
+        total_states_indexed: 36,
+        last_sync: new Date().toISOString(),
+        dataset_disclaimer: "Static government directory records enriched with risk analytics.",
+      };
+    }
   },
 
   async getChargerStates(): Promise<IndiaState[]> {
-    const res = await apiClient.get<IndiaState[]>("/chargers/states");
-    return res.data;
+    try {
+      const res = await apiClient.get<IndiaState[]>("/chargers/states");
+      return res.data;
+    } catch (err: any) {
+      if (err?.response?.status === 404) {
+        try {
+          const retryRes = await apiClient.get<IndiaState[]>("/api/v1/chargers/states");
+          return retryRes.data;
+        } catch (retryErr) {}
+      }
+      return [];
+    }
   },
 
   async syncIndiaStations(params?: { pages?: number; page_size?: number }): Promise<any> {

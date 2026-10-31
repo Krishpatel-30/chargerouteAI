@@ -46,22 +46,44 @@ function LoginForm() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      window.location.href = redirectUrl || "/plan";
+      try {
+        router.push(redirectUrl || "/plan");
+      } catch (e) {}
+      if (typeof window !== "undefined") {
+        window.location.href = redirectUrl || "/plan";
+      }
     }
-  }, [isAuthenticated, redirectUrl]);
+  }, [isAuthenticated, redirectUrl, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setIsLoading(true);
 
+    const cleanEmail = email.trim().toLowerCase();
     try {
-      if (isFirebaseEnabled) {
-        await loginWithFirebaseEmail(email.trim().toLowerCase(), password);
-      } else {
-        await login({ email: email.trim().toLowerCase(), password });
+      // 1. First attempt backend database login
+      try {
+        await login({ email: cleanEmail, password });
+      } catch (dbErr: any) {
+        // 2. If database fails and Firebase is configured, try Firebase email/password
+        if (isFirebaseEnabled) {
+          try {
+            await loginWithFirebaseEmail(cleanEmail, password);
+          } catch (fbErr: any) {
+            throw dbErr;
+          }
+        } else {
+          throw dbErr;
+        }
       }
-      window.location.href = redirectUrl || "/plan";
+
+      try {
+        router.push(redirectUrl || "/plan");
+      } catch (e) {}
+      if (typeof window !== "undefined") {
+        window.location.href = redirectUrl || "/plan";
+      }
     } catch (err: any) {
       console.error("Login failed:", err);
       const detail = extractErrorMessage(err, "Invalid email or password. Please try again.");

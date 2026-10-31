@@ -68,9 +68,14 @@ export default function LandingPage() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      window.location.href = "/plan";
+      try {
+        router.push("/plan");
+      } catch (e) {}
+      if (typeof window !== "undefined") {
+        window.location.href = "/plan";
+      }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
 
   const handleInlineAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,23 +125,52 @@ export default function LandingPage() {
     setIsSubmitting(true);
     try {
       if (authMode === "signin") {
-        if (isFirebaseEnabled) {
-          await loginWithFirebaseEmail(cleanEmail, password);
-        } else {
+        try {
+          // 1. First attempt standard backend database login
           await login({ email: cleanEmail, password });
+        } catch (dbErr: any) {
+          // 2. If backend fails and Firebase is configured, try Firebase email/password
+          if (isFirebaseEnabled) {
+            try {
+              await loginWithFirebaseEmail(cleanEmail, password);
+            } catch (fbErr: any) {
+              throw dbErr;
+            }
+          } else {
+            throw dbErr;
+          }
         }
       } else {
-        if (isFirebaseEnabled) {
-          await registerWithFirebaseEmail(cleanEmail, password, fullName.trim() || undefined);
-        } else {
+        // Register mode: create new driver account
+        try {
           await register({
             email: cleanEmail,
             password,
             full_name: fullName.trim() || undefined,
           });
+          if (isFirebaseEnabled) {
+            try {
+              await registerWithFirebaseEmail(cleanEmail, password, fullName.trim() || undefined);
+            } catch (fbErr) {
+              console.warn("Firebase registration mirror notice:", fbErr);
+            }
+          }
+        } catch (regErr: any) {
+          if (isFirebaseEnabled) {
+            await registerWithFirebaseEmail(cleanEmail, password, fullName.trim() || undefined);
+          } else {
+            throw regErr;
+          }
         }
       }
-      window.location.href = "/plan";
+
+      // Immediately navigate directly to the main model/planner page
+      try {
+        router.push("/plan");
+      } catch (e) {}
+      if (typeof window !== "undefined") {
+        window.location.href = "/plan";
+      }
     } catch (err: any) {
       console.error(`${authMode} failed:`, err);
       const msg = extractErrorMessage(

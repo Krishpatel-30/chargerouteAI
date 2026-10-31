@@ -29,9 +29,14 @@ function RegisterForm() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      window.location.href = redirectUrl || "/plan";
+      try {
+        router.push(redirectUrl || "/plan");
+      } catch (e) {}
+      if (typeof window !== "undefined") {
+        window.location.href = redirectUrl || "/plan";
+      }
     }
-  }, [isAuthenticated, redirectUrl]);
+  }, [isAuthenticated, redirectUrl, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,21 +54,35 @@ function RegisterForm() {
 
     setIsLoading(true);
 
+    const cleanEmail = email.trim().toLowerCase();
     try {
-      if (isFirebaseEnabled) {
-        await registerWithFirebaseEmail(
-          email.trim().toLowerCase(),
-          password,
-          fullName.trim() || undefined
-        );
-      } else {
+      try {
         await register({
-          email: email.trim().toLowerCase(),
+          email: cleanEmail,
           password,
           full_name: fullName.trim() || undefined,
         });
+        if (isFirebaseEnabled) {
+          try {
+            await registerWithFirebaseEmail(cleanEmail, password, fullName.trim() || undefined);
+          } catch (fbErr) {
+            console.warn("Firebase registration mirror notice:", fbErr);
+          }
+        }
+      } catch (regErr: any) {
+        if (isFirebaseEnabled) {
+          await registerWithFirebaseEmail(cleanEmail, password, fullName.trim() || undefined);
+        } else {
+          throw regErr;
+        }
       }
-      window.location.href = redirectUrl || "/plan";
+
+      try {
+        router.push(redirectUrl || "/plan");
+      } catch (e) {}
+      if (typeof window !== "undefined") {
+        window.location.href = redirectUrl || "/plan";
+      }
     } catch (err: any) {
       console.error("Registration failed:", err);
       const detail = extractErrorMessage(err, "Registration failed. Please check your inputs.");

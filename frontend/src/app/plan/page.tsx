@@ -35,7 +35,13 @@ import {
 
 export default function PlanTripPage() {
   const router = useRouter();
-  const { isAuthenticated, isLoading: authLoading, login } = useAuth();
+  const {
+    isAuthenticated,
+    isLoading: authLoading,
+    login,
+    loginWithFirebaseEmail,
+    isFirebaseEnabled,
+  } = useAuth();
   const [vehicles, setVehicles] = useState<VehicleModel[]>([]);
   const [allChargers, setAllChargers] = useState<ChargingStation[]>([]);
   const [planResponse, setPlanResponse] = useState<TripPlanResponse | null>(null);
@@ -55,8 +61,21 @@ export default function PlanTripPage() {
     e.preventDefault();
     setGateError(null);
     setGateLoading(true);
+    const cleanEmail = gateEmail.trim().toLowerCase();
     try {
-      await login({ email: gateEmail, password: gatePassword });
+      try {
+        await login({ email: cleanEmail, password: gatePassword });
+      } catch (dbErr: any) {
+        if (isFirebaseEnabled) {
+          try {
+            await loginWithFirebaseEmail(cleanEmail, gatePassword);
+          } catch (fbErr) {
+            throw dbErr;
+          }
+        } else {
+          throw dbErr;
+        }
+      }
     } catch (err: any) {
       setGateError(err?.response?.data?.detail || "Invalid email or password.");
     } finally {

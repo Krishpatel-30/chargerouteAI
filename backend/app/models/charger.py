@@ -17,12 +17,17 @@ class ChargingStation(Base):
     longitude = Column(Float, nullable=False, index=True)
     address = Column(String(500), nullable=True)
     city = Column(String(100), index=True, nullable=True)
+    district = Column(String(100), index=True, nullable=True)
     state = Column(String(100), index=True, nullable=False, default="Gujarat")
+    state_code = Column(String(10), index=True, nullable=True)
     country = Column(String(100), nullable=False, default="India")
     
     # Operator & Hardware
     operator = Column(String(100), index=True, nullable=False) # e.g. "Tata Power", "Jio-bp pulse", "Statiq"
     connector_types = Column(JSON, nullable=False, default=list) # e.g. [{"type": "CCS2", "power_kw": 60, "count": 2}]
+    currents = Column(JSON, nullable=True, default=list) # e.g. ["AC", "DC"]
+    standards = Column(JSON, nullable=True, default=list) # e.g. ["CCS2", "Type 2"]
+    vehicle_classes = Column(JSON, nullable=True, default=list) # e.g. ["car", "two_wheeler"]
     total_plugs = Column(Integer, default=2)
     max_power_kw = Column(Float, default=50.0)
     
@@ -32,9 +37,10 @@ class ChargingStation(Base):
     payment_network = Column(String(100), default="App / RFID / UPI")
     
     # Operational Status
-    # Values: "operational", "partially_available", "offline", "unknown"
+    # Values: "operational", "partially_available", "offline", "unknown", "verified_directory"
     live_status = Column(String(50), default="unknown", index=True)
     source_provider = Column(String(100), default="Verified Corridor Seed")
+    dataset_snapshot = Column(String(100), nullable=True, default="till 26th October 2025")
     
     # Timestamps & Data Integrity
     last_data_refresh = Column(DateTime, default=lambda: datetime.now(timezone.utc))

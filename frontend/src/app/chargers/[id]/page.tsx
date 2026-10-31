@@ -169,12 +169,15 @@ function ChargerDetailContent({ stationId }: { stationId: string }) {
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex flex-wrap items-center gap-2 mb-1.5">
                 <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase ${statusBadge}`}>
-                  {station.live_status}
+                  {station.live_status === "verified_directory" ? "Directory Verified" : station.live_status}
                 </span>
                 <span className="text-xs font-semibold text-slate-500">
                   Network: <strong className="text-slate-800">{station.operator}</strong>
+                </span>
+                <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full">
+                  🏛️ {station.source_provider || "Bureau of Energy Efficiency (BEE)"} • {station.dataset_snapshot || "till Oct 2025"}
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">

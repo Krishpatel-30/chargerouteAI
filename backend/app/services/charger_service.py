@@ -19,7 +19,14 @@ class ChargerService:
         min_power_kw: Optional[float] = None,
         operator: Optional[str] = None,
         city: Optional[str] = None,
+        state: Optional[str] = None,
+        state_code: Optional[str] = None,
+        current: Optional[str] = None,
+        vehicle_connectors: Optional[List[str]] = None,
         search: Optional[str] = None,
+        nearby_lat: Optional[float] = None,
+        nearby_lng: Optional[float] = None,
+        radius_km: Optional[float] = None,
     ) -> List[ChargingStation]:
         stmt = select(ChargingStation)
 
@@ -28,13 +35,19 @@ class ChargerService:
             filters.append(ChargingStation.operator.ilike(f"%{operator}%"))
         if city:
             filters.append(ChargingStation.city.ilike(f"%{city}%"))
+        if state:
+            filters.append(ChargingStation.state.ilike(f"%{state}%"))
+        if state_code:
+            filters.append(ChargingStation.state_code.ilike(f"{state_code}"))
         if search:
             filters.append(
                 or_(
                     ChargingStation.name.ilike(f"%{search}%"),
                     ChargingStation.address.ilike(f"%{search}%"),
                     ChargingStation.city.ilike(f"%{search}%"),
+                    ChargingStation.state.ilike(f"%{search}%"),
                     ChargingStation.operator.ilike(f"%{search}%"),
+                    ChargingStation.external_id.ilike(f"%{search}%"),
                 )
             )
 
@@ -44,25 +57,60 @@ class ChargerService:
         result = await db.execute(stmt)
         stations = list(result.scalars().all())
 
-        # Post-filter in Python for JSON connector types and min_power
+        # Post-filter in Python for JSON connector types, min_power, currents, vehicle compatibility, and proximity
         filtered = []
         for st in stations:
-            if min_power_kw and st.max_power_kw < min_power_kw:
+            if min_power_kw and (st.max_power_kw or 0) < min_power_kw:
                 continue
 
+            conns = [c.get("type", "") if isinstance(c, dict) else str(c) for c in (st.connector_types or [])]
+
             if connector_type:
-                conns = [c.get("type", "") if isinstance(c, dict) else str(c) for c in (st.connector_types or [])]
                 if not any(connector_type.lower() in c.lower() for c in conns):
                     continue
 
+            # Current filter (AC or DC)
+            if current:
+                c_upper = current.upper()
+                st_currents = [str(x).upper() for x in (st.currents or [])]
+                # If currents not specified, infer from connector standards
+                is_dc = "DC" in st_currents or any("CCS" in c or "CHA" in c or "BHARAT" in c for c in conns)
+                is_ac = "AC" in st_currents or any("TYPE 2" in c or "TYPE2" in c or "15A" in c for c in conns)
+                if c_upper == "DC" and not is_dc:
+                    continue
+                if c_upper == "AC" and not is_ac:
+                    continue
+
+            # Vehicle compatibility filter
+            if vehicle_connectors:
+                # Station must share at least one connector standard with the vehicle
+                if not any(any(vc.lower() in sc.lower() for sc in conns) for vc in vehicle_connectors):
+                    continue
+
+            # GPS Distance Calculation
+            if nearby_lat is not None and nearby_lng is not None:
+                dist = haversine_distance_km(nearby_lat, nearby_lng, st.latitude, st.longitude)
+                if radius_km and dist > radius_km:
+                    continue
+                st.distance_km = round(dist, 2)
+
             filtered.append(st)
+
+        if nearby_lat is not None and nearby_lng is not None:
+            filtered.sort(key=lambda x: getattr(x, "distance_km", 999999.0))
 
         return filtered
 
     @staticmethod
     async def get_station_by_id(db: AsyncSession, station_id: str) -> Optional[ChargingStation]:
-        stmt = select(ChargingStation).where(ChargingStation.id == station_id)
+        stmt = select(ChargingStation).where(
+            or_(
+                ChargingStation.id == station_id,
+                ChargingStation.external_id == station_id
+            )
+        )
         res = await db.execute(stmt)
+        return res.scalar_one_or_none()
         return res.scalar_one_or_none()
 
     @staticmethod

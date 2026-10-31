@@ -23,6 +23,25 @@ async def seed_database(force_refresh_seeds: bool = True):
     # 1. Create tables if they do not exist
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        
+        # Ensure new schema columns exist if database was previously created
+        from sqlalchemy import text
+        migration_statements = [
+            "ALTER TABLE users ADD COLUMN reset_password_token VARCHAR(255)",
+            "ALTER TABLE users ADD COLUMN reset_password_expires_at TIMESTAMP",
+            "ALTER TABLE charging_stations ADD COLUMN state_code VARCHAR(10)",
+            "ALTER TABLE charging_stations ADD COLUMN district VARCHAR(100)",
+            "ALTER TABLE charging_stations ADD COLUMN currents JSON",
+            "ALTER TABLE charging_stations ADD COLUMN standards JSON",
+            "ALTER TABLE charging_stations ADD COLUMN vehicle_classes JSON",
+            "ALTER TABLE charging_stations ADD COLUMN dataset_snapshot VARCHAR(100)",
+        ]
+        for stmt in migration_statements:
+            try:
+                await conn.execute(text(stmt))
+            except Exception:
+                # Column already exists or dialect specific
+                pass
 
     async with AsyncSessionLocal() as db:
         # Load vehicles from seed_vehicles.json

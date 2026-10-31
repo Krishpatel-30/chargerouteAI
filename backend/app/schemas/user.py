@@ -38,3 +38,17 @@ class UserResponse(UserBase):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    password: str
+
+
+class PasswordResetResponse(BaseModel):
+    message: str
+    reset_url_dev: Optional[str] = None

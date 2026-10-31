@@ -51,23 +51,51 @@ export interface ChargingStation {
   longitude: number;
   address?: string;
   city?: string;
+  district?: string;
   state: string;
+  state_code?: string;
   country: string;
   operator: string;
   connector_types: ConnectorDetail[];
+  currents?: string[];
+  standards?: string[];
+  vehicle_classes?: string[];
   total_plugs: number;
   max_power_kw: number;
   access_restrictions: string;
   opening_hours: string;
   payment_network: string;
-  live_status: "operational" | "partially_available" | "offline" | "unknown";
+  live_status: "operational" | "partially_available" | "offline" | "unknown" | "verified_directory" | string;
   source_provider: string;
+  dataset_snapshot?: string;
   confidence_score: number;
   last_data_refresh: string;
   last_successful_verification?: string;
   fault_report_count: number;
   external_url?: string;
+  distance_km?: number;
   risk_assessment?: RiskBreakdown;
+}
+
+export interface IndiaEVMetadata {
+  source_name: string;
+  publisher: string;
+  snapshot_label: string;
+  attribution: string;
+  total_stations_directory: number;
+  total_stations_local_db: number;
+  total_states_indexed: number;
+  last_sync?: string;
+  dataset_disclaimer: string;
+}
+
+export interface IndiaState {
+  name: string;
+  code: string;
+  iso?: string;
+  stations?: number;
+  chargers?: number;
+  dc_stations?: number;
 }
 
 export interface BackupStopCandidate {

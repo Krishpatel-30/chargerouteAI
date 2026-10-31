@@ -15,10 +15,15 @@ class ChargingStationBase(BaseModel):
     longitude: float = Field(..., ge=-180.0, le=180.0)
     address: Optional[str] = None
     city: Optional[str] = None
+    district: Optional[str] = None
     state: str = "Gujarat"
+    state_code: Optional[str] = None
     country: str = "India"
     operator: str
     connector_types: List[Dict[str, Any]] = Field(default_factory=list)
+    currents: Optional[List[str]] = Field(default_factory=list)
+    standards: Optional[List[str]] = Field(default_factory=list)
+    vehicle_classes: Optional[List[str]] = Field(default_factory=list)
     total_plugs: int = 2
     max_power_kw: float = 50.0
     access_restrictions: str = "Public 24/7"
@@ -26,7 +31,9 @@ class ChargingStationBase(BaseModel):
     payment_network: str = "App / RFID / UPI"
     live_status: str = "unknown"
     source_provider: str = "Verified Corridor Seed"
+    dataset_snapshot: Optional[str] = "till 26th October 2025"
     external_url: Optional[str] = None
+    distance_km: Optional[float] = None
 
 
 class ChargingStationCreate(ChargingStationBase):
@@ -65,3 +72,19 @@ class ChargingStationFilterParams(BaseModel):
     city: Optional[str] = None
     max_risk_category: Optional[str] = None
     search: Optional[str] = None
+
+
+class IndiaEVMetadataResponse(BaseModel):
+    source_name: str
+    publisher: str
+    snapshot_label: str
+    attribution: str
+    total_stations_directory: int
+    total_stations_local_db: int
+    total_states_indexed: int
+    last_sync: Optional[datetime] = None
+    dataset_disclaimer: str = (
+        "Dataset republished from the official Bureau of Energy Efficiency (BEE), "
+        "Ministry of Power, Government of India. Historical government directory records "
+        "are displayed with explainable risk ratings and are not live socket telemetry."
+    )

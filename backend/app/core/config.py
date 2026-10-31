@@ -40,6 +40,19 @@ class Settings(BaseSettings):
     DEFAULT_MIN_RESERVE_PERCENT: float = 15.0
     HIGHWAY_SPEED_FACTOR: float = 1.15  # 15% higher consumption at 100+ km/h
     AC_CLIMATE_FACTOR: float = 1.10     # 10% higher consumption for Indian summer HVAC
+
+    # Email & SMTP Settings
+    SMTP_HOST: Optional[str] = None
+    SMTP_PORT: int = 587
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
+    SMTP_TLS: bool = True
+    EMAILS_FROM_EMAIL: str = "noreply@chargeroute.ai"
+    EMAILS_FROM_NAME: str = "ChargeRoute AI Support"
+    FRONTEND_URL: str = "http://localhost:3000"
+
+    # External India EV API
+    INDIA_EV_API_BASE: str = "https://ev-charging-stations-api.vercel.app"
     
     model_config = SettingsConfigDict(
         env_file=".env",

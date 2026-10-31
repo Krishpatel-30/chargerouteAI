@@ -1,6 +1,7 @@
 import secrets
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Optional
+import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,7 +12,19 @@ from app.core.database import get_db
 from app.core.config import settings
 from app.core.security import create_access_token, verify_password, get_password_hash
 from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin, GoogleAuthRequest, Token, UserResponse
+from app.schemas.user import (
+    UserCreate,
+    UserLogin,
+    GoogleAuthRequest,
+    Token,
+    UserResponse,
+    ForgotPasswordRequest,
+    ResetPasswordRequest,
+    PasswordResetResponse,
+)
+from app.services.email_service import EmailService
+
+logger = logging.getLogger("chargeroute.auth")
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login", auto_error=False)
@@ -129,3 +142,87 @@ async def login_with_google(google_data: GoogleAuthRequest, db: AsyncSession = D
 @router.get("/me", response_model=UserResponse)
 async def get_me(user: User = Depends(get_current_user)):
     return UserResponse.model_validate(user)
+
+
+@router.post("/forgot-password", response_model=PasswordResetResponse)
+async def forgot_password(request: ForgotPasswordRequest, db: AsyncSession = Depends(get_db)):
+    email = request.email.lower().strip()
+    stmt = select(User).where(User.email == email)
+    res = await db.execute(stmt)
+    user = res.scalar_one_or_none()
+
+    reset_token = secrets.token_urlsafe(32)
+    dev_url = None
+
+    if user:
+        user.reset_password_token = reset_token
+        user.reset_password_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+        await db.commit()
+        await db.refresh(user)
+
+        email_result = EmailService.send_password_reset_email(
+            to_email=user.email,
+            reset_token=reset_token,
+            user_name=user.full_name,
+        )
+        dev_url = email_result.get("reset_url")
+    else:
+        logger.info(f"Password reset requested for non-existing email: {email}")
+
+    return PasswordResetResponse(
+        message="If an account with that email exists, password reset instructions have been sent to your email.",
+        reset_url_dev=dev_url,
+    )
+
+
+@router.post("/reset-password", response_model=PasswordResetResponse)
+async def reset_password(request: ResetPasswordRequest, db: AsyncSession = Depends(get_db)):
+    token = request.token.strip()
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or missing reset token."
+        )
+
+    if len(request.password) < 6:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 6 characters long."
+        )
+
+    stmt = select(User).where(User.reset_password_token == token)
+    res = await db.execute(stmt)
+    user = res.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This password reset link is invalid or has already been used.",
+        )
+
+    # Check expiration
+    if not user.reset_password_expires_at:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid password reset request.",
+        )
+
+    expires_at = user.reset_password_expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+    if datetime.now(timezone.utc) > expires_at:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This password reset link has expired. Please request a new link.",
+        )
+
+    # Update password and invalidate token
+    user.hashed_password = get_password_hash(request.password)
+    user.reset_password_token = None
+    user.reset_password_expires_at = None
+    await db.commit()
+
+    return PasswordResetResponse(
+        message="Your password has been successfully reset! You can now sign in with your new password.",
+    )

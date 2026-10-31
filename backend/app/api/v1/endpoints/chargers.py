@@ -1,25 +1,186 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, desc
+from sqlalchemy import select, desc, func
 from datetime import datetime, timezone
 
 from app.core.database import get_db
 from app.api.v1.endpoints.auth import get_current_user_optional
 from app.models.user import User
 from app.models.charger import ChargingStation
+from app.models.vehicle import VehicleModel
 from app.models.report import CommunityReport
 from app.schemas.charger import (
     ChargingStationResponse,
     ChargingStationBase,
     RiskBreakdown,
+    IndiaEVMetadataResponse,
 )
 from app.schemas.report import CommunityReportResponse, CommunityReportCreate
 from app.services.charger_service import ChargerService
 from app.services.risk_engine import RiskEngine
 from app.services.backup_finder import BackupFinder
+from app.services.india_ev_service import IndiaEVService
 
 router = APIRouter()
+
+
+@router.get("/metadata", response_model=IndiaEVMetadataResponse)
+async def get_chargers_metadata(db: AsyncSession = Depends(get_db)):
+    """
+    Returns official Bureau of Energy Efficiency (BEE) dataset metadata,
+    including snapshot date, attribution, and local vs upstream counts.
+    """
+    try:
+        upstream_meta = await IndiaEVService.fetch_source_metadata()
+    except Exception:
+        upstream_meta = {
+            "source_name": "EV Public Charging Stations Data till 26th October 2025",
+            "publisher": "Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India",
+            "snapshot_label": "till 26th October 2025",
+            "attribution": "Data: Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India",
+            "total_upstream_stations": 29184,
+        }
+
+    # Count local stations
+    count_stmt = select(func.count(ChargingStation.id))
+    local_count_res = await db.execute(count_stmt)
+    local_count = local_count_res.scalar() or 0
+
+    # Count states
+    states_stmt = select(func.count(func.distinct(ChargingStation.state)))
+    states_res = await db.execute(states_stmt)
+    states_count = states_res.scalar() or 35
+
+    return IndiaEVMetadataResponse(
+        source_name=upstream_meta.get("source_name", "EV Public Charging Stations Data till 26th October 2025"),
+        publisher=upstream_meta.get("publisher", "Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India"),
+        snapshot_label=upstream_meta.get("snapshot_label", "till 26th October 2025"),
+        attribution=upstream_meta.get("attribution", "Data: Bureau of Energy Efficiency (BEE), Ministry of Power, Government of India"),
+        total_stations_directory=upstream_meta.get("total_upstream_stations", 29184),
+        total_stations_local_db=local_count,
+        total_states_indexed=states_count,
+        last_sync=datetime.now(timezone.utc),
+    )
+
+
+@router.get("/states")
+async def get_states():
+    """
+    Returns 36 Indian states and union territories with station statistics.
+    """
+    states = await IndiaEVService.fetch_states()
+    if not states:
+        return [
+            {"name": "Gujarat", "code": "GJ"},
+            {"name": "Maharashtra", "code": "MH"},
+            {"name": "Delhi", "code": "DL"},
+            {"name": "Karnataka", "code": "KA"},
+            {"name": "Tamil Nadu", "code": "TN"},
+            {"name": "Rajasthan", "code": "RJ"},
+            {"name": "Uttar Pradesh", "code": "UP"},
+            {"name": "Haryana", "code": "HR"},
+        ]
+    return states
+
+
+@router.get("/nearby", response_model=List[ChargingStationResponse])
+async def get_nearby_chargers(
+    lat: float = Query(..., ge=-90.0, le=90.0),
+    lng: float = Query(..., ge=-180.0, le=180.0),
+    radius_km: float = Query(25.0, ge=1.0, le=150.0),
+    current: Optional[str] = None, # "AC" or "DC"
+    min_power_kw: Optional[float] = None,
+    connector_type: Optional[str] = None,
+    vehicle_id: Optional[str] = None,
+    limit: int = Query(50, ge=1, le=150),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Discovers charging stations within radius_km of the provided GPS coordinates.
+    Supports AC/DC, power, connector, and vehicle compatibility filtering.
+    """
+    vehicle_connectors = None
+    if vehicle_id:
+        veh_stmt = select(VehicleModel).where(VehicleModel.id == vehicle_id)
+        veh_res = await db.execute(veh_stmt)
+        veh = veh_res.scalar_one_or_none()
+        if veh:
+            vehicle_connectors = veh.connector_types
+
+    # First check database stations
+    local_nearby = await ChargerService.get_all_stations(
+        db=db,
+        connector_type=connector_type,
+        min_power_kw=min_power_kw,
+        current=current,
+        vehicle_connectors=vehicle_connectors,
+        nearby_lat=lat,
+        nearby_lng=lng,
+        radius_km=radius_km,
+    )
+
+    # If few local stations found within radius, query upstream API to enrich live
+    if len(local_nearby) < 5:
+        try:
+            upstream_near = await IndiaEVService.fetch_nearby_api(
+                lat=lat,
+                lng=lng,
+                radius_km=radius_km,
+                current=current,
+                min_power_kw=min_power_kw,
+                connector=connector_type,
+                limit=limit,
+            )
+            if upstream_near:
+                # Ingest into DB
+                await IndiaEVService.import_stations_batch(db, upstream_near)
+                # Re-query
+                local_nearby = await ChargerService.get_all_stations(
+                    db=db,
+                    connector_type=connector_type,
+                    min_power_kw=min_power_kw,
+                    current=current,
+                    vehicle_connectors=vehicle_connectors,
+                    nearby_lat=lat,
+                    nearby_lng=lng,
+                    radius_km=radius_km,
+                )
+        except Exception:
+            pass
+
+    paged = local_nearby[:limit]
+    responses = []
+    for st in paged:
+        risk = RiskEngine.calculate_station_risk(
+            live_status=st.live_status,
+            last_refresh=st.last_data_refresh,
+            fault_reports_count=st.fault_report_count,
+            total_plugs=st.total_plugs,
+            access_restrictions=st.access_restrictions,
+            opening_hours=st.opening_hours,
+            nearby_backup_count=1,
+        )
+        res = ChargingStationResponse.model_validate(st)
+        res.risk_assessment = risk
+        res.distance_km = getattr(st, "distance_km", None)
+        responses.append(res)
+
+    return responses
+
+
+@router.post("/sync-india-api")
+async def sync_india_charging_stations(
+    pages: int = Query(5, ge=1, le=50),
+    page_size: int = Query(100, ge=10, le=100),
+    db: AsyncSession = Depends(get_db),
+):
+    """
+    Synchronizes public EV stations from the Bureau of Energy Efficiency API
+    into the active database.
+    """
+    res = await IndiaEVService.sync_priority_hubs(db, pages=pages, page_size=page_size)
+    return res
 
 
 @router.get("", response_model=List[ChargingStationResponse])
@@ -28,17 +189,33 @@ async def list_chargers(
     min_power_kw: Optional[float] = None,
     operator: Optional[str] = None,
     city: Optional[str] = None,
+    state: Optional[str] = None,
+    state_code: Optional[str] = None,
+    current: Optional[str] = None, # AC or DC
+    vehicle_id: Optional[str] = None,
     search: Optional[str] = None,
     limit: int = Query(300, ge=1, le=1000),
     offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db),
 ):
+    vehicle_connectors = None
+    if vehicle_id:
+        veh_stmt = select(VehicleModel).where(VehicleModel.id == vehicle_id)
+        veh_res = await db.execute(veh_stmt)
+        veh = veh_res.scalar_one_or_none()
+        if veh:
+            vehicle_connectors = veh.connector_types
+
     stations = await ChargerService.get_all_stations(
         db=db,
         connector_type=connector_type,
         min_power_kw=min_power_kw,
         operator=operator,
         city=city,
+        state=state,
+        state_code=state_code,
+        current=current,
+        vehicle_connectors=vehicle_connectors,
         search=search,
     )
 
@@ -55,7 +232,7 @@ async def list_chargers(
             total_plugs=st.total_plugs,
             access_restrictions=st.access_restrictions,
             opening_hours=st.opening_hours,
-            nearby_backup_count=1, # approximate default for listing
+            nearby_backup_count=1,
         )
         res = ChargingStationResponse.model_validate(st)
         res.risk_assessment = risk

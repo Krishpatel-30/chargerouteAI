@@ -305,9 +305,19 @@ export default function LandingPage() {
                       </div>
 
                       <div>
-                        <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
-                          PASSWORD
-                        </label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                            PASSWORD
+                          </label>
+                          {authMode === "signin" && (
+                            <Link
+                              href="/forgot-password"
+                              className="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 hover:underline"
+                            >
+                              Forgot password?
+                            </Link>
+                          )}
+                        </div>
                         <div className="relative">
                           <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3.5" />
                           <input

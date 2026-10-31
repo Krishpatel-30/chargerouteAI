@@ -102,34 +102,46 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
     layers.clearLayers();
     const bounds = L.latLngBounds([]);
 
-    // 1. Draw all regional chargers as subtle small dots
+    // 1. Draw all regional/India chargers as interactive clustered markers
     if (allChargers && allChargers.length > 0) {
       allChargers.forEach((ch) => {
-        const isOperational = ch.live_status === "operational";
+        const isFastDC = (ch.max_power_kw || 0) >= 50;
         const circleMarker = L.circleMarker([ch.latitude, ch.longitude], {
-          radius: 5,
-          fillColor: isOperational ? "#10b981" : "#f59e0b",
+          radius: isFastDC ? 6 : 5,
+          fillColor: isFastDC ? "#059669" : "#0d9488",
           color: "#ffffff",
           weight: 1.5,
-          opacity: 0.9,
-          fillOpacity: 0.8,
+          opacity: 0.95,
+          fillOpacity: 0.85,
         });
 
+        const powerLabel = ch.max_power_kw ? `${ch.max_power_kw} kW` : "Fast Charger";
+        const distanceLabel = ch.distance_km != null ? ` • 📍 ${ch.distance_km} km away` : "";
+
         circleMarker.bindPopup(`
-          <div class="p-3 max-w-xs text-xs">
+          <div class="p-3 max-w-xs text-xs font-sans">
             <span class="font-bold text-slate-900 block text-sm mb-1">${ch.name}</span>
-            <div class="text-slate-500 mb-1">${ch.operator} • ${ch.max_power_kw} kW</div>
-            <div class="inline-block px-1.5 py-0.5 rounded text-[10px] font-semibold ${
-              isOperational ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
-            }">
-              Status: ${ch.live_status.toUpperCase()}
+            <div class="text-slate-600 mb-1 font-medium">${ch.operator} • ${powerLabel}${distanceLabel}</div>
+            <div class="text-slate-500 text-[11px] mb-2 leading-relaxed">${ch.address || `${ch.city || ''}, ${ch.state || 'India'}`}</div>
+            <div class="flex flex-wrap items-center gap-1 mb-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                ⚡ ${ch.max_power_kw} kW ${ch.currents?.join('/') || 'DC/AC'}
+              </span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">
+                ${ch.total_plugs || 2} Plugs
+              </span>
             </div>
-            <div class="mt-2 text-slate-600">
-              <a href="/chargers/${ch.id}" class="text-emerald-600 font-semibold hover:underline">View Station Details &rarr;</a>
+            <div class="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-[10px] text-slate-400">${ch.dataset_snapshot || 'BEE Directory 2025'}</span>
+              <a href="/chargers/${ch.id}" class="text-emerald-700 font-bold hover:underline">View Station &rarr;</a>
             </div>
           </div>
         `);
         circleMarker.addTo(layers);
+
+        if (!routeGeometry || routeGeometry.length === 0) {
+          bounds.extend([ch.latitude, ch.longitude]);
+        }
       });
     }
 

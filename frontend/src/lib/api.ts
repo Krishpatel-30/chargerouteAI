@@ -10,6 +10,8 @@ import {
   GoogleAuthData,
   LocationSearchResult,
   GeocodingConfig,
+  IndiaEVMetadata,
+  IndiaState,
 } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
@@ -56,6 +58,16 @@ export const api = {
     if (typeof window !== "undefined" && res.data?.access_token) {
       localStorage.setItem("voltplan_token", res.data.access_token);
     }
+    return res.data;
+  },
+
+  async forgotPassword(email: string): Promise<{ message: string; reset_url_dev?: string }> {
+    const res = await apiClient.post<{ message: string; reset_url_dev?: string }>("/auth/forgot-password", { email });
+    return res.data;
+  },
+
+  async resetPassword(data: { token: string; password: string }): Promise<{ message: string }> {
+    const res = await apiClient.post<{ message: string }>("/auth/reset-password", data);
     return res.data;
   },
 
@@ -210,6 +222,35 @@ export const api = {
       console.warn("Backend unavailable, using chargers fallback:", err);
       return [];
     }
+  },
+
+  async getNearbyChargers(params: {
+    lat: number;
+    lng: number;
+    radius_km?: number;
+    current?: string;
+    min_power_kw?: number;
+    connector_type?: string;
+    vehicle_id?: string;
+    limit?: number;
+  }): Promise<ChargingStation[]> {
+    const res = await apiClient.get<ChargingStation[]>("/chargers/nearby", { params });
+    return res.data;
+  },
+
+  async getChargersMetadata(): Promise<IndiaEVMetadata> {
+    const res = await apiClient.get<IndiaEVMetadata>("/chargers/metadata");
+    return res.data;
+  },
+
+  async getChargerStates(): Promise<IndiaState[]> {
+    const res = await apiClient.get<IndiaState[]>("/chargers/states");
+    return res.data;
+  },
+
+  async syncIndiaStations(params?: { pages?: number; page_size?: number }): Promise<any> {
+    const res = await apiClient.post("/chargers/sync-india-api", null, { params });
+    return res.data;
   },
 
   async getCharger(id: string): Promise<ChargingStation> {

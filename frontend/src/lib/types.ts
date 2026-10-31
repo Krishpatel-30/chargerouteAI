@@ -212,9 +212,13 @@ export interface User {
   id: string;
   email: string;
   full_name?: string;
-  is_admin: boolean;
+  is_admin?: boolean;
   is_active?: boolean;
-  created_at: string;
+  created_at?: string;
+  avatar_url?: string;
+  auth_provider?: string;
+  role?: string;
+  is_verified?: boolean;
 }
 
 export interface AuthResponse {

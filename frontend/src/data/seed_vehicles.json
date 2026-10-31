@@ -1,0 +1,1921 @@
+[
+  {
+    "manufacturer": "Tata",
+    "model": "Tiago EV XE (Medium Range)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 19.2,
+    "usable_battery_capacity_kwh": 18.2,
+    "consumption_kwh_100km": 12.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 25.0,
+    "charging_curve": {
+      "0-80%": 25.0,
+      "80-100%": 7.0
+    },
+    "range_reference_km": 190.0,
+    "source": "Tata Motors Spec (250 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Tiago EV XT / XZ+ (Long Range)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 24.0,
+    "usable_battery_capacity_kwh": 22.8,
+    "consumption_kwh_100km": 12.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 30.0,
+    "charging_curve": {
+      "0-80%": 30.0,
+      "80-100%": 10.0
+    },
+    "range_reference_km": 220.0,
+    "source": "Tata Motors Spec (315 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Tigor EV XZ+ / Lux",
+    "model_year": 2024,
+    "battery_capacity_kwh": 26.0,
+    "usable_battery_capacity_kwh": 24.5,
+    "consumption_kwh_100km": 13.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 25.0,
+    "charging_curve": {
+      "0-80%": 25.0,
+      "80-100%": 10.0
+    },
+    "range_reference_km": 210.0,
+    "source": "Tata Motors Spec (315 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Xpres-T EV (Commercial Fleet)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 26.0,
+    "usable_battery_capacity_kwh": 24.5,
+    "consumption_kwh_100km": 13.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 25.0,
+    "charging_curve": {
+      "0-80%": 25.0,
+      "80-100%": 8.0
+    },
+    "range_reference_km": 185.0,
+    "source": "Tata Fleet Spec (277 km ARAI)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Punch EV Smart / Adventure (Medium Range)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 25.0,
+    "usable_battery_capacity_kwh": 23.5,
+    "consumption_kwh_100km": 13.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 30.0,
+    "charging_curve": {
+      "0-80%": 30.0,
+      "80-100%": 12.0
+    },
+    "range_reference_km": 220.0,
+    "source": "Tata Motors Spec (315 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Punch EV Empowered+ (Long Range)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 35.0,
+    "usable_battery_capacity_kwh": 33.0,
+    "consumption_kwh_100km": 14.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 35.0,
+    "charging_curve": {
+      "0-70%": 35.0,
+      "70-80%": 25.0,
+      "80-100%": 12.0
+    },
+    "range_reference_km": 285.0,
+    "source": "Tata Motors Spec (421 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Nexon EV Creative (Medium Range 30 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 30.0,
+    "usable_battery_capacity_kwh": 28.5,
+    "consumption_kwh_100km": 14.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 35.0,
+    "charging_curve": {
+      "0-80%": 35.0,
+      "80-100%": 15.0
+    },
+    "range_reference_km": 235.0,
+    "source": "Tata Motors Spec (325 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Nexon EV Fearless+ (Long Range 40.5 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 40.5,
+    "usable_battery_capacity_kwh": 38.5,
+    "consumption_kwh_100km": 14.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-70%": 50.0,
+      "70-80%": 35.0,
+      "80-100%": 15.0
+    },
+    "range_reference_km": 320.0,
+    "source": "Tata Motors Spec (465 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Nexon EV 45 (Empowered Plus 45 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 45.0,
+    "usable_battery_capacity_kwh": 43.0,
+    "consumption_kwh_100km": 14.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 60.0,
+    "charging_curve": {
+      "0-70%": 60.0,
+      "70-80%": 40.0,
+      "80-90%": 22.0,
+      "90-100%": 11.0
+    },
+    "range_reference_km": 370.0,
+    "source": "Tata Motors Spec (489 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Curvv EV 45 (Accomplished)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 45.0,
+    "usable_battery_capacity_kwh": 42.5,
+    "consumption_kwh_100km": 14.7,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 65.0,
+    "charging_curve": {
+      "0-70%": 65.0,
+      "70-80%": 45.0,
+      "80-100%": 18.0
+    },
+    "range_reference_km": 365.0,
+    "source": "Tata Motors Spec (502 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Curvv EV 55 (Empowered+ A)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 55.0,
+    "usable_battery_capacity_kwh": 52.0,
+    "consumption_kwh_100km": 15.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 70.0,
+    "charging_curve": {
+      "0-70%": 70.0,
+      "70-80%": 48.0,
+      "80-90%": 25.0,
+      "90-100%": 12.0
+    },
+    "range_reference_km": 425.0,
+    "source": "Tata Motors Spec (585 km MIDC)"
+  },
+  {
+    "manufacturer": "Tata",
+    "model": "Harrier EV AWD (Dual Motor)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 75.0,
+    "usable_battery_capacity_kwh": 71.0,
+    "consumption_kwh_100km": 17.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 120.0,
+    "charging_curve": {
+      "0-70%": 120.0,
+      "70-85%": 70.0,
+      "85-100%": 25.0
+    },
+    "range_reference_km": 480.0,
+    "source": "Tata Motors Acti.ev Production Spec"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "eVerito D4 / D6 (Fleet Classic)",
+    "model_year": 2023,
+    "battery_capacity_kwh": 21.2,
+    "usable_battery_capacity_kwh": 20.0,
+    "consumption_kwh_100km": 13.5,
+    "connector_types": [
+      "CCS2",
+      "Bharat DC-001"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 15.0,
+    "charging_curve": {
+      "0-80%": 15.0,
+      "80-100%": 5.0
+    },
+    "range_reference_km": 125.0,
+    "source": "Mahindra Commercial Spec (181 km MIDC)"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "XUV400 EV EC Pro (34.5 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 34.5,
+    "usable_battery_capacity_kwh": 32.5,
+    "consumption_kwh_100km": 15.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 18.0
+    },
+    "range_reference_km": 260.0,
+    "source": "Mahindra Spec (375 km MIDC)"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "XUV400 EV EL Pro (39.4 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 39.4,
+    "usable_battery_capacity_kwh": 37.0,
+    "consumption_kwh_100km": 15.4,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 20.0
+    },
+    "range_reference_km": 305.0,
+    "source": "Mahindra Spec (456 km MIDC)"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "BE 6e (Pack 1 / 59 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 59.0,
+    "usable_battery_capacity_kwh": 56.0,
+    "consumption_kwh_100km": 16.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 140.0,
+    "charging_curve": {
+      "0-70%": 140.0,
+      "70-85%": 80.0,
+      "85-100%": 25.0
+    },
+    "range_reference_km": 410.0,
+    "source": "Mahindra INGLO Platform Spec (535 km ARAI)"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "BE 6e (Pack 2 / 79 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 79.0,
+    "usable_battery_capacity_kwh": 75.0,
+    "consumption_kwh_100km": 16.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 175.0,
+    "charging_curve": {
+      "0-65%": 175.0,
+      "65-80%": 110.0,
+      "80-90%": 50.0,
+      "90-100%": 20.0
+    },
+    "range_reference_km": 500.0,
+    "source": "Mahindra INGLO Spec (682 km ARAI)"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "XEV 9e (Pack 1 / 59 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 59.0,
+    "usable_battery_capacity_kwh": 56.0,
+    "consumption_kwh_100km": 16.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 140.0,
+    "charging_curve": {
+      "0-70%": 140.0,
+      "70-85%": 80.0,
+      "85-100%": 25.0
+    },
+    "range_reference_km": 395.0,
+    "source": "Mahindra INGLO Platform Spec (535 km ARAI)"
+  },
+  {
+    "manufacturer": "Mahindra",
+    "model": "XEV 9e (Pack 2 / 79 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 79.0,
+    "usable_battery_capacity_kwh": 75.0,
+    "consumption_kwh_100km": 17.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 175.0,
+    "charging_curve": {
+      "0-65%": 175.0,
+      "65-80%": 110.0,
+      "80-90%": 50.0,
+      "90-100%": 20.0
+    },
+    "range_reference_km": 490.0,
+    "source": "Mahindra INGLO Spec (656 km ARAI)"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "Comet EV Executive / Excite",
+    "model_year": 2024,
+    "battery_capacity_kwh": 17.3,
+    "usable_battery_capacity_kwh": 16.5,
+    "consumption_kwh_100km": 10.5,
+    "connector_types": [
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 0.0,
+    "charging_curve": {
+      "0-100%": 3.3
+    },
+    "range_reference_km": 175.0,
+    "source": "MG Motor Spec (230 km ARAI)"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "Comet EV Exclusive (Fast Charge 7.4kW)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 17.3,
+    "usable_battery_capacity_kwh": 16.5,
+    "consumption_kwh_100km": 10.5,
+    "connector_types": [
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 0.0,
+    "charging_curve": {
+      "0-100%": 7.4
+    },
+    "range_reference_km": 175.0,
+    "source": "MG Motor Fast Charge Spec"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "Windsor EV (Excite 38 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 38.0,
+    "usable_battery_capacity_kwh": 36.0,
+    "consumption_kwh_100km": 15.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 18.0
+    },
+    "range_reference_km": 270.0,
+    "source": "MG Motor India (331 km ARAI)"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "Windsor EV (Essence 38 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 38.0,
+    "usable_battery_capacity_kwh": 36.0,
+    "consumption_kwh_100km": 15.1,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 18.0
+    },
+    "range_reference_km": 275.0,
+    "source": "MG Motor India"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "Windsor EV Pro (50 kWh BaaS)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 50.0,
+    "usable_battery_capacity_kwh": 48.0,
+    "consumption_kwh_100km": 15.3,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 60.0,
+    "charging_curve": {
+      "0-75%": 60.0,
+      "75-100%": 25.0
+    },
+    "range_reference_km": 340.0,
+    "source": "MG Motor Spec (440 km ARAI)"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "ZS EV Excite (50.3 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 50.3,
+    "usable_battery_capacity_kwh": 48.0,
+    "consumption_kwh_100km": 15.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 20.0
+    },
+    "range_reference_km": 340.0,
+    "source": "MG Motor Spec (461 km ARAI)"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "ZS EV Exclusive Plus (50.3 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 50.3,
+    "usable_battery_capacity_kwh": 48.0,
+    "consumption_kwh_100km": 15.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 20.0
+    },
+    "range_reference_km": 340.0,
+    "source": "MG Motor Spec (461 km ARAI)"
+  },
+  {
+    "manufacturer": "MG",
+    "model": "Cyberster EV Convertible",
+    "model_year": 2025,
+    "battery_capacity_kwh": 77.0,
+    "usable_battery_capacity_kwh": 74.0,
+    "consumption_kwh_100km": 18.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 144.0,
+    "charging_curve": {
+      "0-80%": 144.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 430.0,
+    "source": "MG Motor Global Spec (508 km WLTP)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "Atto 3 Dynamic (49.92 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 49.92,
+    "usable_battery_capacity_kwh": 48.0,
+    "consumption_kwh_100km": 15.6,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.0,
+    "max_dc_power_kw": 70.0,
+    "charging_curve": {
+      "0-80%": 70.0,
+      "80-100%": 25.0
+    },
+    "range_reference_km": 350.0,
+    "source": "BYD Blade Spec (468 km ARAI)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "Atto 3 Superior / Premium (60.48 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 60.48,
+    "usable_battery_capacity_kwh": 58.0,
+    "consumption_kwh_100km": 15.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.0,
+    "max_dc_power_kw": 88.0,
+    "charging_curve": {
+      "0-80%": 88.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 410.0,
+    "source": "BYD Blade Spec (521 km ARAI)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "Seal Dynamic RWD (61.44 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 61.44,
+    "usable_battery_capacity_kwh": 59.0,
+    "consumption_kwh_100km": 15.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 110.0,
+    "charging_curve": {
+      "0-80%": 110.0,
+      "80-100%": 35.0
+    },
+    "range_reference_km": 410.0,
+    "source": "BYD Blade Spec (510 km NEDC)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "Seal Premium RWD (82.56 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 82.56,
+    "usable_battery_capacity_kwh": 79.0,
+    "consumption_kwh_100km": 16.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-75%": 150.0,
+      "75-90%": 85.0,
+      "90-100%": 30.0
+    },
+    "range_reference_km": 520.0,
+    "source": "BYD Blade Spec (650 km NEDC)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "Seal Performance AWD (82.56 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 82.56,
+    "usable_battery_capacity_kwh": 79.0,
+    "consumption_kwh_100km": 17.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-75%": 150.0,
+      "75-90%": 85.0,
+      "90-100%": 30.0
+    },
+    "range_reference_km": 480.0,
+    "source": "BYD Blade Spec (580 km NEDC)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "eMax 7 Premium (51.5 kWh 6-Seater)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 51.5,
+    "usable_battery_capacity_kwh": 49.0,
+    "consumption_kwh_100km": 16.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.0,
+    "max_dc_power_kw": 89.0,
+    "charging_curve": {
+      "0-80%": 89.0,
+      "80-100%": 28.0
+    },
+    "range_reference_km": 330.0,
+    "source": "BYD MPV Spec (420 km NEDC)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "eMax 7 Superior (71.8 kWh 7-Seater)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 71.8,
+    "usable_battery_capacity_kwh": 68.0,
+    "consumption_kwh_100km": 16.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.0,
+    "max_dc_power_kw": 115.0,
+    "charging_curve": {
+      "0-80%": 115.0,
+      "80-100%": 35.0
+    },
+    "range_reference_km": 420.0,
+    "source": "BYD MPV Spec (530 km NEDC)"
+  },
+  {
+    "manufacturer": "BYD",
+    "model": "e6 MPV (Commercial Fleet 71.7 kWh)",
+    "model_year": 2023,
+    "battery_capacity_kwh": 71.7,
+    "usable_battery_capacity_kwh": 68.0,
+    "consumption_kwh_100km": 17.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 6.6,
+    "max_dc_power_kw": 60.0,
+    "charging_curve": {
+      "0-80%": 60.0,
+      "80-100%": 25.0
+    },
+    "range_reference_km": 415.0,
+    "source": "BYD Blade Spec (520 km WLTC)"
+  },
+  {
+    "manufacturer": "Hyundai",
+    "model": "Kona Electric Premium",
+    "model_year": 2023,
+    "battery_capacity_kwh": 39.2,
+    "usable_battery_capacity_kwh": 37.5,
+    "consumption_kwh_100km": 14.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.2,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 18.0
+    },
+    "range_reference_km": 290.0,
+    "source": "Hyundai Spec (452 km ARAI)"
+  },
+  {
+    "manufacturer": "Hyundai",
+    "model": "Ioniq 5 RWD (800V Ultra-Fast)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 72.6,
+    "usable_battery_capacity_kwh": 70.0,
+    "consumption_kwh_100km": 17.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 230.0,
+    "charging_curve": {
+      "0-60%": 230.0,
+      "60-80%": 150.0,
+      "80-90%": 60.0,
+      "90-100%": 25.0
+    },
+    "range_reference_km": 460.0,
+    "source": "Hyundai E-GMP Spec (631 km ARAI)"
+  },
+  {
+    "manufacturer": "Hyundai",
+    "model": "Creta EV Executive (45 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 45.0,
+    "usable_battery_capacity_kwh": 43.0,
+    "consumption_kwh_100km": 15.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 75.0,
+    "charging_curve": {
+      "0-80%": 75.0,
+      "80-100%": 22.0
+    },
+    "range_reference_km": 320.0,
+    "source": "Hyundai Creta EV Spec (420 km ARAI)"
+  },
+  {
+    "manufacturer": "Hyundai",
+    "model": "Creta EV Long Range (51.4 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 51.4,
+    "usable_battery_capacity_kwh": 49.0,
+    "consumption_kwh_100km": 15.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 100.0,
+    "charging_curve": {
+      "0-80%": 100.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 370.0,
+    "source": "Hyundai Creta EV Spec (475 km ARAI)"
+  },
+  {
+    "manufacturer": "Hyundai",
+    "model": "Inster EV Urban Commuter",
+    "model_year": 2025,
+    "battery_capacity_kwh": 42.0,
+    "usable_battery_capacity_kwh": 40.0,
+    "consumption_kwh_100km": 13.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 85.0,
+    "charging_curve": {
+      "0-80%": 85.0,
+      "80-100%": 25.0
+    },
+    "range_reference_km": 280.0,
+    "source": "Hyundai Inster Spec (355 km WLTP)"
+  },
+  {
+    "manufacturer": "Kia",
+    "model": "EV6 GT-Line RWD",
+    "model_year": 2024,
+    "battery_capacity_kwh": 77.4,
+    "usable_battery_capacity_kwh": 74.0,
+    "consumption_kwh_100km": 16.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 240.0,
+    "charging_curve": {
+      "0-60%": 240.0,
+      "60-80%": 160.0,
+      "80-90%": 65.0,
+      "90-100%": 25.0
+    },
+    "range_reference_km": 500.0,
+    "source": "Kia E-GMP Spec (708 km ARAI)"
+  },
+  {
+    "manufacturer": "Kia",
+    "model": "EV6 GT-Line AWD",
+    "model_year": 2024,
+    "battery_capacity_kwh": 77.4,
+    "usable_battery_capacity_kwh": 74.0,
+    "consumption_kwh_100km": 17.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 240.0,
+    "charging_curve": {
+      "0-60%": 240.0,
+      "60-80%": 160.0,
+      "80-90%": 65.0,
+      "90-100%": 25.0
+    },
+    "range_reference_km": 475.0,
+    "source": "Kia E-GMP Spec (680 km ARAI)"
+  },
+  {
+    "manufacturer": "Kia",
+    "model": "EV9 GT-Line AWD (99.8 kWh 6-Seater)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 99.8,
+    "usable_battery_capacity_kwh": 95.0,
+    "consumption_kwh_100km": 21.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 240.0,
+    "charging_curve": {
+      "0-60%": 240.0,
+      "60-80%": 160.0,
+      "80-90%": 65.0,
+      "90-100%": 25.0
+    },
+    "range_reference_km": 485.0,
+    "source": "Kia Flagship Spec (561 km WLTP)"
+  },
+  {
+    "manufacturer": "Kia",
+    "model": "EV3 Long Range",
+    "model_year": 2025,
+    "battery_capacity_kwh": 81.4,
+    "usable_battery_capacity_kwh": 78.0,
+    "consumption_kwh_100km": 15.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 128.0,
+    "charging_curve": {
+      "0-70%": 128.0,
+      "70-85%": 80.0,
+      "85-100%": 25.0
+    },
+    "range_reference_km": 490.0,
+    "source": "Kia EV3 Spec (605 km WLTP)"
+  },
+  {
+    "manufacturer": "Citro\u00ebn",
+    "model": "\u00eb-C3 Live",
+    "model_year": 2024,
+    "battery_capacity_kwh": 29.2,
+    "usable_battery_capacity_kwh": 27.5,
+    "consumption_kwh_100km": 13.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 30.0,
+    "charging_curve": {
+      "0-80%": 30.0,
+      "80-100%": 10.0
+    },
+    "range_reference_km": 220.0,
+    "source": "Citro\u00ebn Spec (320 km MIDC)"
+  },
+  {
+    "manufacturer": "Citro\u00ebn",
+    "model": "\u00eb-C3 Feel / Shine",
+    "model_year": 2024,
+    "battery_capacity_kwh": 29.2,
+    "usable_battery_capacity_kwh": 27.5,
+    "consumption_kwh_100km": 13.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 30.0,
+    "charging_curve": {
+      "0-80%": 30.0,
+      "80-100%": 10.0
+    },
+    "range_reference_km": 225.0,
+    "source": "Citro\u00ebn Spec (320 km MIDC)"
+  },
+  {
+    "manufacturer": "Citro\u00ebn",
+    "model": "Basalt EV Coup\u00e9 SUV",
+    "model_year": 2025,
+    "battery_capacity_kwh": 35.0,
+    "usable_battery_capacity_kwh": 33.0,
+    "consumption_kwh_100km": 14.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 45.0,
+    "charging_curve": {
+      "0-80%": 45.0,
+      "80-100%": 15.0
+    },
+    "range_reference_km": 265.0,
+    "source": "Citro\u00ebn India Spec (360 km MIDC)"
+  },
+  {
+    "manufacturer": "Maruti Suzuki",
+    "model": "e Vitara (eVX) 2WD (49 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 49.0,
+    "usable_battery_capacity_kwh": 47.0,
+    "consumption_kwh_100km": 15.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 7.4,
+    "max_dc_power_kw": 70.0,
+    "charging_curve": {
+      "0-80%": 70.0,
+      "80-100%": 25.0
+    },
+    "range_reference_km": 330.0,
+    "source": "Maruti Suzuki Global Premiere Spec (400 km ARAI)"
+  },
+  {
+    "manufacturer": "Maruti Suzuki",
+    "model": "e Vitara (eVX) ALLGRIP-e AWD (61 kWh)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 61.0,
+    "usable_battery_capacity_kwh": 58.5,
+    "consumption_kwh_100km": 16.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 90.0,
+    "charging_curve": {
+      "0-80%": 90.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 395.0,
+    "source": "Maruti Suzuki Global Premiere Spec (500 km ARAI)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "iX1 eDrive20",
+    "model_year": 2024,
+    "battery_capacity_kwh": 64.7,
+    "usable_battery_capacity_kwh": 62.0,
+    "consumption_kwh_100km": 16.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 130.0,
+    "charging_curve": {
+      "0-70%": 130.0,
+      "70-85%": 80.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 380.0,
+    "source": "BMW India Spec (475 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "iX1 xDrive30 M Sport",
+    "model_year": 2024,
+    "battery_capacity_kwh": 66.5,
+    "usable_battery_capacity_kwh": 64.7,
+    "consumption_kwh_100km": 17.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 130.0,
+    "charging_curve": {
+      "0-70%": 130.0,
+      "70-85%": 80.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 365.0,
+    "source": "BMW India Spec (440 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "i4 eDrive40 Gran Coup\u00e9",
+    "model_year": 2024,
+    "battery_capacity_kwh": 83.9,
+    "usable_battery_capacity_kwh": 80.7,
+    "consumption_kwh_100km": 17.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 205.0,
+    "charging_curve": {
+      "0-50%": 205.0,
+      "50-70%": 135.0,
+      "70-85%": 75.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 480.0,
+    "source": "BMW India Spec (590 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "i4 M50 xDrive",
+    "model_year": 2024,
+    "battery_capacity_kwh": 83.9,
+    "usable_battery_capacity_kwh": 80.7,
+    "consumption_kwh_100km": 19.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 205.0,
+    "charging_curve": {
+      "0-50%": 205.0,
+      "50-70%": 135.0,
+      "70-85%": 75.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 430.0,
+    "source": "BMW India Spec (521 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "i5 M60 xDrive Sedan",
+    "model_year": 2024,
+    "battery_capacity_kwh": 81.2,
+    "usable_battery_capacity_kwh": 78.0,
+    "consumption_kwh_100km": 19.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 205.0,
+    "charging_curve": {
+      "0-60%": 205.0,
+      "60-80%": 125.0,
+      "80-100%": 35.0
+    },
+    "range_reference_km": 425.0,
+    "source": "BMW India Spec (516 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "i7 xDrive60",
+    "model_year": 2024,
+    "battery_capacity_kwh": 101.7,
+    "usable_battery_capacity_kwh": 98.0,
+    "consumption_kwh_100km": 20.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 195.0,
+    "charging_curve": {
+      "0-60%": 195.0,
+      "60-80%": 120.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 510.0,
+    "source": "BMW India Spec (625 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "i7 M70 xDrive",
+    "model_year": 2024,
+    "battery_capacity_kwh": 101.7,
+    "usable_battery_capacity_kwh": 98.0,
+    "consumption_kwh_100km": 22.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 195.0,
+    "charging_curve": {
+      "0-60%": 195.0,
+      "60-80%": 120.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 470.0,
+    "source": "BMW India Spec (560 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "iX xDrive40",
+    "model_year": 2024,
+    "battery_capacity_kwh": 76.6,
+    "usable_battery_capacity_kwh": 71.0,
+    "consumption_kwh_100km": 21.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-70%": 150.0,
+      "70-85%": 90.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 340.0,
+    "source": "BMW India Spec (425 km WLTP)"
+  },
+  {
+    "manufacturer": "BMW",
+    "model": "iX xDrive50",
+    "model_year": 2024,
+    "battery_capacity_kwh": 111.5,
+    "usable_battery_capacity_kwh": 105.2,
+    "consumption_kwh_100km": 21.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 195.0,
+    "charging_curve": {
+      "0-65%": 195.0,
+      "65-80%": 125.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 510.0,
+    "source": "BMW India Spec (630 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQA 250+",
+    "model_year": 2024,
+    "battery_capacity_kwh": 70.5,
+    "usable_battery_capacity_kwh": 66.5,
+    "consumption_kwh_100km": 16.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 100.0,
+    "charging_curve": {
+      "0-80%": 100.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 440.0,
+    "source": "Mercedes-Benz Spec (560 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQB 250+ (7-Seater)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 70.5,
+    "usable_battery_capacity_kwh": 66.5,
+    "consumption_kwh_100km": 17.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 100.0,
+    "charging_curve": {
+      "0-80%": 100.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 425.0,
+    "source": "Mercedes-Benz Spec (535 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQB 350 4MATIC",
+    "model_year": 2024,
+    "battery_capacity_kwh": 66.5,
+    "usable_battery_capacity_kwh": 64.0,
+    "consumption_kwh_100km": 18.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 100.0,
+    "charging_curve": {
+      "0-80%": 100.0,
+      "80-100%": 30.0
+    },
+    "range_reference_km": 350.0,
+    "source": "Mercedes-Benz Spec (423 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQE 350+ SUV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 90.6,
+    "usable_battery_capacity_kwh": 86.0,
+    "consumption_kwh_100km": 19.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 170.0,
+    "charging_curve": {
+      "0-70%": 170.0,
+      "70-85%": 110.0,
+      "85-100%": 35.0
+    },
+    "range_reference_km": 480.0,
+    "source": "Mercedes-Benz Spec (590 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQE 500 4MATIC SUV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 90.6,
+    "usable_battery_capacity_kwh": 86.0,
+    "consumption_kwh_100km": 20.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 170.0,
+    "charging_curve": {
+      "0-70%": 170.0,
+      "70-85%": 110.0,
+      "85-100%": 35.0
+    },
+    "range_reference_km": 460.0,
+    "source": "Mercedes-Benz Spec (550 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQS 450+ Sedan",
+    "model_year": 2024,
+    "battery_capacity_kwh": 107.8,
+    "usable_battery_capacity_kwh": 104.0,
+    "consumption_kwh_100km": 18.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 200.0,
+    "charging_curve": {
+      "0-65%": 200.0,
+      "65-80%": 135.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 630.0,
+    "source": "Mercedes-Benz Spec (784 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQS 580 4MATIC Sedan",
+    "model_year": 2024,
+    "battery_capacity_kwh": 107.8,
+    "usable_battery_capacity_kwh": 104.0,
+    "consumption_kwh_100km": 18.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 200.0,
+    "charging_curve": {
+      "0-65%": 200.0,
+      "65-80%": 135.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 620.0,
+    "source": "Mercedes-Benz Spec (857 km ARAI Made-in-India)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "EQS 450 4MATIC SUV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 108.4,
+    "usable_battery_capacity_kwh": 104.0,
+    "consumption_kwh_100km": 21.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 200.0,
+    "charging_curve": {
+      "0-65%": 200.0,
+      "65-80%": 135.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 500.0,
+    "source": "Mercedes-Benz Spec (616 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "Maybach EQS 680 SUV",
+    "model_year": 2025,
+    "battery_capacity_kwh": 118.0,
+    "usable_battery_capacity_kwh": 112.0,
+    "consumption_kwh_100km": 23.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 200.0,
+    "charging_curve": {
+      "0-65%": 200.0,
+      "65-80%": 135.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 490.0,
+    "source": "Mercedes-Maybach Spec (600 km WLTP)"
+  },
+  {
+    "manufacturer": "Mercedes-Benz",
+    "model": "G 580 with EQ Technology (Electric G-Wagon)",
+    "model_year": 2025,
+    "battery_capacity_kwh": 116.0,
+    "usable_battery_capacity_kwh": 110.0,
+    "consumption_kwh_100km": 27.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 200.0,
+    "charging_curve": {
+      "0-65%": 200.0,
+      "65-80%": 130.0,
+      "80-100%": 35.0
+    },
+    "range_reference_km": 380.0,
+    "source": "Mercedes-Benz G-Class Spec (473 km WLTP)"
+  },
+  {
+    "manufacturer": "Volvo",
+    "model": "EX40 Plus RWD",
+    "model_year": 2024,
+    "battery_capacity_kwh": 69.0,
+    "usable_battery_capacity_kwh": 66.0,
+    "consumption_kwh_100km": 17.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 135.0,
+    "charging_curve": {
+      "0-70%": 135.0,
+      "70-85%": 80.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 385.0,
+    "source": "Volvo Cars Spec (475 km WLTP)"
+  },
+  {
+    "manufacturer": "Volvo",
+    "model": "EX40 Ultimate Twin AWD",
+    "model_year": 2024,
+    "battery_capacity_kwh": 78.0,
+    "usable_battery_capacity_kwh": 75.0,
+    "consumption_kwh_100km": 18.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-70%": 150.0,
+      "70-85%": 85.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 415.0,
+    "source": "Volvo Cars Spec (530 km WLTP)"
+  },
+  {
+    "manufacturer": "Volvo",
+    "model": "C40 Recharge Twin AWD",
+    "model_year": 2024,
+    "battery_capacity_kwh": 78.0,
+    "usable_battery_capacity_kwh": 75.0,
+    "consumption_kwh_100km": 18.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-70%": 150.0,
+      "70-85%": 85.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 420.0,
+    "source": "Volvo Cars Spec (530 km WLTP)"
+  },
+  {
+    "manufacturer": "Volvo",
+    "model": "EX30 Single Motor Extended Range",
+    "model_year": 2025,
+    "battery_capacity_kwh": 69.0,
+    "usable_battery_capacity_kwh": 64.0,
+    "consumption_kwh_100km": 16.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 153.0,
+    "charging_curve": {
+      "0-70%": 153.0,
+      "70-85%": 90.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 380.0,
+    "source": "Volvo Cars Spec (476 km WLTP)"
+  },
+  {
+    "manufacturer": "Volvo",
+    "model": "EX30 Twin Motor Performance AWD",
+    "model_year": 2025,
+    "battery_capacity_kwh": 69.0,
+    "usable_battery_capacity_kwh": 64.0,
+    "consumption_kwh_100km": 17.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 153.0,
+    "charging_curve": {
+      "0-70%": 153.0,
+      "70-85%": 90.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 365.0,
+    "source": "Volvo Cars Spec (450 km WLTP)"
+  },
+  {
+    "manufacturer": "Volvo",
+    "model": "EM90 Luxury MPV",
+    "model_year": 2025,
+    "battery_capacity_kwh": 116.0,
+    "usable_battery_capacity_kwh": 110.0,
+    "consumption_kwh_100km": 20.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 180.0,
+    "charging_curve": {
+      "0-70%": 180.0,
+      "70-85%": 110.0,
+      "85-100%": 35.0
+    },
+    "range_reference_km": 540.0,
+    "source": "Volvo Cars Spec (738 km CLTC)"
+  },
+  {
+    "manufacturer": "Audi",
+    "model": "Q8 50 e-tron",
+    "model_year": 2024,
+    "battery_capacity_kwh": 89.0,
+    "usable_battery_capacity_kwh": 84.0,
+    "consumption_kwh_100km": 21.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-70%": 150.0,
+      "70-85%": 95.0,
+      "85-100%": 35.0
+    },
+    "range_reference_km": 390.0,
+    "source": "Audi India Spec (491 km WLTP)"
+  },
+  {
+    "manufacturer": "Audi",
+    "model": "Q8 55 e-tron",
+    "model_year": 2024,
+    "battery_capacity_kwh": 114.0,
+    "usable_battery_capacity_kwh": 106.0,
+    "consumption_kwh_100km": 22.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 170.0,
+    "charging_curve": {
+      "0-70%": 170.0,
+      "70-85%": 115.0,
+      "85-100%": 40.0
+    },
+    "range_reference_km": 470.0,
+    "source": "Audi India Spec (582 km WLTP)"
+  },
+  {
+    "manufacturer": "Audi",
+    "model": "Q8 Sportback 55 e-tron",
+    "model_year": 2024,
+    "battery_capacity_kwh": 114.0,
+    "usable_battery_capacity_kwh": 106.0,
+    "consumption_kwh_100km": 21.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 170.0,
+    "charging_curve": {
+      "0-70%": 170.0,
+      "70-85%": 115.0,
+      "85-100%": 40.0
+    },
+    "range_reference_km": 485.0,
+    "source": "Audi India Spec (600 km WLTP)"
+  },
+  {
+    "manufacturer": "Audi",
+    "model": "e-tron GT quattro",
+    "model_year": 2024,
+    "battery_capacity_kwh": 93.4,
+    "usable_battery_capacity_kwh": 85.0,
+    "consumption_kwh_100km": 20.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 270.0,
+    "charging_curve": {
+      "0-60%": 270.0,
+      "60-80%": 170.0,
+      "80-100%": 45.0
+    },
+    "range_reference_km": 410.0,
+    "source": "Audi India Spec (500 km WLTP)"
+  },
+  {
+    "manufacturer": "Audi",
+    "model": "RS e-tron GT",
+    "model_year": 2024,
+    "battery_capacity_kwh": 93.4,
+    "usable_battery_capacity_kwh": 85.0,
+    "consumption_kwh_100km": 21.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 270.0,
+    "charging_curve": {
+      "0-60%": 270.0,
+      "60-80%": 170.0,
+      "80-100%": 45.0
+    },
+    "range_reference_km": 395.0,
+    "source": "Audi India Spec (472 km WLTP)"
+  },
+  {
+    "manufacturer": "Porsche",
+    "model": "Taycan RWD (Performance Battery Plus)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 89.0,
+    "usable_battery_capacity_kwh": 82.3,
+    "consumption_kwh_100km": 19.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 270.0,
+    "charging_curve": {
+      "0-60%": 270.0,
+      "60-80%": 175.0,
+      "80-100%": 45.0
+    },
+    "range_reference_km": 420.0,
+    "source": "Porsche India Spec (503 km WLTP)"
+  },
+  {
+    "manufacturer": "Porsche",
+    "model": "Taycan 4S",
+    "model_year": 2025,
+    "battery_capacity_kwh": 105.0,
+    "usable_battery_capacity_kwh": 97.0,
+    "consumption_kwh_100km": 19.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 320.0,
+    "charging_curve": {
+      "0-60%": 320.0,
+      "60-80%": 200.0,
+      "80-100%": 50.0
+    },
+    "range_reference_km": 510.0,
+    "source": "Porsche India Spec (642 km WLTP)"
+  },
+  {
+    "manufacturer": "Porsche",
+    "model": "Taycan Turbo S",
+    "model_year": 2025,
+    "battery_capacity_kwh": 105.0,
+    "usable_battery_capacity_kwh": 97.0,
+    "consumption_kwh_100km": 20.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 320.0,
+    "charging_curve": {
+      "0-60%": 320.0,
+      "60-80%": 200.0,
+      "80-100%": 50.0
+    },
+    "range_reference_km": 490.0,
+    "source": "Porsche India Spec (630 km WLTP)"
+  },
+  {
+    "manufacturer": "Porsche",
+    "model": "Macan 4 Electric",
+    "model_year": 2024,
+    "battery_capacity_kwh": 100.0,
+    "usable_battery_capacity_kwh": 95.0,
+    "consumption_kwh_100km": 20.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 270.0,
+    "charging_curve": {
+      "0-60%": 270.0,
+      "60-80%": 175.0,
+      "80-100%": 45.0
+    },
+    "range_reference_km": 485.0,
+    "source": "Porsche India Spec (613 km WLTP)"
+  },
+  {
+    "manufacturer": "Porsche",
+    "model": "Macan Turbo Electric",
+    "model_year": 2024,
+    "battery_capacity_kwh": 100.0,
+    "usable_battery_capacity_kwh": 95.0,
+    "consumption_kwh_100km": 21.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 270.0,
+    "charging_curve": {
+      "0-60%": 270.0,
+      "60-80%": 175.0,
+      "80-100%": 45.0
+    },
+    "range_reference_km": 465.0,
+    "source": "Porsche India Spec (591 km WLTP)"
+  },
+  {
+    "manufacturer": "Mini",
+    "model": "Cooper SE (3-Door)",
+    "model_year": 2023,
+    "battery_capacity_kwh": 32.6,
+    "usable_battery_capacity_kwh": 28.9,
+    "consumption_kwh_100km": 15.8,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 50.0,
+    "charging_curve": {
+      "0-80%": 50.0,
+      "80-100%": 15.0
+    },
+    "range_reference_km": 180.0,
+    "source": "Mini India Spec (270 km WLTP)"
+  },
+  {
+    "manufacturer": "Mini",
+    "model": "Cooper SE (New Gen 54.2 kWh)",
+    "model_year": 2024,
+    "battery_capacity_kwh": 54.2,
+    "usable_battery_capacity_kwh": 49.2,
+    "consumption_kwh_100km": 15.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 95.0,
+    "charging_curve": {
+      "0-80%": 95.0,
+      "80-100%": 25.0
+    },
+    "range_reference_km": 310.0,
+    "source": "Mini India Spec (402 km WLTP)"
+  },
+  {
+    "manufacturer": "Mini",
+    "model": "Countryman SE ALL4",
+    "model_year": 2024,
+    "battery_capacity_kwh": 66.5,
+    "usable_battery_capacity_kwh": 64.7,
+    "consumption_kwh_100km": 18.2,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 130.0,
+    "charging_curve": {
+      "0-70%": 130.0,
+      "70-85%": 80.0,
+      "85-100%": 30.0
+    },
+    "range_reference_km": 345.0,
+    "source": "Mini India Spec (433 km WLTP)"
+  },
+  {
+    "manufacturer": "Rolls-Royce",
+    "model": "Spectre Ultra-Luxury Coup\u00e9",
+    "model_year": 2024,
+    "battery_capacity_kwh": 102.0,
+    "usable_battery_capacity_kwh": 96.0,
+    "consumption_kwh_100km": 23.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 195.0,
+    "charging_curve": {
+      "0-65%": 195.0,
+      "65-80%": 125.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 430.0,
+    "source": "Rolls-Royce Motor Cars Spec (530 km WLTP)"
+  },
+  {
+    "manufacturer": "Lotus",
+    "model": "Eletre S Hyper-SUV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 112.0,
+    "usable_battery_capacity_kwh": 109.0,
+    "consumption_kwh_100km": 22.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 350.0,
+    "charging_curve": {
+      "0-60%": 350.0,
+      "60-80%": 220.0,
+      "80-100%": 55.0
+    },
+    "range_reference_km": 480.0,
+    "source": "Lotus Cars Spec (600 km WLTP)"
+  },
+  {
+    "manufacturer": "Lotus",
+    "model": "Eletre R Hyper-SUV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 112.0,
+    "usable_battery_capacity_kwh": 109.0,
+    "consumption_kwh_100km": 25.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 350.0,
+    "charging_curve": {
+      "0-60%": 350.0,
+      "60-80%": 220.0,
+      "80-100%": 55.0
+    },
+    "range_reference_km": 400.0,
+    "source": "Lotus Cars Spec (490 km WLTP)"
+  },
+  {
+    "manufacturer": "Lotus",
+    "model": "Emeya Hyper-GT",
+    "model_year": 2025,
+    "battery_capacity_kwh": 102.0,
+    "usable_battery_capacity_kwh": 99.0,
+    "consumption_kwh_100km": 20.5,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 22.0,
+    "max_dc_power_kw": 350.0,
+    "charging_curve": {
+      "0-60%": 350.0,
+      "60-80%": 220.0,
+      "80-100%": 55.0
+    },
+    "range_reference_km": 490.0,
+    "source": "Lotus Cars Spec (610 km WLTP)"
+  },
+  {
+    "manufacturer": "Strom",
+    "model": "Motors R3 (Urban Personal EV)",
+    "model_year": 2023,
+    "battery_capacity_kwh": 13.0,
+    "usable_battery_capacity_kwh": 12.0,
+    "consumption_kwh_100km": 8.0,
+    "connector_types": [
+      "Type 2"
+    ],
+    "max_ac_power_kw": 3.3,
+    "max_dc_power_kw": 10.0,
+    "charging_curve": {
+      "0-80%": 10.0,
+      "80-100%": 3.0
+    },
+    "range_reference_km": 150.0,
+    "source": "Strom Motors Spec (200 km ARAI)"
+  },
+  {
+    "manufacturer": "Pravaig",
+    "model": "Defy Cyber SUV",
+    "model_year": 2024,
+    "battery_capacity_kwh": 90.9,
+    "usable_battery_capacity_kwh": 86.0,
+    "consumption_kwh_100km": 20.0,
+    "connector_types": [
+      "CCS2",
+      "Type 2"
+    ],
+    "max_ac_power_kw": 11.0,
+    "max_dc_power_kw": 150.0,
+    "charging_curve": {
+      "0-80%": 150.0,
+      "80-100%": 40.0
+    },
+    "range_reference_km": 420.0,
+    "source": "Pravaig Dynamics Spec (504 km ARAI)"
+  }
+]

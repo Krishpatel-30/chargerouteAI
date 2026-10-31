@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from sqlalchemy.orm import selectinload
 
 from app.core.database import get_db
@@ -21,11 +21,20 @@ router = APIRouter()
 @router.get("", response_model=List[VehicleModelResponse])
 async def list_vehicles(
     manufacturer: Optional[str] = None,
+    search: Optional[str] = None,
     db: AsyncSession = Depends(get_db),
 ):
     stmt = select(VehicleModel)
     if manufacturer:
         stmt = stmt.where(VehicleModel.manufacturer.ilike(f"%{manufacturer}%"))
+    if search:
+        search_pattern = f"%{search.strip()}%"
+        stmt = stmt.where(
+            or_(
+                VehicleModel.manufacturer.ilike(search_pattern),
+                VehicleModel.model.ilike(search_pattern),
+            )
+        )
     stmt = stmt.order_by(VehicleModel.manufacturer.asc(), VehicleModel.model.asc())
     res = await db.execute(stmt)
     vehicles = res.scalars().all()

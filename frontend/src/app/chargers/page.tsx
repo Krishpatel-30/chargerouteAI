@@ -6,6 +6,7 @@ import { api } from "@/lib/api";
 import { ChargingStation } from "@/lib/types";
 import { getRiskColorClass, getStatusBadgeClass } from "@/lib/utils";
 import { RouteMap } from "@/components/map/RouteMap";
+import { AuthGate } from "@/components/auth/AuthGate";
 import {
   Search,
   Filter,
@@ -19,12 +20,25 @@ import {
 } from "lucide-react";
 
 export default function ChargersPage() {
+  return (
+    <AuthGate
+      featureTitle="Pan-India EV Charging Stations Directory"
+      featureDescription="Sign in to explore 269+ verified highway & city charging hubs, live tariffs, and backup stations."
+      redirectUrl="/chargers"
+    >
+      <ChargersContent />
+    </AuthGate>
+  );
+}
+
+function ChargersContent() {
   const [chargers, setChargers] = useState<ChargingStation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [operator, setOperator] = useState("");
   const [connectorType, setConnectorType] = useState("");
   const [city, setCity] = useState("");
+  const [hubType, setHubType] = useState<"all" | "city" | "highway">("all");
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
 
   const loadChargers = async () => {
@@ -35,7 +49,7 @@ export default function ChargersPage() {
         operator: operator || undefined,
         connector_type: connectorType || undefined,
         city: city || undefined,
-        limit: 100,
+        limit: 500,
       });
       setChargers(data);
     } catch (err) {
@@ -54,6 +68,43 @@ export default function ChargersPage() {
     loadChargers();
   };
 
+  // Dynamically extract sorted list of unique cities across India
+  const availableCities = React.useMemo(() => {
+    const set = new Set<string>();
+    chargers.forEach((c) => {
+      if (c.city) set.add(c.city);
+    });
+    return Array.from(set).sort();
+  }, [chargers]);
+
+  // Filter by Hub Type (City vs Highway)
+  const filteredChargers = React.useMemo(() => {
+    if (hubType === "all") return chargers;
+    if (hubType === "city") {
+      return chargers.filter(
+        (c) =>
+          c.source_provider?.toLowerCase().includes("city") ||
+          c.access_restrictions?.toLowerCase().includes("mall") ||
+          c.access_restrictions?.toLowerCase().includes("parking") ||
+          c.access_restrictions?.toLowerCase().includes("hub") ||
+          c.address?.toLowerCase().includes("mall") ||
+          c.address?.toLowerCase().includes("park") ||
+          c.address?.toLowerCase().includes("road")
+      );
+    } else {
+      return chargers.filter(
+        (c) =>
+          c.source_provider?.toLowerCase().includes("corridor") ||
+          c.name?.toLowerCase().includes("expressway") ||
+          c.name?.toLowerCase().includes("highway") ||
+          c.address?.toLowerCase().includes("nh-") ||
+          c.address?.toLowerCase().includes("expressway") ||
+          c.address?.toLowerCase().includes("ne-1") ||
+          c.address?.toLowerCase().includes("toll")
+      );
+    }
+  }, [chargers, hubType]);
+
   return (
     <div className="flex-1 bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto space-y-6">
@@ -64,7 +115,7 @@ export default function ChargersPage() {
               Charging Station Discovery
             </h1>
             <p className="text-sm text-slate-600 mt-1">
-              Explore verified EV charging stations along Gujarat highway corridors and urban hubs.
+              Explore verified EV charging stations along Indian national expressways, highway corridors and urban hubs.
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -112,6 +163,29 @@ export default function ChargersPage() {
             </button>
           </form>
 
+          {/* Hub Type Quick Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider mr-1">Network Filter:</span>
+            {[
+              { id: "all", label: "All Network", icon: "⚡" },
+              { id: "city", label: "🏙️ City Charging Hubs (Malls, Metros & IT Parks)", icon: "" },
+              { id: "highway", label: "🛣️ National Expressways & Highways", icon: "" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setHubType(tab.id as any)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold transition-all border ${
+                  hubType === tab.id
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-300 shadow-2xs font-bold"
+                    : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-slate-100 text-xs">
             <select
               value={operator}
@@ -141,19 +215,14 @@ export default function ChargersPage() {
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 font-medium"
+              className="px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 font-medium max-w-full"
             >
-              <option value="">All Gujarat Cities</option>
-              <option value="Ahmedabad">Ahmedabad</option>
-              <option value="Vadodara">Vadodara</option>
-              <option value="Surat">Surat</option>
-              <option value="Rajkot">Rajkot</option>
-              <option value="Anand">Anand / NE1</option>
-              <option value="Nadiad">Nadiad</option>
-              <option value="Bharuch">Bharuch</option>
-              <option value="Gandhinagar">Gandhinagar</option>
-              <option value="Mehsana">Mehsana</option>
-              <option value="Somnath">Somnath</option>
+              <option value="">All Indian Cities &amp; Hubs ({chargers.length} stations)</option>
+              {availableCities.map((cityName) => (
+                <option key={cityName} value={cityName}>
+                  {cityName}
+                </option>
+              ))}
             </select>
 
             <button
@@ -163,6 +232,7 @@ export default function ChargersPage() {
                 setOperator("");
                 setConnectorType("");
                 setCity("");
+                setHubType("all");
                 loadChargers();
               }}
               className="px-2.5 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 font-medium text-center"
@@ -180,19 +250,19 @@ export default function ChargersPage() {
           </div>
         ) : viewMode === "map" ? (
           <div className="space-y-4">
-            <RouteMap allChargers={chargers} className="w-full h-[580px]" />
+            <RouteMap allChargers={filteredChargers} className="w-full h-[580px]" />
             <p className="text-xs text-slate-500 text-center">
-              Displaying {chargers.length} charging stations. Click any stall marker to inspect live details and risk ratings.
+              Displaying {filteredChargers.length} charging stations. Click any stall marker to inspect live details and risk ratings.
             </p>
           </div>
         ) : (
           <div className="space-y-4">
             <div className="flex justify-between items-center text-xs text-slate-500 font-medium">
-              <span>Found <strong>{chargers.length}</strong> stations matching filters</span>
+              <span>Found <strong>{filteredChargers.length}</strong> stations matching filters</span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {chargers.map((st) => {
+              {filteredChargers.map((st) => {
                 const risk = st.risk_assessment;
                 const riskColor = risk ? getRiskColorClass(risk.category) : null;
                 const statusBadge = getStatusBadgeClass(st.live_status);

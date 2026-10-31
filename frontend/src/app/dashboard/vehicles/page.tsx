@@ -4,9 +4,22 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { VehicleModel } from "@/lib/types";
+import { AuthGate } from "@/components/auth/AuthGate";
 import { Car, ArrowLeft, PlusCircle, Battery, Zap } from "lucide-react";
 
 export default function UserGaragePage() {
+  return (
+    <AuthGate
+      featureTitle="Driver Vehicle Garage"
+      featureDescription="Sign in to calibrate your primary vehicle, battery degradation, and AC load multipliers."
+      redirectUrl="/dashboard/vehicles"
+    >
+      <UserGarageContent />
+    </AuthGate>
+  );
+}
+
+function UserGarageContent() {
   const [vehicles, setVehicles] = useState<VehicleModel[]>([]);
   const [activeCarId, setActiveCarId] = useState<string>("seed_nexon");
   const [customMultiplier, setCustomMultiplier] = useState(1.0);

@@ -12,7 +12,7 @@ class VehicleModelBase(BaseModel):
     consumption_kwh_100km: float = Field(..., gt=0, json_schema_extra={"example": 15.5})
     connector_types: List[str] = Field(default_factory=lambda: ["CCS2", "Type 2"])
     max_ac_power_kw: float = Field(7.2, gt=0)
-    max_dc_power_kw: float = Field(50.0, gt=0)
+    max_dc_power_kw: float = Field(50.0, ge=0.0)
     charging_curve: Optional[Dict[str, Any]] = None
     range_reference_km: float = Field(..., gt=0, json_schema_extra={"example": 320.0})
     source: str = Field("Manufacturer official specifications")

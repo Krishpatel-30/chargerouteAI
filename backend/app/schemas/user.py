@@ -17,6 +17,14 @@ class UserLogin(BaseModel):
     password: str
 
 
+class GoogleAuthRequest(BaseModel):
+    id_token: Optional[str] = None
+    email: EmailStr
+    full_name: Optional[str] = None
+    google_id: Optional[str] = None
+    avatar_url: Optional[str] = None
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"

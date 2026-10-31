@@ -1,8 +1,23 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { AuthGate } from "@/components/auth/AuthGate";
 import { ShieldCheck, BatteryCharging, Zap, Route, AlertTriangle, ArrowRight } from "lucide-react";
 
 export default function HowItWorksPage() {
+  return (
+    <AuthGate
+      featureTitle="Risk Engine & Methodology Architecture"
+      featureDescription="Sign in to view how ChargeRoute AI calculates highway physics, AC load models, and deterministic reliability scoring."
+      redirectUrl="/how-it-works"
+    >
+      <HowItWorksContent />
+    </AuthGate>
+  );
+}
+
+function HowItWorksContent() {
   return (
     <div className="flex-1 bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-10">

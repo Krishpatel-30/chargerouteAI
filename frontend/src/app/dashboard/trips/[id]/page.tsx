@@ -8,12 +8,25 @@ import { RouteMap } from "@/components/map/RouteMap";
 import { ChargingStopCard } from "@/components/planner/ChargingStopCard";
 import { RiskIndicator } from "@/components/planner/RiskIndicator";
 import { formatDistance, formatDuration, formatINR, getRiskColorClass } from "@/lib/utils";
+import { AuthGate } from "@/components/auth/AuthGate";
 import { ArrowLeft, Route, Clock, Zap, Shield, IndianRupee, BatteryWarning, Loader2 } from "lucide-react";
 
 export default function SavedTripDetailPage() {
   const params = useParams();
   const tripId = params.id as string;
 
+  return (
+    <AuthGate
+      featureTitle="Saved Road Trip Details"
+      featureDescription="Sign in to view your itinerary, route geometry, and historical charging stops."
+      redirectUrl={`/dashboard/trips/${tripId}`}
+    >
+      <SavedTripDetailContent tripId={tripId} />
+    </AuthGate>
+  );
+}
+
+function SavedTripDetailContent({ tripId }: { tripId: string }) {
   const [trip, setTrip] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 

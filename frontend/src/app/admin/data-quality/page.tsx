@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { AuthGate } from "@/components/auth/AuthGate";
 import {
   ShieldAlert,
   Server,
@@ -17,6 +18,18 @@ import {
 } from "lucide-react";
 
 export default function AdminDataQualityPage() {
+  return (
+    <AuthGate
+      featureTitle="Data Quality & Telemetry Dashboard"
+      featureDescription="Sign in to view provider pipeline statuses, sync metrics, and data validation reports."
+      redirectUrl="/admin/data-quality"
+    >
+      <AdminDataQualityContent />
+    </AuthGate>
+  );
+}
+
+function AdminDataQualityContent() {
   const [metrics, setMetrics] = useState<any>(null);
   const [providerStatus, setProviderStatus] = useState<any>(null);
   const [reports, setReports] = useState<any[]>([]);

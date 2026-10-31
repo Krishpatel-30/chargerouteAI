@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { ChargingStopDetail, BackupStopCandidate, ChargingStation } from "@/lib/types";
+import { Navigation, ExternalLink } from "lucide-react";
 
 // Fix standard Leaflet default marker icons in webpack / Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -37,26 +38,47 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerGroupRef = useRef<L.LayerGroup | null>(null);
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
+
+  // Build Turn-by-Turn Google Maps Navigation Link
+  const googleMapsNavUrl = useMemo(() => {
+    if (!origin || !destination) return "https://www.google.com/maps";
+
+    const originParam = encodeURIComponent(`${origin.lat},${origin.lng}`);
+    const destParam = encodeURIComponent(`${destination.lat},${destination.lng}`);
+
+    let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving`;
+
+    if (chargingStops && chargingStops.length > 0) {
+      const waypoints = chargingStops.map((s) => `${s.latitude},${s.longitude}`).join("|");
+      url += `&waypoints=${encodeURIComponent(waypoints)}`;
+    }
+
+    return url;
+  }, [origin, destination, chargingStops]);
 
   // Initialize Map once
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
-      // Default centered on central Gujarat (between Ahmedabad and Vadodara)
+      // Default centered on India
       const map = L.map(mapContainerRef.current, {
-        center: [22.65, 72.85],
-        zoom: 8,
+        center: [22.5, 78.5],
+        zoom: 5,
         zoomControl: true,
       });
 
-      // Add high-clarity CartoDB Positron tiles
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
-        maxZoom: 19,
-        subdomains: "abcd",
-      }).addTo(map);
+      // Default to Google Maps Roadmap tiles
+      const googleTileLayer = L.tileLayer(
+        "https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+        {
+          attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>',
+          maxZoom: 20,
+        }
+      );
+      googleTileLayer.addTo(map);
+      tileLayerRef.current = googleTileLayer;
 
       const layerGroup = L.layerGroup().addTo(map);
       layerGroupRef.current = layerGroup;
@@ -113,9 +135,8 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
 
     // 2. Draw route polyline if coordinates available
     if (routeGeometry && routeGeometry.length > 1) {
-      // Invert GeoJSON [lng, lat] to Leaflet [lat, lng]
       const latLngs: [number, number][] = routeGeometry.map((pt) => [pt[1], pt[0]]);
-      
+
       // Shadow casing line
       L.polyline(latLngs, {
         color: "#0f172a",
@@ -124,7 +145,7 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
       }).addTo(layers);
 
       // Primary emerald highway route line
-      const routeLine = L.polyline(latLngs, {
+      L.polyline(latLngs, {
         color: "#059669",
         weight: 4.5,
         opacity: 0.9,
@@ -213,7 +234,7 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
           ${
             stop.primary_backup
               ? `<div class="mt-1.5 text-[10px] text-amber-800 bg-amber-50 p-1.5 rounded border border-amber-200">
-                  Backup: ${stop.primary_backup.name} (+${stop.primary_backup.detour_km} km detour)
+                  🛡️ Primary Backup: ${stop.primary_backup.name} (+${stop.primary_backup.detour_km} km detour)
                 </div>`
               : ""
           }
@@ -258,19 +279,36 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
   return (
     <div className={`relative rounded-xl overflow-hidden shadow-md border border-slate-200/90 ${className}`}>
       <div ref={mapContainerRef} className="w-full h-full" />
+
+      {/* Top Floating Controls: Navigate in Google Maps & Tile Switcher */}
+      <div className="absolute top-3 right-3 z-[400] flex flex-wrap items-center gap-2">
+        {/* Turn-by-Turn Google Maps Navigation Link */}
+        <a
+          href={googleMapsNavUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all flex items-center gap-1.5 hover:scale-102"
+          title="Open complete route with charging stops in Google Maps"
+        >
+          <Navigation className="w-3.5 h-3.5" />
+          <span>Navigate in Google Maps</span>
+          <ExternalLink className="w-3 h-3 opacity-75" />
+        </a>
+      </div>
+
       {/* Map Legend Overlay */}
-      <div className="absolute bottom-3 right-3 z-[400] bg-white/95 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md border border-slate-200 text-[11px] space-y-1.5 font-medium text-slate-700">
+      <div className="absolute bottom-3 right-3 z-[400] bg-white/95 backdrop-blur-xs px-3 py-2 rounded-lg shadow-md border border-slate-200 text-[11px] space-y-1.5 font-medium text-slate-700">
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-slate-900 inline-block" /> Origin / Destination
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded bg-emerald-500 text-[9px] text-white flex items-center justify-center font-bold">⚡</span> Recommended Stop
+          <span className="w-3 h-3 rounded bg-emerald-500 text-[9px] text-white flex items-center justify-center font-bold">⚡</span> Recommended EV Stop
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-3 h-3 rounded bg-amber-500 text-[9px] text-white flex items-center justify-center font-bold">🛡️</span> Backup Option
+          <span className="w-3 h-3 rounded bg-amber-500 text-[9px] text-white flex items-center justify-center font-bold">🛡️</span> Verified Backup Option
         </div>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 border border-white inline-block" /> Gujarat Network Stalls
+          <span className="w-2 h-2 rounded-full bg-emerald-500 border border-white inline-block" /> Pan-India Highway Stalls
         </div>
       </div>
     </div>

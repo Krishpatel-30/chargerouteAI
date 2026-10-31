@@ -9,6 +9,7 @@ import { RiskIndicator } from "@/components/planner/RiskIndicator";
 import { BackupStopCard } from "@/components/planner/BackupStopCard";
 import { RouteMap } from "@/components/map/RouteMap";
 import { getStatusBadgeClass } from "@/lib/utils";
+import { AuthGate } from "@/components/auth/AuthGate";
 import {
   Zap,
   MapPin,
@@ -29,6 +30,18 @@ export default function ChargerDetailPage() {
   const params = useParams();
   const stationId = params.id as string;
 
+  return (
+    <AuthGate
+      featureTitle="Charging Hub Telemetry & Outage Backups"
+      featureDescription="Sign in to view charger gun status, verified tariffs, and nearby backup stations."
+      redirectUrl={`/chargers/${stationId}`}
+    >
+      <ChargerDetailContent stationId={stationId} />
+    </AuthGate>
+  );
+}
+
+function ChargerDetailContent({ stationId }: { stationId: string }) {
   const [station, setStation] = useState<ChargingStation | null>(null);
   const [reports, setReports] = useState<CommunityReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);

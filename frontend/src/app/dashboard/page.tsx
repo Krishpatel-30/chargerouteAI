@@ -2,8 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { formatDistance, formatDuration, formatINR, getRiskColorClass } from "@/lib/utils";
+import { AuthGate } from "@/components/auth/AuthGate";
 import {
   Route,
   Car,
@@ -15,9 +17,23 @@ import {
   ArrowRight,
   ExternalLink,
   Trash2,
+  LogIn,
 } from "lucide-react";
 
 export default function DashboardPage() {
+  return (
+    <AuthGate
+      featureTitle="Driver Dashboard & Saved Trips"
+      featureDescription="Sign in to view your saved trip history, garage vehicles, and charging preferences."
+      redirectUrl="/dashboard"
+    >
+      <DashboardContent />
+    </AuthGate>
+  );
+}
+
+function DashboardContent() {
+  const { user, isAuthenticated } = useAuth();
   const [savedTrips, setSavedTrips] = useState<any[]>([]);
   const [vehicles, setVehicles] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,14 +73,25 @@ export default function DashboardPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Driver Dashboard
+              {isAuthenticated ? `Welcome back, ${user?.full_name || user?.email?.split("@")[0]}!` : "Driver Dashboard"}
             </h1>
             <p className="text-sm text-slate-600 mt-1">
-              Manage your saved highway routes, vehicle garage, and community charger reports.
+              {isAuthenticated
+                ? `Signed in as ${user?.email}. Your trips and vehicles are synced to your account.`
+                : "Manage your saved highway routes, vehicle garage, and community charger reports."}
             </p>
           </div>
 
           <div className="flex items-center gap-3">
+            {!isAuthenticated && (
+              <Link
+                href="/login?redirect=/dashboard"
+                className="px-4 py-2.5 rounded-xl border border-emerald-600 text-emerald-700 hover:bg-emerald-50 font-bold text-xs flex items-center gap-1.5 transition-colors"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Sign In to Save History</span>
+              </Link>
+            )}
             <Link
               href="/plan"
               className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all"

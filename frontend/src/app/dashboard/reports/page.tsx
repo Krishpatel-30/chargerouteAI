@@ -2,9 +2,22 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { AuthGate } from "@/components/auth/AuthGate";
 import { ArrowLeft, Shield, CheckCircle2, AlertTriangle, ExternalLink } from "lucide-react";
 
 export default function UserReportsPage() {
+  return (
+    <AuthGate
+      featureTitle="Community Charger Reports"
+      featureDescription="Sign in to view your submitted station reports and live crowd-sourced telemetry."
+      redirectUrl="/dashboard/reports"
+    >
+      <UserReportsContent />
+    </AuthGate>
+  );
+}
+
+function UserReportsContent() {
   const [reports] = useState([
     {
       id: "rep_1",

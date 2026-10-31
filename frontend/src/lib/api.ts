@@ -6,6 +6,10 @@ import {
   TripPlanResponse,
   CommunityReport,
   User,
+  AuthResponse,
+  GoogleAuthData,
+  LocationSearchResult,
+  GeocodingConfig,
 } from "./types";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
@@ -30,26 +34,81 @@ apiClient.interceptors.request.use((config) => {
 });
 
 export const api = {
-  // Vehicles
-  async getVehicles(): Promise<VehicleModel[]> {
+  // Authentication & Driver Profile
+  async login(credentials: { email: string; password: string }): Promise<AuthResponse> {
+    const res = await apiClient.post<AuthResponse>("/auth/login", credentials);
+    if (typeof window !== "undefined" && res.data?.access_token) {
+      localStorage.setItem("voltplan_token", res.data.access_token);
+    }
+    return res.data;
+  },
+
+  async register(data: { email: string; password: string; full_name?: string }): Promise<AuthResponse> {
+    const res = await apiClient.post<AuthResponse>("/auth/register", data);
+    if (typeof window !== "undefined" && res.data?.access_token) {
+      localStorage.setItem("voltplan_token", res.data.access_token);
+    }
+    return res.data;
+  },
+
+  async loginWithGoogle(data: GoogleAuthData): Promise<AuthResponse> {
+    const res = await apiClient.post<AuthResponse>("/auth/google", data);
+    if (typeof window !== "undefined" && res.data?.access_token) {
+      localStorage.setItem("voltplan_token", res.data.access_token);
+    }
+    return res.data;
+  },
+
+  async getMe(): Promise<User | null> {
     try {
-      const res = await apiClient.get<VehicleModel[]>("/vehicles");
+      const res = await apiClient.get<User>("/auth/me");
+      return res.data;
+    } catch (err) {
+      return null;
+    }
+  },
+
+  logout(): void {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("voltplan_token");
+    }
+  },
+
+  // Vehicles
+  async getVehicles(params?: { manufacturer?: string; search?: string }): Promise<VehicleModel[]> {
+    try {
+      const res = await apiClient.get<VehicleModel[]>("/vehicles", { params });
       return res.data;
     } catch (err) {
       console.warn("Backend unavailable, using catalog fallback:", err);
       return [
         {
-          id: "seed_nexon",
+          id: "seed_nexon_45",
           manufacturer: "Tata",
-          model: "Nexon EV Long Range",
+          model: "Nexon EV 45 (Empowered Plus)",
           model_year: 2024,
-          battery_capacity_kwh: 40.5,
-          usable_battery_capacity_kwh: 38.0,
-          consumption_kwh_100km: 15.2,
+          battery_capacity_kwh: 45.0,
+          usable_battery_capacity_kwh: 43.0,
+          consumption_kwh_100km: 14.8,
           connector_types: ["CCS2", "Type 2"],
           max_ac_power_kw: 7.2,
-          max_dc_power_kw: 50.0,
-          range_reference_km: 320.0,
+          max_dc_power_kw: 60.0,
+          range_reference_km: 370.0,
+          source: "Official Spec Sheet",
+          is_custom: false,
+        },
+        {
+          id: "seed_curvv_55",
+          manufacturer: "Tata",
+          model: "Curvv EV 55 (Empowered+ A)",
+          model_year: 2024,
+          battery_capacity_kwh: 55.0,
+          usable_battery_capacity_kwh: 52.0,
+          consumption_kwh_100km: 15.0,
+          connector_types: ["CCS2", "Type 2"],
+          max_ac_power_kw: 7.2,
+          max_dc_power_kw: 70.0,
+          range_reference_km: 425.0,
           source: "Official Spec Sheet",
           is_custom: false,
         },
@@ -69,24 +128,54 @@ export const api = {
           is_custom: false,
         },
         {
-          id: "seed_mg_zs",
+          id: "seed_mg_windsor",
           manufacturer: "MG",
-          model: "ZS EV",
+          model: "Windsor EV (Essence)",
           model_year: 2024,
-          battery_capacity_kwh: 50.3,
-          usable_battery_capacity_kwh: 48.0,
-          consumption_kwh_100km: 16.2,
+          battery_capacity_kwh: 38.0,
+          usable_battery_capacity_kwh: 36.0,
+          consumption_kwh_100km: 15.1,
           connector_types: ["CCS2", "Type 2"],
           max_ac_power_kw: 7.4,
           max_dc_power_kw: 50.0,
-          range_reference_km: 340.0,
-          source: "Official Spec Sheet",
+          range_reference_km: 275.0,
+          source: "MG Motor India",
           is_custom: false,
         },
         {
-          id: "seed_ioniq5",
+          id: "seed_mahindra_be6e",
+          manufacturer: "Mahindra",
+          model: "BE 6e (Pack 2 / 79 kWh)",
+          model_year: 2025,
+          battery_capacity_kwh: 79.0,
+          usable_battery_capacity_kwh: 75.0,
+          consumption_kwh_100km: 16.8,
+          connector_types: ["CCS2", "Type 2"],
+          max_ac_power_kw: 11.0,
+          max_dc_power_kw: 175.0,
+          range_reference_km: 500.0,
+          source: "Mahindra INGLO Spec",
+          is_custom: false,
+        },
+        {
+          id: "seed_byd_seal",
+          manufacturer: "BYD",
+          model: "Seal Premium RWD",
+          model_year: 2024,
+          battery_capacity_kwh: 82.56,
+          usable_battery_capacity_kwh: 79.0,
+          consumption_kwh_100km: 16.5,
+          connector_types: ["CCS2", "Type 2"],
+          max_ac_power_kw: 7.4,
+          max_dc_power_kw: 150.0,
+          range_reference_km: 520.0,
+          source: "BYD Blade Spec",
+          is_custom: false,
+        },
+        {
+          id: "seed_hyundai_ioniq5",
           manufacturer: "Hyundai",
-          model: "Ioniq 5",
+          model: "Ioniq 5 RWD (800V)",
           model_year: 2024,
           battery_capacity_kwh: 72.6,
           usable_battery_capacity_kwh: 70.0,
@@ -95,7 +184,7 @@ export const api = {
           max_ac_power_kw: 11.0,
           max_dc_power_kw: 230.0,
           range_reference_km: 460.0,
-          source: "Hyundai E-GMP 800V Architecture",
+          source: "Hyundai Spec",
           is_custom: false,
         },
       ];
@@ -186,4 +275,179 @@ export const api = {
     const res = await apiClient.patch(`/admin/reports/${id}`, { status });
     return res.data;
   },
+
+  // Locations & Google Maps / Gujarat Village Geocoding
+  async searchLocations(query: string, limit = 8): Promise<LocationSearchResult[]> {
+    if (!query || !query.trim()) return [];
+    try {
+      const res = await apiClient.get<LocationSearchResult[]>("/locations/search", {
+        params: { q: query.trim(), limit },
+      });
+      return res.data;
+    } catch (err) {
+      console.warn("Locations search endpoint error, using client fallback:", err);
+      const fallbackList: LocationSearchResult[] = [
+        {
+          id: "fb_delhi",
+          name: "New Delhi, Delhi",
+          display_name: "New Delhi, National Capital Region, India",
+          category: "national_capital",
+          district: "New Delhi",
+          state: "Delhi",
+          country: "India",
+          latitude: 28.6139,
+          longitude: 77.209,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_agra",
+          name: "Agra, Uttar Pradesh",
+          display_name: "Agra (Taj Mahal / Yamuna Expressway), Uttar Pradesh, India",
+          category: "city",
+          district: "Agra",
+          state: "Uttar Pradesh",
+          country: "India",
+          latitude: 27.1767,
+          longitude: 78.0081,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_jaipur",
+          name: "Jaipur, Rajasthan",
+          display_name: "Jaipur, Pink City, Rajasthan, India",
+          category: "state_capital",
+          district: "Jaipur",
+          state: "Rajasthan",
+          country: "India",
+          latitude: 26.9124,
+          longitude: 75.7873,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_mumbai",
+          name: "Mumbai, Maharashtra",
+          display_name: "Mumbai, Maharashtra, India",
+          category: "megacity",
+          district: "Mumbai",
+          state: "Maharashtra",
+          country: "India",
+          latitude: 19.076,
+          longitude: 72.8777,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_pune",
+          name: "Pune, Maharashtra",
+          display_name: "Pune (Mumbai-Pune Expressway), Maharashtra, India",
+          category: "city",
+          district: "Pune",
+          state: "Maharashtra",
+          country: "India",
+          latitude: 18.5204,
+          longitude: 73.8567,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_bengaluru",
+          name: "Bengaluru, Karnataka",
+          display_name: "Bengaluru (Silicon Valley of India), Karnataka, India",
+          category: "state_capital",
+          district: "Bengaluru Urban",
+          state: "Karnataka",
+          country: "India",
+          latitude: 12.9716,
+          longitude: 77.5946,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_hyderabad",
+          name: "Hyderabad, Telangana",
+          display_name: "Hyderabad, Outer Ring Road, Telangana, India",
+          category: "state_capital",
+          district: "Hyderabad",
+          state: "Telangana",
+          country: "India",
+          latitude: 17.385,
+          longitude: 78.4867,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_ahmedabad",
+          name: "Ahmedabad, Gujarat",
+          display_name: "Ahmedabad, Gujarat, India",
+          category: "city",
+          district: "Ahmedabad",
+          state: "Gujarat",
+          country: "India",
+          latitude: 23.0225,
+          longitude: 72.5714,
+          provider: "india_directory",
+        },
+        {
+          id: "fb_kadi",
+          name: "Kadi, Mehsana, Gujarat",
+          display_name: "Kadi, Taluka Kadi, District Mehsana, Gujarat",
+          category: "village",
+          village: "Kadi",
+          district: "Mehsana",
+          state: "Gujarat",
+          country: "India",
+          latitude: 23.2982,
+          longitude: 72.3323,
+          provider: "gujarat_directory",
+        },
+        {
+          id: "fb_sasangir",
+          name: "Sasan Gir, Gir Somnath, Gujarat",
+          display_name: "Sasan Gir National Park & Sanctuary, Gir Somnath, Gujarat",
+          category: "wildlife_ecotourism",
+          village: "Sasan Gir",
+          district: "Gir Somnath",
+          state: "Gujarat",
+          country: "India",
+          latitude: 21.1644,
+          longitude: 70.5986,
+          provider: "gujarat_directory",
+        },
+      ];
+      return fallbackList.filter((x) => x.name.toLowerCase().includes(query.toLowerCase()));
+    }
+  },
+
+  async reverseGeocode(lat: number, lng: number): Promise<LocationSearchResult | null> {
+    try {
+      const res = await apiClient.get<LocationSearchResult>("/locations/reverse", {
+        params: { lat, lng },
+      });
+      return res.data;
+    } catch (err) {
+      console.warn("Reverse geocode error:", err);
+      return null;
+    }
+  },
+
+  async getPopularVillages(): Promise<LocationSearchResult[]> {
+    try {
+      const res = await apiClient.get<LocationSearchResult[]>("/locations/popular-villages");
+      return res.data;
+    } catch (err) {
+      console.warn("Popular villages endpoint error:", err);
+      return [];
+    }
+  },
+
+  async getGeocodingConfig(): Promise<GeocodingConfig> {
+    try {
+      const res = await apiClient.get<GeocodingConfig>("/locations/config");
+      return res.data;
+    } catch (err) {
+      return {
+        has_google_maps_configured: false,
+        primary_provider: "gujarat_rural_geocoder",
+        description: "Comprehensive Gujarat Rural Village Directory",
+        total_rural_locations_indexed: 144,
+      };
+    }
+  },
 };
+

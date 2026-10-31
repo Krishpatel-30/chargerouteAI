@@ -126,7 +126,11 @@ export interface TripPlanResponse {
   trip_id?: string;
   title: string;
   origin_name: string;
+  origin_lat?: number;
+  origin_lng?: number;
   destination_name: string;
+  destination_lat?: number;
+  destination_lng?: number;
   vehicle_name: string;
   vehicle_battery_usable_kwh: number;
   total_distance_km: number;
@@ -181,5 +185,55 @@ export interface User {
   email: string;
   full_name?: string;
   is_admin: boolean;
+  is_active?: boolean;
   created_at: string;
 }
+
+export interface AuthResponse {
+  access_token: string;
+  token_type?: string;
+  user: User;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  full_name?: string;
+}
+
+export interface GoogleAuthData {
+  email: string;
+  full_name?: string;
+  id_token?: string;
+  avatar_url?: string;
+  google_id?: string;
+}
+
+export interface LocationSearchResult {
+  id: string;
+  name: string;
+  display_name: string;
+  category: string; // village, town, city, landmark, etc.
+  village?: string;
+  taluka?: string;
+  district?: string;
+  state: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  provider: "google_maps" | "nominatim" | "gujarat_directory" | "india_directory" | string;
+  place_id?: string;
+}
+
+export interface GeocodingConfig {
+  has_google_maps_configured: boolean;
+  primary_provider: string;
+  description: string;
+  total_rural_locations_indexed: number;
+}
+

@@ -1,3 +1,4 @@
+import secrets
 from datetime import datetime, timezone
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -10,7 +11,7 @@ from app.core.database import get_db
 from app.core.config import settings
 from app.core.security import create_access_token, verify_password, get_password_hash
 from app.models.user import User
-from app.schemas.user import UserCreate, UserLogin, Token, UserResponse
+from app.schemas.user import UserCreate, UserLogin, GoogleAuthRequest, Token, UserResponse
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login", auto_error=False)
@@ -84,6 +85,35 @@ async def login(credentials: UserLogin, db: AsyncSession = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password.",
         )
+
+    token = create_access_token(subject=user.id)
+    return Token(access_token=token, user=UserResponse.model_validate(user))
+
+
+@router.post("/google", response_model=Token)
+async def login_with_google(google_data: GoogleAuthRequest, db: AsyncSession = Depends(get_db)):
+    email = google_data.email.lower().strip()
+    stmt = select(User).where(User.email == email)
+    res = await db.execute(stmt)
+    user = res.scalar_one_or_none()
+
+    if not user:
+        # Create user authenticated via Google
+        user = User(
+            email=email,
+            hashed_password=get_password_hash(secrets.token_urlsafe(32)),
+            full_name=google_data.full_name or email.split("@")[0].title(),
+            is_active=True,
+            is_admin=False,
+        )
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+    else:
+        if not user.full_name and google_data.full_name:
+            user.full_name = google_data.full_name
+            await db.commit()
+            await db.refresh(user)
 
     token = create_access_token(subject=user.id)
     return Token(access_token=token, user=UserResponse.model_validate(user))

@@ -18,7 +18,7 @@ from app.schemas.trip import (
     BackupStopCandidate,
     TripAlternativeSummary,
 )
-from app.providers.routing_osrm import OSRMRoutingProvider
+from app.providers.routing_osrm import OSRMRoutingProvider, CompositeRoutingProvider
 from app.services.energy_calculator import EnergyCalculator
 from app.services.risk_engine import RiskEngine
 from app.services.backup_finder import BackupFinder
@@ -26,8 +26,8 @@ from app.services.charger_service import ChargerService
 
 
 class TripPlanner:
-    def __init__(self, routing_provider: Optional[OSRMRoutingProvider] = None):
-        self.routing = routing_provider or OSRMRoutingProvider()
+    def __init__(self, routing_provider: Optional[Any] = None):
+        self.routing = routing_provider or CompositeRoutingProvider()
 
     async def plan_trip(
         self,
@@ -122,7 +122,11 @@ class TripPlanner:
         return TripPlanResponse(
             title=f"{request.origin_name} to {request.destination_name}",
             origin_name=request.origin_name,
+            origin_lat=request.origin_lat,
+            origin_lng=request.origin_lng,
             destination_name=request.destination_name,
+            destination_lat=request.destination_lat,
+            destination_lng=request.destination_lng,
             vehicle_name=f"{vehicle.manufacturer} {vehicle.model}",
             vehicle_battery_usable_kwh=vehicle.usable_battery_capacity_kwh,
             total_distance_km=round(total_distance_km, 1),
@@ -204,8 +208,9 @@ class TripPlanner:
 
             # Find next stop candidates ahead of current_km that are reachable
             candidates = []
+            min_gap_km = 1.5 if total_distance_km < 80.0 else 8.0
             for st, st_km, detour in corridor_chargers:
-                if st_km <= current_km + 10.0:
+                if st_km <= current_km + min_gap_km:
                     continue  # already passed or too close
 
                 dist_to_st = st_km - current_km

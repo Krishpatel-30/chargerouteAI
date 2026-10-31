@@ -1,5 +1,10 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import {
   Zap,
   ShieldCheck,
@@ -11,524 +16,777 @@ import {
   Clock,
   MapPin,
   ArrowRight,
-  HelpCircle,
-  Users,
   Compass,
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  Sparkles,
+  Loader2,
+  Check,
+  History,
+  Gauge,
+  SlidersHorizontal,
+  Flame,
+  Award,
 } from "lucide-react";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const { user, isAuthenticated, login, logout, isLoading: authLoading } = useAuth();
+
+  // Inline Sign-In state for unauthenticated users on homepage
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const handleInlineLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError(null);
+    setIsLoggingIn(true);
+    try {
+      await login({ email, password });
+      router.push("/plan");
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      setLoginError(err?.response?.data?.detail || "Invalid email or password. Please try again.");
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  // Featured Indian Electric Vehicle Models with verified images and engineering benchmarks
+  const featuredModels = [
+    {
+      id: "curvv-55",
+      name: "Tata Curvv EV 55 (Empowered+)",
+      brand: "TATA",
+      category: "Coupe SUV",
+      tag: "New Flagship 2024",
+      image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=600&q=80",
+      grossKwh: "55.0 kWh",
+      usableKwh: "51.8 kWh",
+      highwayRange: "~450 km",
+      claimedRange: "585 km MIDC",
+      dcSpeed: "70 kW DC",
+      chargeTime: "10–80% in 40 min",
+      consumption: "13.8 kWh / 100km",
+      badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
+    },
+    {
+      id: "nexon-45",
+      name: "Tata Nexon EV 45 (Long Range)",
+      brand: "TATA",
+      category: "Compact SUV",
+      tag: "India's #1 Best-Seller",
+      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=600&q=80",
+      grossKwh: "45.0 kWh",
+      usableKwh: "42.5 kWh",
+      highwayRange: "~365 km",
+      claimedRange: "465 km MIDC",
+      dcSpeed: "60 kW DC",
+      chargeTime: "10–80% in 45 min",
+      consumption: "14.5 kWh / 100km",
+      badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
+    },
+    {
+      id: "xuv400-el",
+      name: "Mahindra XUV400 EL Pro",
+      brand: "MAHINDRA",
+      category: "Electric SUV",
+      tag: "Dual-Zone Climate Pack",
+      image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=600&q=80",
+      grossKwh: "39.4 kWh",
+      usableKwh: "37.2 kWh",
+      highwayRange: "~310 km",
+      claimedRange: "456 km MIDC",
+      dcSpeed: "50 kW DC",
+      chargeTime: "10–80% in 50 min",
+      consumption: "14.8 kWh / 100km",
+      badgeColor: "bg-amber-50 text-amber-900 border-amber-200",
+    },
+    {
+      id: "mg-zs-ev",
+      name: "MG ZS EV (Exclusive Plus)",
+      brand: "MG MOTOR",
+      category: "Premium EV",
+      tag: "Panoramic Glass Roof",
+      image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=600&q=80",
+      grossKwh: "50.3 kWh",
+      usableKwh: "47.5 kWh",
+      highwayRange: "~380 km",
+      claimedRange: "461 km MIDC",
+      dcSpeed: "50 kW DC",
+      chargeTime: "10–80% in 54 min",
+      consumption: "15.0 kWh / 100km",
+      badgeColor: "bg-rose-50 text-rose-800 border-rose-200",
+    },
+    {
+      id: "ioniq-5",
+      name: "Hyundai Ioniq 5 RWD",
+      brand: "HYUNDAI",
+      category: "800V Luxury Crossover",
+      tag: "Ultra-Fast 800V Architecture",
+      image: "https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=600&q=80",
+      grossKwh: "72.6 kWh",
+      usableKwh: "70.0 kWh",
+      highwayRange: "~510 km",
+      claimedRange: "631 km ARAI",
+      dcSpeed: "350 kW Ultra DC",
+      chargeTime: "10–80% in 18 min",
+      consumption: "16.2 kWh / 100km",
+      badgeColor: "bg-sky-50 text-sky-800 border-sky-200",
+    },
+    {
+      id: "byd-atto3",
+      name: "BYD Atto 3 (Extended Range)",
+      brand: "BYD",
+      category: "Blade Battery EV",
+      tag: "Ultra-Safe Blade Cells",
+      image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80",
+      grossKwh: "60.5 kWh",
+      usableKwh: "58.0 kWh",
+      highwayRange: "~430 km",
+      claimedRange: "521 km ARAI",
+      dcSpeed: "80 kW DC",
+      chargeTime: "10–80% in 45 min",
+      consumption: "14.9 kWh / 100km",
+      badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white py-16 sm:py-24 border-b border-slate-200/60">
+      {/* 1. HERO SECTION WITH EMBEDDED AUTHENTICATION & AGENCY ATTRIBUTION */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-white via-slate-50 to-white py-12 sm:py-20 border-b border-slate-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* Left Hero Copy */}
             <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100/90 text-emerald-900 border border-emerald-200">
+              {/* Attribution Pill */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100/90 text-emerald-950 border border-emerald-200 shadow-2xs">
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                <span>Initial Launch: Gujarat EV Highway Corridors</span>
+                <span>Made by <strong>KSVISUALSAGENCY</strong> • Pan-India EV Planning Platform</span>
               </div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
                 Plan Your EV Journey.{" "}
-                <span className="text-emerald-600 block mt-1">Prepare for the Unexpected.</span>
+                <span className="text-emerald-600 block mt-1">Predict Range &amp; Outage Backups.</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-600 max-w-xl leading-relaxed">
-                Find charging stops, understand your true battery range, and plan backup options before you hit the road. Never get stranded by a broken or occupied roadside charger.
+              <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-xl leading-relaxed">
+                India&apos;s intelligent electric vehicle navigation platform. Calculate deterministic battery range, discover verified charging stations across 35 states, and secure safe backup stops before you hit the road.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2">
-                <Link
-                  href="/plan"
-                  className="px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/30 transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
-                >
-                  <Zap className="w-4 h-4 fill-white" />
-                  <span>Plan My Trip</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <Link
-                  href="/chargers"
-                  className="px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-300 shadow-xs transition-all hover:border-slate-400 flex items-center justify-center gap-2"
-                >
-                  <Compass className="w-4 h-4 text-emerald-600" />
-                  <span>Explore Charging Stations</span>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 text-xs">
-                <div>
-                  <strong className="block text-slate-900 font-bold text-sm">Explainable Risk</strong>
-                  <span className="text-slate-500">Transparent 0-100 reliability scoring</span>
+              {/* Key Features Quick Grid */}
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-slate-200/80 text-xs">
+                <div className="space-y-1">
+                  <div className="text-emerald-600 font-extrabold text-lg sm:text-xl">141+</div>
+                  <strong className="block text-slate-900 font-bold text-xs">Indian EV Models</strong>
+                  <span className="text-slate-500 text-[11px] block">With custom car builder</span>
                 </div>
-                <div>
-                  <strong className="block text-slate-900 font-bold text-sm">Verified Backups</strong>
-                  <span className="text-slate-500">Automatic fallback stations for every stop</span>
+                <div className="space-y-1">
+                  <div className="text-emerald-600 font-extrabold text-lg sm:text-xl">269</div>
+                  <strong className="block text-slate-900 font-bold text-xs">City &amp; Highway Hubs</strong>
+                  <span className="text-slate-500 text-[11px] block">Verified 24/7 chargers</span>
                 </div>
-                <div>
-                  <strong className="block text-slate-900 font-bold text-sm">Deterministic Math</strong>
-                  <span className="text-slate-500">True usable battery capacity modeling</span>
+                <div className="space-y-1">
+                  <div className="text-emerald-600 font-extrabold text-lg sm:text-xl">0–100</div>
+                  <strong className="block text-slate-900 font-bold text-xs">Explainable Risk</strong>
+                  <span className="text-slate-500 text-[11px] block">Outage &amp; queue safety</span>
                 </div>
               </div>
-            </div>
 
-            {/* Right: 2. INTERACTIVE TRIP-PLANNING PREVIEW */}
-            <div className="lg:col-span-5">
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-lg relative">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">
-                      Live Trip Simulation Preview
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                    Sample Route
-                  </span>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs">
-                    <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Route</span>
-                      <strong className="text-slate-900">Ahmedabad &rarr; Surat</strong>
-                    </div>
-                    <div>
-                      <span className="text-[10px] text-slate-400 uppercase font-bold block">Vehicle</span>
-                      <strong className="text-slate-900">Tata Nexon EV 40.5 kWh</strong>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                    <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                      <span className="text-[10px] text-slate-500 block">Distance</span>
-                      <strong className="text-slate-900 text-sm">265 km</strong>
-                    </div>
-                    <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                      <span className="text-[10px] text-slate-500 block">Stops</span>
-                      <strong className="text-slate-900 text-sm">1 Stop</strong>
-                    </div>
-                    <div className="bg-emerald-50 p-2.5 rounded-lg border border-emerald-100 text-emerald-900">
-                      <span className="text-[10px] text-emerald-700 block">Risk Score</span>
-                      <strong className="text-emerald-800 text-sm">18/100 (Low)</strong>
-                    </div>
-                  </div>
-
-                  {/* Recommended Stop Preview */}
-                  <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/50 space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-slate-900 flex items-center gap-1.5">
-                        <span className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">1</span>
-                        Tata Power - Anand Food Plaza
-                      </span>
-                      <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-200/70 px-1.5 py-0.5 rounded">
-                        60 kW DC
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-[11px] text-slate-600">
-                      <span>Arrive: <strong>32% SoC</strong></span>
-                      <span>Charge: <strong>28 min (+19 kWh)</strong></span>
-                      <span>Depart: <strong>82% SoC</strong></span>
-                    </div>
-                    <div className="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-[11px]">
-                      <span className="text-amber-800 font-medium">🛡️ Backup: Jio-bp Nadiad (+6.2 km detour)</span>
-                      <span className="text-emerald-700 font-semibold">Reachable</span>
-                    </div>
-                  </div>
-
+              {/* Secondary links - ONLY VISIBLE AFTER USER LOGIN */}
+              {isAuthenticated && (
+                <div className="flex flex-wrap items-center gap-3 pt-2 text-xs">
                   <Link
-                    href="/plan"
-                    className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-colors"
+                    href="/chargers"
+                    className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold border border-slate-200 hover:border-slate-300 transition-colors shadow-2xs flex items-center gap-1.5"
                   >
-                    <span>Open Interactive Planner</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <Compass className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Browse 269 Charging Stations</span>
+                  </Link>
+                  <Link
+                    href="/vehicles"
+                    className="px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold border border-slate-200 hover:border-slate-300 transition-colors shadow-2xs flex items-center gap-1.5"
+                  >
+                    <Car className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>141 EV Directory &amp; Specs</span>
                   </Link>
                 </div>
-              </div>
+              )}
+            </div>
+
+            {/* Right: DRIVER AUTHENTICATION & ACCESS CARD */}
+            <div className="lg:col-span-5">
+              {!isAuthenticated ? (
+                /* Unauthenticated View: Sign In with Google Device ID or Email */
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-7 space-y-5 relative">
+                  <div className="text-center space-y-1.5 pb-1">
+                    <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white shadow-md shadow-emerald-600/30 mb-1">
+                      <Zap className="w-5 h-5 fill-white" />
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                      Sign In to Access Trip Planner
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      Sign in with Google credentials on this device or your driver email to unlock planning.
+                    </p>
+                  </div>
+
+                  {/* Google 1-Click Sign-In (Direct Device Account Chooser) */}
+                  <div className="space-y-3">
+                    <GoogleAuthButton redirectUrl="/plan" buttonText="Continue with Device Google ID" />
+
+                    <div className="relative flex py-1 items-center">
+                      <div className="flex-grow border-t border-slate-200"></div>
+                      <span className="flex-shrink mx-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        or sign in with driver email
+                      </span>
+                      <div className="flex-grow border-t border-slate-200"></div>
+                    </div>
+                  </div>
+
+                  {loginError && (
+                    <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-1.5 font-medium">
+                      <span>⚠️ {loginError}</span>
+                    </div>
+                  )}
+
+                  {/* Inline Email / Password Form */}
+                  <form onSubmit={handleInlineLogin} className="space-y-3">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Driver Email
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+                        <input
+                          type="email"
+                          required
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="driver@example.com"
+                          className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                        Password
+                      </label>
+                      <div className="relative">
+                        <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          required
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="••••••••"
+                          className="w-full pl-8 pr-9 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isLoggingIn}
+                      className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/40 flex items-center justify-center gap-2 disabled:opacity-60"
+                    >
+                      {isLoggingIn ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Signing In &amp; Launching...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Sign In &amp; Launch Trip Planner</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+                  </form>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                    <span>Don&apos;t have an account?</span>
+                    <Link
+                      href="/register?redirect=/plan"
+                      className="font-bold text-emerald-600 hover:text-emerald-700 underline"
+                    >
+                      Create Account
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                /* Authenticated View: Active Driver Command Center */
+                <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-7 space-y-5">
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center shadow-md shadow-emerald-600/30">
+                        {(user?.full_name || user?.email || "D")[0].toUpperCase()}
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-emerald-700 uppercase tracking-wider flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Driver Authenticated</span>
+                        </div>
+                        <h2 className="text-base sm:text-lg font-bold text-slate-900 truncate">
+                          {user?.full_name || user?.email?.split("@")[0]}
+                        </h2>
+                        <div className="text-[11px] text-slate-400 truncate">{user?.email}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Primary CTA: Launch Trip Planner */}
+                  <div className="space-y-3">
+                    <Link
+                      href="/plan"
+                      className="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm transition-all shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/40 flex items-center justify-center gap-2 group"
+                    >
+                      <Zap className="w-4 h-4 fill-white transition-transform group-hover:scale-110" />
+                      <span>Launch Interactive Trip Planner</span>
+                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+
+                    <Link
+                      href="/dashboard/trips"
+                      className="w-full py-2.5 px-4 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold text-xs transition-colors flex items-center justify-center gap-2"
+                    >
+                      <History className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>View My Saved Trips &amp; History</span>
+                    </Link>
+                  </div>
+
+                  {/* Quick Route Starters */}
+                  <div className="pt-2 border-t border-slate-100 space-y-2">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      Popular Corridors Ready:
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-[11px]">
+                      {[
+                        { label: "Delhi → Agra", route: "Yamuna Expwy" },
+                        { label: "Mumbai → Pune", route: "Mumbai Expwy" },
+                        { label: "Bengaluru → Mysuru", route: "10-Lane Expwy" },
+                        { label: "Ahmedabad → Surat", route: "NE-1 Expressway" },
+                      ].map((c) => (
+                        <Link
+                          key={c.label}
+                          href="/plan"
+                          className="p-2 rounded-lg bg-slate-50 hover:bg-emerald-50 border border-slate-100 hover:border-emerald-200 transition-colors"
+                        >
+                          <div className="font-bold text-slate-800">{c.label}</div>
+                          <div className="text-[10px] text-slate-500">{c.route}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between text-xs text-slate-500">
+                    <Link href="/dashboard" className="text-emerald-700 hover:underline font-semibold">
+                      Driver Dashboard
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => logout()}
+                      className="text-slate-400 hover:text-rose-600 transition-colors font-medium"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3. HOW RISK-AWARE PLANNING WORKS */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-              Methodology & Architecture
-            </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              How Risk-Aware Trip Planning Works
+      {/* 2. SHOWCASE OF INDIAN EV CAR MODELS (WITH IMAGES & BENCHMARK SPECS) */}
+      <section className="py-16 sm:py-24 bg-white border-b border-slate-200/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100/80 text-emerald-900 border border-emerald-200">
+              <Car className="w-3.5 h-3.5 text-emerald-700" />
+              <span>141+ Indian Market EV Models Index</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Calibrated Electric Vehicle Models
             </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              ChargeRoute AI answers: &quot;Can I complete this journey safely if one of my planned stops fails?&quot;
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              Every vehicle profile is modeled with deterministic battery physics, differentiating nominal gross pack size from real-world net usable capacity on Indian highway speeds (100+ km/h) and air-conditioning loads.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base">
-                1
-              </div>
-              <h3 className="text-base font-bold text-slate-900">Deterministic Battery Physics</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                We calculate segment consumption using net usable battery capacity, not advertised gross ratings. Load multipliers account for highway speeds (100+ km/h on expressways) and heavy cabin AC usage.
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {featuredModels.map((m) => (
+              <div
+                key={m.id}
+                className="group rounded-3xl border border-slate-200/90 bg-white shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
+              >
+                {/* Vehicle Image Header */}
+                <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-900">
+                  <img
+                    src={m.image}
+                    alt={m.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20" />
 
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-base">
-                2
-              </div>
-              <h3 className="text-base font-bold text-slate-900">Explainable 0-100 Risk Engine</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                No black-box machine learning hype. Stations are transparently scored on data freshness, recent outage reports, stall count redundancy, opening hours, and arrival reserve margins.
-              </p>
-            </div>
+                  {/* Badges on Image */}
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                    <span className="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-[10px] font-extrabold text-white tracking-wider uppercase border border-white/20">
+                      {m.brand}
+                    </span>
+                    <span className="px-2 py-0.5 rounded-lg bg-emerald-500/90 backdrop-blur-md text-[10px] font-bold text-white shadow-xs">
+                      {m.category}
+                    </span>
+                  </div>
 
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base">
-                3
-              </div>
-              <h3 className="text-base font-bold text-slate-900">Automatic Backup Allocation</h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Every recommended stop is paired with at least one viable fallback station within practical detour reach. If a planned charger is down, you already know where to divert.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+                  <div className="absolute top-3 right-3">
+                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-slate-800 shadow-xs border border-slate-200">
+                      {m.tag}
+                    </span>
+                  </div>
 
-      {/* 4. EXAMPLE CHARGER RELIABILITY TRANSPARENCY */}
-      <section className="py-16 sm:py-20 bg-slate-50 border-y border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-              Data Integrity
-            </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Transparent Station Reliability
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              We never assume a charger is operational merely because a pin exists on a map.
-            </p>
-          </div>
+                  <div className="absolute bottom-3 left-3 right-3 text-white">
+                    <h3 className="text-base sm:text-lg font-bold drop-shadow-md truncate">
+                      {m.name}
+                    </h3>
+                  </div>
+                </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-5 rounded-xl border border-emerald-200 bg-white shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                  Verified Operational
-                </span>
-                <span className="text-xs font-bold text-emerald-700">Risk: 12/100</span>
-              </div>
-              <h4 className="font-bold text-slate-900 text-sm">Multi-Stall Fast Hub (4+ Plugs)</h4>
-              <p className="text-xs text-slate-600">
-                Network confirmed active within the last 4 hours. Multiple CCS2 stalls eliminate single point of failure risk.
-              </p>
-            </div>
+                {/* Vehicle Specs Grid */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
+                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                        <BatteryCharging className="w-3 h-3 text-emerald-600" />
+                        <span>Battery Pack</span>
+                      </div>
+                      <div className="font-extrabold text-slate-900">{m.usableKwh}</div>
+                      <div className="text-[10px] text-slate-400">{m.grossKwh} gross</div>
+                    </div>
 
-            <div className="p-5 rounded-xl border border-amber-200 bg-white shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
-                  Status Unknown / Stale
-                </span>
-                <span className="text-xs font-bold text-amber-700">Risk: 48/100</span>
-              </div>
-              <h4 className="font-bold text-slate-900 text-sm">Telemetry Stale (&gt;48 Hours)</h4>
-              <p className="text-xs text-slate-600">
-                Data has not refreshed recently. Single gun station with restricted mall parking hours. Backup recommended.
-              </p>
-            </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
+                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                        <Route className="w-3 h-3 text-emerald-600" />
+                        <span>Highway Range</span>
+                      </div>
+                      <div className="font-extrabold text-emerald-700">{m.highwayRange}</div>
+                      <div className="text-[10px] text-slate-400">{m.claimedRange}</div>
+                    </div>
 
-            <div className="p-5 rounded-xl border border-rose-200 bg-white shadow-xs space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
-                  Reported Outage
-                </span>
-                <span className="text-xs font-bold text-rose-700">Risk: 82/100</span>
-              </div>
-              <h4 className="font-bold text-slate-900 text-sm">Community Reported Offline</h4>
-              <p className="text-xs text-slate-600">
-                Recent user verification confirmed hardware power outage. Routing engine automatically skips this stop.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
+                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                        <Zap className="w-3 h-3 text-emerald-600" />
+                        <span>DC Fast Speed</span>
+                      </div>
+                      <div className="font-extrabold text-slate-900">{m.dcSpeed}</div>
+                      <div className="text-[10px] text-slate-400">{m.chargeTime}</div>
+                    </div>
 
-      {/* 5. VEHICLE COMPATIBILITY */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-                Supported Fleet
-              </span>
-              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-                Tested with Indian Market EVs
-              </h2>
-              <p className="text-sm text-slate-600 mt-1">
-                Pre-configured with real battery capacities, charging curves, and highway consumption benchmarks.
-              </p>
-            </div>
-            <Link
-              href="/vehicles"
-              className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold flex items-center gap-1.5 w-fit"
-            >
-              <span>Explore All Vehicles</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
-          </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
+                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                        <Gauge className="w-3 h-3 text-emerald-600" />
+                        <span>Consumption</span>
+                      </div>
+                      <div className="font-extrabold text-slate-900">{m.consumption}</div>
+                      <div className="text-[10px] text-slate-400">Indian 40°C AC load</div>
+                    </div>
+                  </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {[
-              { name: "Tata Nexon EV Long Range", bat: "38.0 kWh Usable", dc: "50 kW DC", range: "320 km" },
-              { name: "Tata Punch EV Long Range", bat: "33.0 kWh Usable", dc: "35 kW DC", range: "270 km" },
-              { name: "MG ZS EV Exclusive", bat: "48.0 kWh Usable", dc: "50 kW DC", range: "340 km" },
-              { name: "Hyundai Ioniq 5 (800V)", bat: "70.0 kWh Usable", dc: "230 kW DC", range: "460 km" },
-              { name: "BYD Atto 3 Blade", bat: "58.0 kWh Usable", dc: "80 kW DC", range: "410 km" },
-              { name: "Mahindra XUV400 Pro", bat: "37.5 kWh Usable", dc: "50 kW DC", range: "290 km" },
-              { name: "Tata Tiago EV Medium", bat: "18.0 kWh Usable", dc: "25 kW DC", range: "160 km" },
-              { name: "Custom EV Builder", bat: "Configurable kWh", dc: "Custom DC", range: "Custom" },
-            ].map((v, i) => (
-              <div key={i} className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:shadow-xs transition-all space-y-1.5">
-                <span className="text-[10px] text-emerald-700 font-bold uppercase">{v.range} Ref</span>
-                <h4 className="font-bold text-slate-900 text-sm leading-tight">{v.name}</h4>
-                <div className="text-[11px] text-slate-500">{v.bat} • {v.dc}</div>
+                  {/* Action Link */}
+                  <div className="pt-2 border-t border-slate-100">
+                    <Link
+                      href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
+                      className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-emerald-600 text-slate-700 hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 group-hover:bg-emerald-600 group-hover:text-white"
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>{isAuthenticated ? "Select & Simulate Route" : "Sign In to Plan with this EV"}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 6. BACKUP CHARGING & ALTERNATIVES */}
-      <section className="py-16 sm:py-20 bg-slate-900 text-white">
+      {/* 3. DETAILS HOW IT WORKS (PHYSICS, RISK ENGINE, AC MULTIPLIERS, BACKUPS) */}
+      <section className="py-16 sm:py-24 bg-slate-50 border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">
+              Deterministic Engineering Architecture
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Details: How the Model Works
+            </h2>
+            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+              ChargeRoute AI eliminates the #1 cause of Indian EV highway breakdowns: optimistic range ratings and unannounced charger outages.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Step 1 */}
+            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4 relative flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-800 font-extrabold text-lg flex items-center justify-center shadow-xs">
+                  01
+                </div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  True Usable Battery Math
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Advertised range uses gross capacity under unreal laboratory conditions. We calculate segment range exclusively against <strong>net usable capacity</strong> (e.g. 42.5 kWh out of a 45 kWh pack) to guarantee safety reserves.
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500">
+                <span className="font-bold text-slate-700 block mb-0.5">Formula:</span>
+                Usable kWh = Gross kWh × Buffer Ratio (92-95%)
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4 relative flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-800 font-extrabold text-lg flex items-center justify-center shadow-xs">
+                  02
+                </div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  Highway Speed &amp; 40°C AC Load
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Cruising at 100+ km/h on expressways like NE-1 or Yamuna increases aerodynamic drag quadratically. Combined with heavy Indian summer air-conditioning, consumption rises up to 1.35× normal city rates.
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500">
+                <span className="font-bold text-slate-700 block mb-0.5">Dynamic Factors:</span>
+                Speed multiplier (1.15-1.35×) + AC cabin load
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4 relative flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-900 font-extrabold text-lg flex items-center justify-center shadow-xs">
+                  03
+                </div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  0–100 Outage Risk Engine
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Stations are transparently scored from 0 (lowest risk) to 100 (high risk). Telemetry checks multi-gun redundancy, verified community check-ins, feeder reliability, and 24/7 access.
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500">
+                <span className="font-bold text-slate-700 block mb-0.5">Scoring Bands:</span>
+                0-29 Low Risk • 30-59 Moderate • 60+ High
+              </div>
+            </div>
+
+            {/* Step 4 */}
+            <div className="p-6 rounded-3xl bg-white border border-slate-200/90 shadow-sm space-y-4 relative flex flex-col justify-between">
+              <div className="space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-900 font-extrabold text-lg flex items-center justify-center shadow-xs">
+                  04
+                </div>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  Automatic Backup Allocation
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Every recommended charging stop is dynamically paired with a secondary backup station within reachable diversion distance. If a station is down or blocked, your fallback is pre-calculated.
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500">
+                <span className="font-bold text-slate-700 block mb-0.5">Contingency:</span>
+                Reachable on arrival reserve buffer (15-25%)
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. MADE BY KSVISUALSAGENCY AGENCY SHOWCASE BANNER */}
+      <section className="py-14 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 text-white border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-5">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-                Core Differentiator
-              </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-                What if your planned charger is down?
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-8 sm:p-12 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8">
+            <div className="space-y-4 text-center lg:text-left max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">
+                <Award className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Product Engineering &amp; Design Architecture</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+                Made with Precision by <span className="text-emerald-400">KSVISUALSAGENCY</span>
               </h2>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                Traditional navigators lead you to a charger and leave you stranded if there&apos;s a power outage, broken connector latch, or a 45-minute queue.
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                ChargeRoute AI was engineered and designed by <strong>KSVISUALSAGENCY</strong> to bring world-class deterministic EV telemetry, mathematical route modeling, and emergency contingency infrastructure to Indian electric vehicle owners.
               </p>
-              <p className="text-sm text-slate-300 leading-relaxed">
-                ChargeRoute AI continuously monitors fallback options. For every scheduled charging stop, our backup engine verifies whether you can reach alternative stations within a short detour on your remaining battery.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href="/how-it-works"
-                  className="px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs inline-flex items-center gap-2 transition-colors"
-                >
-                  <span>Learn How Backups Are Selected</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-800/90 border border-slate-700/80 space-y-4">
-              <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                Corridor Divert Demonstration
-              </div>
-              <div className="p-4 rounded-xl bg-slate-900/90 border border-slate-700 space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-rose-400 font-bold">Planned Stop: Statiq Chhani, Vadodara</span>
-                  <span className="text-[10px] bg-rose-950 text-rose-300 px-2 py-0.5 rounded border border-rose-800">
-                    Outage Reported
-                  </span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-amber-950/40 border border-amber-800/60 text-xs text-amber-200 space-y-1">
-                  <div className="font-bold flex items-center gap-1.5">
-                    <span>🛡️ Auto-Assigned Fallback:</span>
-                    <span className="text-white">Zeon Suba Elite (4.2 km detour)</span>
-                  </div>
-                  <div className="text-[11px] text-amber-300">
-                    Remaining battery upon detour: <strong>24% SoC</strong>. Reachable safely!
-                  </div>
-                </div>
-              </div>
+            <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+              <Link
+                href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
+                className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+              >
+                <Zap className="w-4 h-4 fill-slate-950" />
+                <span>{isAuthenticated ? "Open Trip Planner" : "Sign In to Start"}</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. COMMUNITY CHARGER REPORTS */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-              Crowdsourced Reliability
-            </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Community Charger Reports
+      {/* 5. LOCKED PLATFORM NOTICE FOR GUESTS OR ACTIVE TOOLS FOR LOGGED-IN USERS */}
+      {!isAuthenticated ? (
+        <section className="py-16 bg-slate-100/70 border-t border-slate-200">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 text-slate-700">
+              <Lock className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Full Platform Unlocks After User Login</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+              All Planning Options &amp; Telemetry Available Upon Sign-In
             </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Contribute to driver reliability. Report broken guns, payment errors, or confirm successful charging sessions.
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
+              To preserve your trip history, vehicle profiles, and custom car configurations, all planning tools and station directories require an authenticated driver account.
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-900">Tata Power - Anand Food Mall</span>
-                <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-100 px-2 py-0.5 rounded">
-                  Successful Charge
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left pt-4">
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                  <Route className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">Interactive Trip Planner</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Deterministic range simulation, real elevation &amp; AC load math, and instant outage backups.
+                </p>
+                <div className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 pt-1">
+                  <Lock className="w-3 h-3" />
+                  <span>Unlocks on sign-in</span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                  <BatteryCharging className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">269+ Charging Stations</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Pan-India city and expressway charger directory with live connector statuses and tariffs.
+                </p>
+                <div className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 pt-1">
+                  <Lock className="w-3 h-3" />
+                  <span>Unlocks on sign-in</span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                  <Car className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">141+ EV Catalog &amp; Custom</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Indian market battery ratings, highway consumption rates, plus add your own custom car.
+                </p>
+                <div className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 pt-1">
+                  <Lock className="w-3 h-3" />
+                  <span>Unlocks on sign-in</span>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center font-bold">
+                  <History className="w-4 h-4" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">Saved History &amp; Dashboard</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Save routes to your profile, review historical stops, and manage your vehicle fleet.
+                </p>
+                <div className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1 pt-1">
+                  <Lock className="w-3 h-3" />
+                  <span>Unlocks on sign-in</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <Link
+                href="/login"
+                className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm inline-flex items-center gap-2 shadow-md shadow-emerald-600/30 transition-all"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Sign In with Google or Email to Unlock All Options</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : (
+        /* Authenticated: Popular Highway & Expressways Overview */
+        <section className="py-16 sm:py-20 bg-slate-50 border-t border-slate-200/80">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl mx-auto text-center mb-10">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
+                National EV Coverage
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                Supported Highway &amp; City Corridors
+              </h2>
+              <p className="text-sm text-slate-600 mt-2">
+                Pan-India deployment covering national expressways, golden quadrilateral arteries, and urban charging networks across 35 States &amp; UTs.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="text-xs font-bold text-slate-900">Yamuna &amp; Agra-Lucknow Expwy</div>
+                <div className="text-xs text-slate-600">Delhi — Noida — Mathura — Agra — Lucknow</div>
+                <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
+                  120kW Superfast Hubs
                 </span>
               </div>
-              <p className="text-xs text-slate-600">
-                &quot;Charged Nexon EV from 28% to 80% at 55kW. Clean food court and working washrooms.&quot;
-              </p>
-              <span className="text-[10px] text-slate-400 block">Verified driver • 2 hours ago</span>
-            </div>
 
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-900">Jio-bp pulse - Nadiad Bypass</span>
-                <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-100 px-2 py-0.5 rounded">
-                  Successful Charge
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="text-xs font-bold text-slate-900">Mumbai — Pune Expressway</div>
+                <div className="text-xs text-slate-600">Kalamboli — Khalapur — Lonavala — Talegaon — Wakad</div>
+                <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
+                  Ultra-High Density Plazas
                 </span>
               </div>
-              <p className="text-xs text-slate-600">
-                &quot;Both CCS2 guns active. Plug & charge activated quickly via app.&quot;
-              </p>
-              <span className="text-[10px] text-slate-400 block">Verified driver • 5 hours ago</span>
-            </div>
 
-            <div className="p-5 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-900">VR Mall - Surat</span>
-                <span className="text-[10px] text-amber-800 font-semibold bg-amber-100 px-2 py-0.5 rounded">
-                  Connector Issue
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="text-xs font-bold text-slate-900">Bengaluru — Mysuru Expressway</div>
+                <div className="text-xs text-slate-600">Kengeri — Bidadi — Ramanagara — Maddur — Mandya</div>
+                <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
+                  10-Lane Access-Controlled
                 </span>
               </div>
-              <p className="text-xs text-slate-600">
-                &quot;Gun 2 latch loose. Gun 1 working fine. Paid parking required at entrance.&quot;
-              </p>
-              <span className="text-[10px] text-slate-400 block">Verified driver • Yesterday</span>
+
+              <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                <div className="text-xs font-bold text-slate-900">National Expressway 1 (NE-1)</div>
+                <div className="text-xs text-slate-600">Ahmedabad — Nadiad — Anand — Vadodara — Surat</div>
+                <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
+                  Dual-Corridor Coverage
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* 8. SUPPORTED REGIONS */}
-      <section className="py-16 sm:py-20 bg-slate-50 border-y border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center mb-10">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-              Regional Coverage
-            </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Supported Highway Corridors
-            </h2>
-            <p className="text-sm text-slate-600 mt-2">
-              Initial high-density deployment across Gujarat with modular architecture ready for national rollout.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
-              <div className="text-xs font-bold text-slate-900">NE-1 Expressway</div>
-              <div className="text-xs text-slate-600">Ahmedabad — Anand — Nadiad — Vadodara</div>
-              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
-                Ultra-High Density Hubs
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
-              <div className="text-xs font-bold text-slate-900">NH-48 Golden Corridor</div>
-              <div className="text-xs text-slate-600">Vadodara — Bharuch — Ankleshwar — Surat</div>
-              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
-                120kW Superfast Chargers
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
-              <div className="text-xs font-bold text-slate-900">NH-27 Saurashtra Corridor</div>
-              <div className="text-xs text-slate-600">Ahmedabad — Limbdi — Sayla — Rajkot</div>
-              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
-                Highway Oasis Plazas
-              </span>
-            </div>
-
-            <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
-              <div className="text-xs font-bold text-slate-900">NH-41 North Gujarat</div>
-              <div className="text-xs text-slate-600">Ahmedabad — Gandhinagar — Mehsana</div>
-              <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 inline-block">
-                Tech & Industrial Hubs
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. FAQ */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="text-center">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-              Frequently Asked Questions
-            </span>
-            <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-              Honest Answers About EV Trip Planning
-            </h2>
-          </div>
-
-          <div className="space-y-4 text-xs sm:text-sm">
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-              <h4 className="font-bold text-slate-900">How is the Charging Risk Score calculated?</h4>
-              <p className="text-slate-600 leading-relaxed text-xs">
-                The score (0 to 100) is transparent and rule-based. It evaluates status freshness, recent fault reports, connector count (multi-stall vs single gun), detour distance to alternative stations, and expected arrival SoC. We do not use unvalidated AI predictions.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-              <h4 className="font-bold text-slate-900">Why does battery consumption differ from ARAI / MIDC claims?</h4>
-              <p className="text-slate-600 leading-relaxed text-xs">
-                Official test cycles are conducted at moderate speeds in laboratory conditions without air conditioning. Real highway driving at 100 km/h with Indian summer AC increases consumption by 20% to 30%. ChargeRoute AI uses net usable capacity and realistic highway multipliers.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-              <h4 className="font-bold text-slate-900">What happens if my planned charger is occupied?</h4>
-              <p className="text-slate-600 leading-relaxed text-xs">
-                Every stop card in ChargeRoute AI highlights primary and secondary backup stations. The planner calculates whether you have sufficient remaining battery to detour without running out of charge.
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-1.5">
-              <h4 className="font-bold text-slate-900">Is this data sample data or live?</h4>
-              <p className="text-slate-600 leading-relaxed text-xs">
-                In development mode, stations reflect verified coordinates and typical tariffs of operating Gujarat highway charging plazas. Data confidence levels and timestamps are clearly labeled on every card.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CALL TO ACTION */}
-      <section className="bg-emerald-600 text-white py-14">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <h2 className="text-3xl font-extrabold tracking-tight">Ready to plan your intercity journey?</h2>
-          <p className="text-sm text-emerald-100 max-w-lg mx-auto">
-            Choose your electric car, calculate true highway range, and ensure peace of mind with verified fallback stations.
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/plan"
-              className="px-6 py-3.5 rounded-xl bg-white text-emerald-950 font-bold text-sm shadow-md transition-all hover:bg-slate-100 hover:scale-105 inline-flex items-center gap-2"
-            >
-              <Zap className="w-4 h-4 fill-emerald-900" />
-              <span>Start Trip Planning Now</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

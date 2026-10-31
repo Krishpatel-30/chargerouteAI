@@ -1,6 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import {
   VehicleModel,
@@ -16,9 +19,23 @@ import { AlternativeRouteSelector } from "@/components/planner/AlternativeRouteS
 import { RiskIndicator } from "@/components/planner/RiskIndicator";
 import { TripTimeline } from "@/components/planner/TripTimeline";
 import { RouteMap } from "@/components/map/RouteMap";
-import { ShieldCheck, Info, CheckCircle2 } from "lucide-react";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import {
+  ShieldCheck,
+  Info,
+  CheckCircle2,
+  Lock,
+  Mail,
+  Eye,
+  EyeOff,
+  Sparkles,
+  Loader2,
+  ArrowRight,
+} from "lucide-react";
 
 export default function PlanTripPage() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading, login } = useAuth();
   const [vehicles, setVehicles] = useState<VehicleModel[]>([]);
   const [allChargers, setAllChargers] = useState<ChargingStation[]>([]);
   const [planResponse, setPlanResponse] = useState<TripPlanResponse | null>(null);
@@ -27,8 +44,29 @@ export default function PlanTripPage() {
   const [savedSuccessMessage, setSavedSuccessMessage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Load initial vehicles and regional chargers
+  // Auth gate states
+  const [gateEmail, setGateEmail] = useState("");
+  const [gatePassword, setGatePassword] = useState("");
+  const [gateShowPassword, setGateShowPassword] = useState(false);
+  const [gateLoading, setGateLoading] = useState(false);
+  const [gateError, setGateError] = useState<string | null>(null);
+
+  const handleGateLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setGateError(null);
+    setGateLoading(true);
+    try {
+      await login({ email: gateEmail, password: gatePassword });
+    } catch (err: any) {
+      setGateError(err?.response?.data?.detail || "Invalid email or password.");
+    } finally {
+      setGateLoading(false);
+    }
+  };
+
+  // Load initial vehicles and regional chargers only after authentication
   useEffect(() => {
+    if (!isAuthenticated) return;
     async function initData() {
       try {
         const [vehs, chargers] = await Promise.all([
@@ -38,15 +76,15 @@ export default function PlanTripPage() {
         setVehicles(vehs);
         setAllChargers(chargers);
 
-        // Run default demonstration plan: Ahmedabad to Surat in Nexon EV
+        // Run default demonstration plan: New Delhi to Agra on Yamuna Expressway
         if (vehs.length > 0) {
           handlePlanTrip({
-            origin_name: "Ahmedabad, Gujarat",
-            origin_lat: 23.0225,
-            origin_lng: 72.5714,
-            destination_name: "Surat, Gujarat",
-            destination_lat: 21.1702,
-            destination_lng: 72.8311,
+            origin_name: "New Delhi, Delhi",
+            origin_lat: 28.6139,
+            origin_lng: 77.2090,
+            destination_name: "Agra, Uttar Pradesh",
+            destination_lat: 27.1767,
+            destination_lng: 78.0081,
             vehicle_id: vehs[0].id,
             start_battery_pct: 85,
             min_arrival_battery_pct: 15,
@@ -58,7 +96,13 @@ export default function PlanTripPage() {
       }
     }
     initData();
-  }, []);
+  }, [isAuthenticated]);
+
+  const handleVehicleCreated = (newVehicle: VehicleModel) => {
+    setVehicles((prev) => [newVehicle, ...prev.filter((v) => v.id !== newVehicle.id)]);
+    setSavedSuccessMessage(`Custom vehicle "${newVehicle.manufacturer} ${newVehicle.model}" configured and selected for trip analysis!`);
+    setTimeout(() => setSavedSuccessMessage(null), 6000);
+  };
 
   const handlePlanTrip = async (payload: TripPlanRequest) => {
     setIsLoading(true);
@@ -77,14 +121,17 @@ export default function PlanTripPage() {
 
   const handleSaveTrip = async () => {
     if (!planResponse) return;
+    if (!isAuthenticated) {
+      router.push(`/login?redirect=/plan`);
+      return;
+    }
     setIsSaving(true);
     try {
       await api.saveTrip(planResponse.title, planResponse);
-      setSavedSuccessMessage("Trip successfully saved to your Driver Dashboard!");
-      setTimeout(() => setSavedSuccessMessage(null), 4000);
+      setSavedSuccessMessage("Trip saved to your permanent Driver History! View under Trip History.");
+      setTimeout(() => setSavedSuccessMessage(null), 5000);
     } catch (err) {
-      // Fallback for demo guest
-      setSavedSuccessMessage("Trip saved to session! (Login to persist across devices)");
+      setSavedSuccessMessage("Could not save trip. Please try again.");
       setTimeout(() => setSavedSuccessMessage(null), 4000);
     } finally {
       setIsSaving(false);
@@ -117,14 +164,140 @@ export default function PlanTripPage() {
 
   // Origin & destination coordinates for map
   const originCoord = planResponse
-    ? { name: planResponse.origin_name, lat: 23.0225, lng: 72.5714 }
+    ? {
+        name: planResponse.origin_name,
+        lat: planResponse.origin_lat ?? (planResponse.route_geometry?.[0]?.[1] ?? 28.6139),
+        lng: planResponse.origin_lng ?? (planResponse.route_geometry?.[0]?.[0] ?? 77.2090),
+      }
     : undefined;
   const destCoord = planResponse
-    ? { name: planResponse.destination_name, lat: 21.1702, lng: 72.8311 }
+    ? {
+        name: planResponse.destination_name,
+        lat: planResponse.destination_lat ?? (planResponse.route_geometry?.[planResponse.route_geometry.length - 1]?.[1] ?? 27.1767),
+        lng: planResponse.destination_lng ?? (planResponse.route_geometry?.[planResponse.route_geometry.length - 1]?.[0] ?? 78.0081),
+      }
     : undefined;
 
   // Collect all backup candidates across stops for map
   const allBackups = displayedStops.flatMap((s) => s.all_backups || []);
+
+  if (authLoading) {
+    return (
+      <div className="flex-1 bg-slate-50 flex items-center justify-center p-12">
+        <div className="text-center space-y-3">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mx-auto" />
+          <p className="text-xs font-semibold text-slate-500">Checking driver credentials...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex-1 bg-slate-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-8 space-y-6">
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center mx-auto shadow-md shadow-emerald-600/30">
+              <Lock className="w-6 h-6" />
+            </div>
+            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+              Driver Sign-In Required
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600">
+              Sign in with Google or your driver account to access the Pan-India EV Trip Planner, simulate battery range, and view backup chargers.
+            </p>
+          </div>
+
+          <GoogleAuthButton redirectUrl="/plan" buttonText="Continue with Google" />
+
+          <div className="relative flex py-1 items-center">
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="flex-shrink mx-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              or continue with driver email
+            </span>
+            <div className="flex-grow border-t border-slate-200"></div>
+          </div>
+
+          {gateError && (
+            <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
+              ⚠️ {gateError}
+            </div>
+          )}
+
+          <form onSubmit={handleGateLogin} className="space-y-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Email Address
+              </label>
+              <div className="relative">
+                <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+                <input
+                  type="email"
+                  required
+                  value={gateEmail}
+                  onChange={(e) => setGateEmail(e.target.value)}
+                  placeholder="driver@example.com"
+                  className="w-full pl-8 pr-3 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+                <input
+                  type={gateShowPassword ? "text" : "password"}
+                  required
+                  value={gatePassword}
+                  onChange={(e) => setGatePassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full pl-8 pr-9 py-2 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => setGateShowPassword(!gateShowPassword)}
+                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                >
+                  {gateShowPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={gateLoading}
+              className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/40 flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              {gateLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Signing In...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sign In &amp; Open Trip Planner</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>New driver?</span>
+            <Link
+              href="/register?redirect=/plan"
+              className="font-bold text-emerald-600 hover:text-emerald-700 underline"
+            >
+              Create Account
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
@@ -136,12 +309,12 @@ export default function PlanTripPage() {
               Risk-Aware EV Trip Planner
             </h1>
             <p className="text-sm text-slate-600 mt-1">
-              Select your vehicle, customize battery assumptions, and discover verified charging stops with safe backups.
+              Select your vehicle, customize battery assumptions, and discover verified charging stops with safe backups across all India.
             </p>
           </div>
           <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 bg-emerald-100/90 border border-emerald-200 px-3 py-1.5 rounded-lg w-fit">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
-            <span>Gujarat Corridor Telemetry Active</span>
+            <span>Pan-India Corridor Telemetry Active</span>
           </div>
         </div>
 
@@ -160,6 +333,7 @@ export default function PlanTripPage() {
               vehicles={vehicles}
               onPlanTrip={handlePlanTrip}
               isLoading={isLoading}
+              onVehicleCreated={handleVehicleCreated}
             />
 
             {/* Assumptions Box */}

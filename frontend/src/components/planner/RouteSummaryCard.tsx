@@ -1,7 +1,7 @@
 import React from "react";
 import { TripPlanResponse } from "@/lib/types";
 import { formatDistance, formatDuration, formatINR, getRiskColorClass } from "@/lib/utils";
-import { Route, Clock, Zap, Shield, IndianRupee, BatteryWarning } from "lucide-react";
+import { Route, Clock, Zap, Shield, IndianRupee, BatteryWarning, Navigation, ExternalLink } from "lucide-react";
 
 interface RouteSummaryCardProps {
   plan: TripPlanResponse;
@@ -103,9 +103,40 @@ export const RouteSummaryCard: React.FC<RouteSummaryCardProps> = ({
         </div>
       )}
 
-      {/* Save Trip CTA */}
-      {onSave && (
-        <div className="pt-2 flex justify-end">
+      {/* Actions: Navigate in Google Maps & Save Route */}
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100">
+        <a
+          href={(() => {
+            const originParam = encodeURIComponent(
+              plan.origin_lat && plan.origin_lng
+                ? `${plan.origin_lat},${plan.origin_lng}`
+                : plan.origin_name
+            );
+            const destParam = encodeURIComponent(
+              plan.destination_lat && plan.destination_lng
+                ? `${plan.destination_lat},${plan.destination_lng}`
+                : plan.destination_name
+            );
+            let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving`;
+            if (plan.charging_stops && plan.charging_stops.length > 0) {
+              const waypoints = plan.charging_stops
+                .map((s) => `${s.latitude},${s.longitude}`)
+                .join("|");
+              url += `&waypoints=${encodeURIComponent(waypoints)}`;
+            }
+            return url;
+          })()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-xs flex items-center gap-1.5"
+          title="Open complete EV route with planned charging stops in Google Maps"
+        >
+          <Navigation className="w-3.5 h-3.5" />
+          <span>Navigate in Google Maps</span>
+          <ExternalLink className="w-3 h-3 opacity-75" />
+        </a>
+
+        {onSave && (
           <button
             onClick={onSave}
             disabled={isSaving}
@@ -113,8 +144,8 @@ export const RouteSummaryCard: React.FC<RouteSummaryCardProps> = ({
           >
             {isSaving ? "Saving Trip..." : "Save Route to My Dashboard"}
           </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

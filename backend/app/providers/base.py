@@ -40,3 +40,32 @@ class ChargerDataProvider(ABC):
     ) -> List[Dict[str, Any]]:
         """Discovers charging stations near a geographic point."""
         pass
+
+
+class LocationResult(BaseModel):
+    id: str
+    name: str
+    display_name: str
+    category: str = "location"  # village, town, city, landmark, etc.
+    village: Optional[str] = None
+    taluka: Optional[str] = None
+    district: Optional[str] = None
+    state: Optional[str] = "India"
+    country: str = "India"
+    latitude: float
+    longitude: float
+    provider: str  # google_maps, nominatim, india_directory
+    place_id: Optional[str] = None
+
+
+class GeocodingProvider(ABC):
+    @abstractmethod
+    async def search(self, query: str, limit: int = 8) -> List[LocationResult]:
+        """Searches for locations/villages matching a query."""
+        pass
+
+    @abstractmethod
+    async def reverse(self, lat: float, lng: float) -> Optional[LocationResult]:
+        """Reverse geocodes coordinates to a location/village description."""
+        pass
+

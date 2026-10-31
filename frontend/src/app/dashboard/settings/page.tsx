@@ -2,9 +2,22 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { AuthGate } from "@/components/auth/AuthGate";
 import { ArrowLeft, Save, Shield, Sliders, Bell } from "lucide-react";
 
 export default function UserSettingsPage() {
+  return (
+    <AuthGate
+      featureTitle="Driver Preferences & Routing Margins"
+      featureDescription="Sign in to customize arrival battery reserves, charging operator filters, and outage alerts."
+      redirectUrl="/dashboard/settings"
+    >
+      <UserSettingsContent />
+    </AuthGate>
+  );
+}
+
+function UserSettingsContent() {
   const [defaultReserve, setDefaultReserve] = useState(15);
   const [preferredNetworks, setPreferredNetworks] = useState<string[]>([
     "Tata Power",

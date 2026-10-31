@@ -29,7 +29,7 @@ async def list_chargers(
     operator: Optional[str] = None,
     city: Optional[str] = None,
     search: Optional[str] = None,
-    limit: int = Query(50, ge=1, le=200),
+    limit: int = Query(300, ge=1, le=1000),
     offset: int = Query(0, ge=0),
     db: AsyncSession = Depends(get_db),
 ):

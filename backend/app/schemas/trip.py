@@ -87,7 +87,11 @@ class TripPlanResponse(BaseModel):
     trip_id: Optional[str] = None
     title: str
     origin_name: str
+    origin_lat: Optional[float] = None
+    origin_lng: Optional[float] = None
     destination_name: str
+    destination_lat: Optional[float] = None
+    destination_lng: Optional[float] = None
     vehicle_name: str
     vehicle_battery_usable_kwh: float
     

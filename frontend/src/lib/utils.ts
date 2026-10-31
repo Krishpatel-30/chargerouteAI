@@ -75,6 +75,30 @@ export function getStatusBadgeClass(status: string): string {
 
 export function extractErrorMessage(err: any, fallback = "An unexpected error occurred. Please try again."): string {
   if (!err) return fallback;
+
+  // Firebase Auth Error Code mapping
+  if (err?.code) {
+    if (err.code === "auth/popup-closed-by-user") {
+      return "Google sign-in popup was closed before completing.";
+    }
+    if (err.code === "auth/cancelled-popup-request") {
+      return "Another Google sign-in request was started.";
+    }
+    if (err.code === "auth/operation-not-allowed") {
+      return "Google Sign-In is not yet enabled in your Firebase Console. Go to Firebase Console -> Authentication -> Sign-in method -> Enable Google.";
+    }
+    if (err.code === "auth/unauthorized-domain") {
+      const currentHost = typeof window !== "undefined" ? window.location.hostname : "this domain";
+      return `Domain (${currentHost}) is not authorized in Firebase. Add it under Firebase Console -> Authentication -> Settings -> Authorized domains.`;
+    }
+    if (err.code === "auth/popup-blocked") {
+      return "The Google sign-in popup was blocked by your browser. Please allow popups for this site.";
+    }
+    if (err.code === "auth/network-request-failed") {
+      return "Network error connecting to Google servers. Please check your internet connection.";
+    }
+  }
+
   const detail = err?.response?.data?.detail;
   if (typeof detail === "string") {
     return detail;

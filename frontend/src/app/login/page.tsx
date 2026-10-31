@@ -46,9 +46,9 @@ function LoginForm() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      router.push(redirectUrl);
+      window.location.href = redirectUrl || "/plan";
     }
-  }, [isAuthenticated, redirectUrl, router]);
+  }, [isAuthenticated, redirectUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,7 +61,7 @@ function LoginForm() {
       } else {
         await login({ email: email.trim().toLowerCase(), password });
       }
-      router.push(redirectUrl);
+      window.location.href = redirectUrl || "/plan";
     } catch (err: any) {
       console.error("Login failed:", err);
       const detail = extractErrorMessage(err, "Invalid email or password. Please try again.");

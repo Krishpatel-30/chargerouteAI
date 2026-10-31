@@ -39,10 +39,14 @@ export function GoogleAuthButton({
       setIsLoading(true);
       try {
         await loginWithFirebaseGoogle();
-        router.push(redirectUrl);
+        // Guaranteed immediate full-page navigation to destination page
+        window.location.href = redirectUrl || "/plan";
       } catch (err: any) {
         console.error("Firebase Google Sign-In failed:", err);
-        setError(extractErrorMessage(err, "Google sign-in was cancelled or failed. Please try again."));
+        const errorMsg = extractErrorMessage(err, "Google sign-in was cancelled or failed. Please try again.");
+        setError(errorMsg);
+        // Automatically open confidential dialog fallback so user is never stuck
+        setIsModalOpen(true);
       } finally {
         setIsLoading(false);
       }
@@ -66,7 +70,7 @@ export function GoogleAuthButton({
         full_name: name?.trim() || undefined,
       });
       setIsModalOpen(false);
-      router.push(redirectUrl);
+      window.location.href = redirectUrl || "/plan";
     } catch (err: any) {
       console.error("Google sign-in failed:", err);
       setError(extractErrorMessage(err, "Google authentication failed. Please try again."));
@@ -108,6 +112,12 @@ export function GoogleAuthButton({
         </svg>
         <span>{buttonText}</span>
       </button>
+
+      {error && !isModalOpen && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
+          ⚠️ {error}
+        </div>
+      )}
 
       {/* Google Authentication Dialog - Strictly Private & Confidential */}
       {isModalOpen && (

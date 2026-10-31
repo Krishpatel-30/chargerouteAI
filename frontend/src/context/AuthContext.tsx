@@ -100,12 +100,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const { idToken, user: fbUser } = await signInWithGoogleFirebase();
+      const userEmail = fbUser.email || fbUser.providerData?.[0]?.email || "";
+      const userName = fbUser.displayName || fbUser.providerData?.[0]?.displayName || undefined;
+      const userPhoto = fbUser.photoURL || fbUser.providerData?.[0]?.photoURL || undefined;
+
+      if (!userEmail) {
+        throw new Error("No email was returned from your Google account. Please use driver email sign-in.");
+      }
+
       const res = await api.loginWithFirebase({
         id_token: idToken,
-        email: fbUser.email || "",
-        full_name: fbUser.displayName || undefined,
+        email: userEmail,
+        full_name: userName,
         firebase_uid: fbUser.uid,
-        avatar_url: fbUser.photoURL || undefined,
+        avatar_url: userPhoto,
       });
       setUser(res.user);
       return res.user;

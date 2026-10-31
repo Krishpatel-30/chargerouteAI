@@ -66,6 +66,12 @@ export default function LandingPage() {
   const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
   const [resetDevUrl, setResetDevUrl] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      window.location.href = "/plan";
+    }
+  }, [isAuthenticated]);
+
   const handleInlineAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
@@ -130,7 +136,7 @@ export default function LandingPage() {
           });
         }
       }
-      router.push("/plan");
+      window.location.href = "/plan";
     } catch (err: any) {
       console.error(`${authMode} failed:`, err);
       const msg = extractErrorMessage(

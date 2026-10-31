@@ -29,9 +29,9 @@ function RegisterForm() {
 
   React.useEffect(() => {
     if (isAuthenticated) {
-      router.push(redirectUrl);
+      window.location.href = redirectUrl || "/plan";
     }
-  }, [isAuthenticated, redirectUrl, router]);
+  }, [isAuthenticated, redirectUrl]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ function RegisterForm() {
           full_name: fullName.trim() || undefined,
         });
       }
-      router.push(redirectUrl);
+      window.location.href = redirectUrl || "/plan";
     } catch (err: any) {
       console.error("Registration failed:", err);
       const detail = extractErrorMessage(err, "Registration failed. Please check your inputs.");

@@ -14,19 +14,35 @@ import {
   IndiaState,
 } from "./types";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+export function getApiBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    // If an explicit non-localhost production API is provided, use it
+    const envApi = process.env.NEXT_PUBLIC_API_URL;
+    if (envApi && !envApi.includes("localhost") && !envApi.includes("127.0.0.1")) {
+      return envApi;
+    }
+    // In any browser environment (whether localhost, mobile device on LAN, or domain):
+    // Next.js rewrites /api/v1/:path* to FastAPI on port 8000.
+    // Using relative "/api/v1" ensures all requests hit the origin serving the page,
+    // eliminating cross-device network errors, firewall blocks, and CORS restrictions.
+    return "/api/v1";
+  }
+  // Server-side (Node.js / SSR):
+  return process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+}
 
 const apiClient = axios.create({
-  baseURL: API_BASE,
-  timeout: 10000,
+  baseURL: getApiBaseUrl(),
+  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Attach token if present in localStorage (client side)
+// Attach token and dynamically set base URL in browser
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
+    config.baseURL = getApiBaseUrl();
     const token = localStorage.getItem("voltplan_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -55,6 +71,26 @@ export const api = {
 
   async loginWithGoogle(data: GoogleAuthData): Promise<AuthResponse> {
     const res = await apiClient.post<AuthResponse>("/auth/google", data);
+    if (typeof window !== "undefined" && res.data?.access_token) {
+      localStorage.setItem("voltplan_token", res.data.access_token);
+    }
+    return res.data;
+  },
+
+  async loginWithFirebase(data: {
+    id_token: string;
+    email: string;
+    full_name?: string;
+    firebase_uid?: string;
+    avatar_url?: string;
+  }): Promise<AuthResponse> {
+    const res = await apiClient.post<AuthResponse>("/auth/google", {
+      id_token: data.id_token,
+      email: data.email,
+      full_name: data.full_name,
+      google_id: data.firebase_uid,
+      avatar_url: data.avatar_url,
+    });
     if (typeof window !== "undefined" && res.data?.access_token) {
       localStorage.setItem("voltplan_token", res.data.access_token);
     }

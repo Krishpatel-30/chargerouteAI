@@ -41,7 +41,18 @@ import {
 
 export default function LandingPage() {
   const router = useRouter();
-  const { user, isAuthenticated, login, register, logout, isLoading: authLoading } = useAuth();
+  const {
+    user,
+    isAuthenticated,
+    login,
+    register,
+    loginWithFirebaseEmail,
+    registerWithFirebaseEmail,
+    sendPasswordResetEmail,
+    isFirebaseEnabled,
+    logout,
+    isLoading: authLoading,
+  } = useAuth();
 
   // Inline Auth state (Sign In, Account Creation & Forgot Password) for unauthenticated users on homepage
   const [authMode, setAuthMode] = useState<"signin" | "register" | "forgot_password">("signin");
@@ -70,10 +81,15 @@ export default function LandingPage() {
     if (authMode === "forgot_password") {
       setIsSubmitting(true);
       try {
-        const res = await api.forgotPassword(cleanEmail);
-        setResetSuccessMessage(res.message || `Password reset instructions sent to ${cleanEmail}`);
-        if (res.reset_url_dev) {
-          setResetDevUrl(res.reset_url_dev);
+        if (isFirebaseEnabled) {
+          await sendPasswordResetEmail(cleanEmail);
+          setResetSuccessMessage(`Password reset link sent to ${cleanEmail} directly via Google Firebase.`);
+        } else {
+          const res = await api.forgotPassword(cleanEmail);
+          setResetSuccessMessage(res.message || `Password reset instructions sent to ${cleanEmail}`);
+          if (res.reset_url_dev) {
+            setResetDevUrl(res.reset_url_dev);
+          }
         }
       } catch (err: any) {
         console.error("Forgot password failed:", err);
@@ -98,13 +114,21 @@ export default function LandingPage() {
     setIsSubmitting(true);
     try {
       if (authMode === "signin") {
-        await login({ email: cleanEmail, password });
+        if (isFirebaseEnabled) {
+          await loginWithFirebaseEmail(cleanEmail, password);
+        } else {
+          await login({ email: cleanEmail, password });
+        }
       } else {
-        await register({
-          email: cleanEmail,
-          password,
-          full_name: fullName.trim() || undefined,
-        });
+        if (isFirebaseEnabled) {
+          await registerWithFirebaseEmail(cleanEmail, password, fullName.trim() || undefined);
+        } else {
+          await register({
+            email: cleanEmail,
+            password,
+            full_name: fullName.trim() || undefined,
+          });
+        }
       }
       router.push("/plan");
     } catch (err: any) {

@@ -2,7 +2,8 @@ import secrets
 from datetime import datetime, timezone, timedelta
 from typing import Optional
 import logging
-from fastapi import APIRouter, Depends, HTTPException, status
+from urllib.parse import urlparse
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
@@ -145,7 +146,11 @@ async def get_me(user: User = Depends(get_current_user)):
 
 
 @router.post("/forgot-password", response_model=PasswordResetResponse)
-async def forgot_password(request: ForgotPasswordRequest, db: AsyncSession = Depends(get_db)):
+async def forgot_password(
+    http_req: Request,
+    request: ForgotPasswordRequest,
+    db: AsyncSession = Depends(get_db),
+):
     email = request.email.lower().strip()
     stmt = select(User).where(User.email == email)
     res = await db.execute(stmt)
@@ -153,6 +158,14 @@ async def forgot_password(request: ForgotPasswordRequest, db: AsyncSession = Dep
 
     reset_token = secrets.token_urlsafe(32)
     dev_url = None
+
+    # Dynamically detect client frontend origin so links opened on other devices (mobile, LAN, etc.) route properly
+    client_origin = http_req.headers.get("origin") or http_req.headers.get("referer")
+    detected_frontend = None
+    if client_origin:
+        parsed = urlparse(client_origin)
+        if parsed.scheme and parsed.netloc:
+            detected_frontend = f"{parsed.scheme}://{parsed.netloc}"
 
     if user:
         user.reset_password_token = reset_token
@@ -164,6 +177,7 @@ async def forgot_password(request: ForgotPasswordRequest, db: AsyncSession = Dep
             to_email=user.email,
             reset_token=reset_token,
             user_name=user.full_name,
+            frontend_url=detected_frontend,
         )
         dev_url = email_result.get("reset_url")
     else:

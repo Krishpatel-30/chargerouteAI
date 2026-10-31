@@ -30,10 +30,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS configuration
+# CORS configuration: allow any origin regex to support local development across devices (LAN IP, localhost, custom domains)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permits local Next.js dev server & external clients
+    allow_origin_regex=r"^https?://.*",
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

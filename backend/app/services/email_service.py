@@ -13,14 +13,15 @@ class EmailService:
     def send_password_reset_email(
         to_email: str,
         reset_token: str,
-        user_name: Optional[str] = None
+        user_name: Optional[str] = None,
+        frontend_url: Optional[str] = None,
     ) -> dict:
         """
         Sends a secure password reset email to the user.
         If SMTP server is configured, sends via SMTP.
         Otherwise logs and returns development URL for zero-friction local testing.
         """
-        frontend_base = settings.FRONTEND_URL.rstrip("/")
+        frontend_base = (frontend_url or settings.FRONTEND_URL).rstrip("/")
         reset_url = f"{frontend_base}/reset-password?token={reset_token}"
         display_name = user_name or to_email.split("@")[0].title()
 

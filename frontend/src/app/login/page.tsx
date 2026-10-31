@@ -26,7 +26,13 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/plan";
 
-  const { login, isAuthenticated } = useAuth();
+  const {
+    login,
+    loginWithFirebaseEmail,
+    sendPasswordResetEmail,
+    isFirebaseEnabled,
+    isAuthenticated,
+  } = useAuth();
   const [view, setView] = useState<"login" | "forgot_password">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +56,11 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      await login({ email: email.trim().toLowerCase(), password });
+      if (isFirebaseEnabled) {
+        await loginWithFirebaseEmail(email.trim().toLowerCase(), password);
+      } else {
+        await login({ email: email.trim().toLowerCase(), password });
+      }
       router.push(redirectUrl);
     } catch (err: any) {
       console.error("Login failed:", err);
@@ -75,8 +85,15 @@ function LoginForm() {
     }
 
     try {
-      const res = await api.forgotPassword(cleanEmail);
-      setResetSuccessInfo(res);
+      if (isFirebaseEnabled) {
+        await sendPasswordResetEmail(cleanEmail);
+        setResetSuccessInfo({
+          message: `Password reset instructions have been sent to ${cleanEmail} directly via Google Firebase. Please check your inbox or spam folder.`,
+        });
+      } else {
+        const res = await api.forgotPassword(cleanEmail);
+        setResetSuccessInfo(res);
+      }
     } catch (err: any) {
       console.error("Forgot password failed:", err);
       const msg = extractErrorMessage(err, "Failed to send reset link. Please check your email.");

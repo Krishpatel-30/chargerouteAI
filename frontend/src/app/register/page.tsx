@@ -13,7 +13,12 @@ function RegisterForm() {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get("redirect") || "/plan";
 
-  const { register, isAuthenticated } = useAuth();
+  const {
+    register,
+    registerWithFirebaseEmail,
+    isFirebaseEnabled,
+    isAuthenticated,
+  } = useAuth();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,11 +50,19 @@ function RegisterForm() {
     setIsLoading(true);
 
     try {
-      await register({
-        email: email.trim().toLowerCase(),
-        password,
-        full_name: fullName.trim() || undefined,
-      });
+      if (isFirebaseEnabled) {
+        await registerWithFirebaseEmail(
+          email.trim().toLowerCase(),
+          password,
+          fullName.trim() || undefined
+        );
+      } else {
+        await register({
+          email: email.trim().toLowerCase(),
+          password,
+          full_name: fullName.trim() || undefined,
+        });
+      }
       router.push(redirectUrl);
     } catch (err: any) {
       console.error("Registration failed:", err);

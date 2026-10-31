@@ -16,7 +16,7 @@ export function GoogleAuthButton({
   buttonText = "Continue with Google",
 }: GoogleAuthButtonProps) {
   const router = useRouter();
-  const { loginWithGoogle } = useAuth();
+  const { loginWithGoogle, loginWithFirebaseGoogle, isFirebaseEnabled } = useAuth();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +32,26 @@ export function GoogleAuthButton({
       // Ignore
     }
   }, []);
+
+  const handleButtonClick = async () => {
+    setError(null);
+    if (isFirebaseEnabled) {
+      setIsLoading(true);
+      try {
+        await loginWithFirebaseGoogle();
+        router.push(redirectUrl);
+      } catch (err: any) {
+        console.error("Firebase Google Sign-In failed:", err);
+        setError(extractErrorMessage(err, "Google sign-in was cancelled or failed. Please try again."));
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setGoogleEmail("");
+      setFullName("");
+      setIsModalOpen(true);
+    }
+  };
 
   const executeGoogleSignIn = async (email: string, name?: string) => {
     if (!email || !email.includes("@")) {
@@ -64,12 +84,8 @@ export function GoogleAuthButton({
     <>
       <button
         type="button"
-        onClick={() => {
-          setError(null);
-          setGoogleEmail("");
-          setFullName("");
-          setIsModalOpen(true);
-        }}
+        disabled={isLoading}
+        onClick={handleButtonClick}
         className="w-full py-2.5 px-4 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm transition-all shadow-xs flex items-center justify-center gap-3 disabled:opacity-60 hover:border-slate-400 group"
       >
         <svg className="w-4 h-4 shrink-0 transition-transform group-hover:scale-105" viewBox="0 0 24 24">

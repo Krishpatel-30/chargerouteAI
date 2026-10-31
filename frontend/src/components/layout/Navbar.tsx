@@ -46,9 +46,14 @@ export const Navbar = () => {
                 <span className="text-xl font-bold tracking-tight text-slate-900 group-hover:text-emerald-700 transition-colors">
                   ChargeRoute<span className="text-emerald-600">.AI</span>
                 </span>
-                <span className="hidden sm:inline-block text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                  by KSVISUALSAGENCY
-                </span>
+                <a
+                  href="https://ksvisualsagency.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-block text-[9px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded border border-emerald-200 transition-colors"
+                >
+                  by KSVISUALSAGENCY ↗
+                </a>
               </div>
               <span className="block text-[10px] uppercase tracking-wider font-semibold text-slate-400 -mt-0.5">
                 Risk-Aware EV Planner

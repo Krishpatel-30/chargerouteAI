@@ -29,6 +29,9 @@ import {
   SlidersHorizontal,
   Flame,
   Award,
+  Globe,
+  ExternalLink,
+  Layers,
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -57,138 +60,6 @@ export default function LandingPage() {
     }
   };
 
-  // Featured Indian Electric Vehicle Models with real verified photos and engineering benchmarks
-  const featuredModels = [
-    {
-      id: "curvv-55",
-      name: "Tata Curvv EV 55 (Empowered+)",
-      brand: "TATA",
-      category: "Coupe SUV",
-      tag: "New Flagship 2024",
-      image: "/images/vehicles/tata-curvv-ev.jpg",
-      grossKwh: "55.0 kWh",
-      usableKwh: "51.8 kWh",
-      highwayRange: "~450 km",
-      claimedRange: "585 km MIDC",
-      dcSpeed: "70 kW DC",
-      chargeTime: "10–80% in 40 min",
-      consumption: "13.8 kWh / 100km",
-      badgeColor: "bg-emerald-50 text-emerald-800 border-emerald-200",
-    },
-    {
-      id: "nexon-45",
-      name: "Tata Nexon EV 45 (Long Range)",
-      brand: "TATA",
-      category: "Compact SUV",
-      tag: "India's #1 Best-Seller",
-      image: "/images/vehicles/tata-nexon-ev.png",
-      grossKwh: "45.0 kWh",
-      usableKwh: "42.5 kWh",
-      highwayRange: "~365 km",
-      claimedRange: "465 km MIDC",
-      dcSpeed: "60 kW DC",
-      chargeTime: "10–80% in 45 min",
-      consumption: "14.5 kWh / 100km",
-      badgeColor: "bg-blue-50 text-blue-800 border-blue-200",
-    },
-    {
-      id: "xuv400-el",
-      name: "Mahindra XUV400 EL Pro",
-      brand: "MAHINDRA",
-      category: "Electric SUV",
-      tag: "Dual-Zone Climate Pack",
-      image: "/images/vehicles/mahindra-xuv400.jpg",
-      grossKwh: "39.4 kWh",
-      usableKwh: "37.2 kWh",
-      highwayRange: "~310 km",
-      claimedRange: "456 km MIDC",
-      dcSpeed: "50 kW DC",
-      chargeTime: "10–80% in 50 min",
-      consumption: "14.8 kWh / 100km",
-      badgeColor: "bg-amber-50 text-amber-900 border-amber-200",
-    },
-    {
-      id: "mg-zs-ev",
-      name: "MG ZS EV (Exclusive Plus)",
-      brand: "MG MOTOR",
-      category: "Premium EV",
-      tag: "Panoramic Glass Roof",
-      image: "/images/vehicles/mg-zs-ev.jpg",
-      grossKwh: "50.3 kWh",
-      usableKwh: "47.5 kWh",
-      highwayRange: "~380 km",
-      claimedRange: "461 km MIDC",
-      dcSpeed: "50 kW DC",
-      chargeTime: "10–80% in 54 min",
-      consumption: "15.0 kWh / 100km",
-      badgeColor: "bg-rose-50 text-rose-800 border-rose-200",
-    },
-    {
-      id: "ioniq-5",
-      name: "Hyundai Ioniq 5 RWD",
-      brand: "HYUNDAI",
-      category: "800V Luxury Crossover",
-      tag: "Ultra-Fast 800V Architecture",
-      image: "/images/vehicles/hyundai-ioniq-5.jpg",
-      grossKwh: "72.6 kWh",
-      usableKwh: "70.0 kWh",
-      highwayRange: "~510 km",
-      claimedRange: "631 km ARAI",
-      dcSpeed: "350 kW Ultra DC",
-      chargeTime: "10–80% in 18 min",
-      consumption: "16.2 kWh / 100km",
-      badgeColor: "bg-sky-50 text-sky-800 border-sky-200",
-    },
-    {
-      id: "byd-atto3",
-      name: "BYD Atto 3 (Extended Range)",
-      brand: "BYD",
-      category: "Blade Battery EV",
-      tag: "Ultra-Safe Blade Cells",
-      image: "/images/vehicles/byd-atto-3.jpg",
-      grossKwh: "60.5 kWh",
-      usableKwh: "58.0 kWh",
-      highwayRange: "~430 km",
-      claimedRange: "521 km ARAI",
-      dcSpeed: "80 kW DC",
-      chargeTime: "10–80% in 45 min",
-      consumption: "14.9 kWh / 100km",
-      badgeColor: "bg-teal-50 text-teal-800 border-teal-200",
-    },
-    {
-      id: "punch-ev",
-      name: "Tata Punch EV (Empowered+ LR)",
-      brand: "TATA",
-      category: "Micro SUV",
-      tag: "act.ev Architecture",
-      image: "/images/vehicles/tata-punch-ev.png",
-      grossKwh: "35.0 kWh",
-      usableKwh: "33.2 kWh",
-      highwayRange: "~290 km",
-      claimedRange: "421 km MIDC",
-      dcSpeed: "50 kW DC",
-      chargeTime: "10–80% in 56 min",
-      consumption: "13.2 kWh / 100km",
-      badgeColor: "bg-indigo-50 text-indigo-800 border-indigo-200",
-    },
-    {
-      id: "tiago-ev",
-      name: "Tata Tiago EV (XZ+ Tech LUX)",
-      brand: "TATA",
-      category: "Electric Hatchback",
-      tag: "Urban City Commuter",
-      image: "/images/vehicles/tata-tiago-ev.jpg",
-      grossKwh: "24.0 kWh",
-      usableKwh: "22.5 kWh",
-      highwayRange: "~210 km",
-      claimedRange: "315 km MIDC",
-      dcSpeed: "25 kW DC",
-      chargeTime: "10–80% in 57 min",
-      consumption: "12.5 kWh / 100km",
-      badgeColor: "bg-violet-50 text-violet-800 border-violet-200",
-    },
-  ];
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. HERO SECTION WITH EMBEDDED AUTHENTICATION & AGENCY ATTRIBUTION */}
@@ -198,10 +69,15 @@ export default function LandingPage() {
             {/* Left Hero Copy */}
             <div className="lg:col-span-7 space-y-6 text-left">
               {/* Attribution Pill */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100/90 text-emerald-950 border border-emerald-200 shadow-2xs">
+              <a
+                href="https://ksvisualsagency.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-100/90 hover:bg-emerald-200/90 text-emerald-950 border border-emerald-300 shadow-2xs transition-colors group"
+              >
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
-                <span>Made by <strong>KSVISUALSAGENCY</strong> • Pan-India EV Planning Platform</span>
-              </div>
+                <span>Made by <strong className="underline group-hover:text-emerald-800">KSVISUALSAGENCY</strong> ↗ • Pan-India EV Planning Platform</span>
+              </a>
 
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
                 Plan Your EV Journey.{" "}
@@ -444,7 +320,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 2. VISUAL SHOWCASE: THE PLATFORM MODEL WE MADE (WHAT USERS SEE AFTER LOGIN) */}
+      {/* 2. HIGH-TECH PLATFORM MODEL SHOWCASE (UNLOCKED AFTER DRIVER LOGIN) */}
       <section className="py-16 sm:py-24 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 text-white border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="max-w-3xl mx-auto text-center space-y-3">
@@ -456,240 +332,235 @@ export default function LandingPage() {
               The Planning Model We Built
             </h2>
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-              Explore the exact system interface unlocked once you sign in. From live highway corridor route planning to real-time outage risk simulations and custom vehicle engineering.
+              Explore the deterministic engineering platform unlocked once you sign in. Engineered with mathematical battery telemetry, real-time charger outage scoring, and custom electric vehicle physics by <strong>KSVISUALSAGENCY</strong>.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            {/* Card 1: Interactive Trip Planner with Route & Risk Score */}
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-2xl flex flex-col group hover:border-emerald-500/50 transition-all">
-              <div className="p-6 space-y-2 border-b border-slate-800">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Route className="w-3.5 h-3.5" />
-                    <span>01 • Interactive Trip Planner</span>
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
-                    Active System Preview
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold text-white">
-                  Risk-Aware Highway Route &amp; 0–100 Outage Engine
-                </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Real-time simulation of departure battery, arrival safety cushions, and turn-by-turn charging halts. The model maps 269+ verified charging plazas and scores outage risks to ensure you never get stranded.
-                </p>
-              </div>
-              <div className="relative flex-1 bg-slate-950 overflow-hidden flex items-center justify-center p-3 sm:p-5">
-                <img
-                  src="/images/model/live-trip-planner.png"
-                  alt="Risk-Aware EV Trip Planner Interface Model"
-                  className="rounded-2xl border border-slate-800/80 shadow-2xl w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-                />
-              </div>
-              <div className="p-4 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-[11px] text-slate-400">
-                  Full access at <code className="text-emerald-400 font-mono">/plan</code> after sign-in
-                </span>
-                <Link
-                  href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
-                >
-                  <span>{isAuthenticated ? "Launch Interactive Planner" : "Sign In to Test Model"}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-
-            {/* Card 2: Custom EV Builder / Manual Car Details */}
-            <div className="rounded-3xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-2xl flex flex-col group hover:border-emerald-500/50 transition-all">
-              <div className="p-6 space-y-2 border-b border-slate-800">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <SlidersHorizontal className="w-3.5 h-3.5" />
-                    <span>02 • Custom Vehicle Builder</span>
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
-                    Custom EV Analytics
+            {/* Studio Window 1: Interactive Corridor Route Planner & Outage Risk Engine */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/90 overflow-hidden shadow-2xl flex flex-col group hover:border-emerald-500/50 transition-all">
+              {/* Studio Window Header */}
+              <div className="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+                  <span className="ml-2 text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                    <Lock className="w-3 h-3 text-emerald-400" />
+                    <span>chargeroute.ai/plan?route=delhi-agra</span>
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white">
-                  Add Any Custom Car / Manual Specifications
-                </h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Have an unreleased model, imported EV, or custom battery pack? Tap <strong>+ Add Manual Car</strong> to quick-pick vehicle size, drag battery size (25–90 kWh) &amp; range sliders, and simulate route consumption instantly.
-                </p>
-              </div>
-              <div className="relative flex-1 bg-slate-950 overflow-hidden flex items-center justify-center p-3 sm:p-5">
-                <img
-                  src="/images/model/custom-ev-builder-model.jpg"
-                  alt="Custom EV Builder Model Dialog"
-                  className="rounded-2xl border border-slate-800/80 shadow-2xl max-h-[380px] w-auto object-contain group-hover:scale-[1.02] transition-transform duration-500"
-                />
-              </div>
-              <div className="p-4 bg-slate-900/90 border-t border-slate-800 flex items-center justify-between">
-                <span className="text-[11px] text-slate-400">
-                  Integrated inside planner via <code className="text-emerald-400 font-mono">+ Add Manual Car</code>
-                </span>
-                <Link
-                  href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
-                >
-                  <span>{isAuthenticated ? "Configure Custom EV" : "Sign In to Build EV"}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Lower Showcase: 141+ EV Directory with Authentic Photos & Specs */}
-          <div className="rounded-3xl border border-slate-800 bg-slate-900/80 overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center group hover:border-emerald-500/50 transition-all">
-            <div className="p-6 sm:p-8 space-y-3 lg:w-5/12">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Car className="w-3.5 h-3.5" />
-                  <span>03 • 141+ EV Directory &amp; Range Specs</span>
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-semibold border border-emerald-500/30">
-                  Real Car Photos
+                <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-2 py-0.5 rounded-md">
+                  Active Model
                 </span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-white">
-                Authentic Indian Electric Vehicle Directory
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                Every vehicle includes authentic car images, real highway range reference at 100+ km/h with Indian 40°C AC load, net usable vs. gross kWh battery sizes, and brand filtering across Tata, Mahindra, MG, Hyundai, BYD, and more.
-              </p>
-              <div className="pt-2">
-                <Link
-                  href={isAuthenticated ? "/vehicles" : "/login?redirect=/vehicles"}
-                  className="inline-flex px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
-                >
-                  <span>{isAuthenticated ? "Explore EV Catalog" : "Sign In to Browse Models"}</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-            <div className="lg:w-7/12 p-3 sm:p-5 bg-slate-950 flex items-center justify-center">
-              <img
-                src="/images/model/live-vehicles-catalog.png"
-                alt="141+ EV Directory and Model Specs"
-                className="rounded-2xl border border-slate-800 shadow-2xl w-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* 3. SHOWCASE OF INDIAN EV CAR MODELS (WITH IMAGES & BENCHMARK SPECS) */}
-      <section className="py-16 sm:py-24 bg-white border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="max-w-3xl mx-auto text-center space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100/80 text-emerald-900 border border-emerald-200">
-              <Car className="w-3.5 h-3.5 text-emerald-700" />
-              <span>141+ Indian Market EV Models Index</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Calibrated Electric Vehicle Models
-            </h2>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-              Every vehicle profile is modeled with deterministic battery physics, differentiating nominal gross pack size from real-world net usable capacity on Indian highway speeds (100+ km/h) and air-conditioning loads.
-            </p>
-          </div>
+              {/* Console Body */}
+              <div className="p-6 space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 block">
+                        01 • Deterministic Route Engine
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-bold text-white">
+                        Delhi ──▶ Agra (Yamuna Expressway)
+                      </h3>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-bold text-slate-400 block">Corridor Length</span>
+                      <span className="text-sm font-extrabold text-white">214 km</span>
+                    </div>
+                  </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {featuredModels.map((m) => (
-              <div
-                key={m.id}
-                className="group rounded-3xl border border-slate-200/90 bg-white shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
-              >
-                {/* Vehicle Image Header */}
-                <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-slate-900">
-                  <img
-                    src={m.image}
-                    alt={m.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/20" />
-
-                  {/* Badges on Image */}
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                    <span className="px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md text-[10px] font-extrabold text-white tracking-wider uppercase border border-white/20">
-                      {m.brand}
-                    </span>
-                    <span className="px-2 py-0.5 rounded-lg bg-emerald-500/90 backdrop-blur-md text-[10px] font-bold text-white shadow-xs">
-                      {m.category}
+                  {/* Outage Risk Pill & Status */}
+                  <div className="p-3.5 rounded-2xl bg-emerald-950/40 border border-emerald-800/60 flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 font-extrabold text-sm">
+                        12
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-emerald-300">Low Outage Risk • Direct Corridor</div>
+                        <div className="text-[10px] text-slate-400">Zero feeder outages detected • 24/7 highway patrol</div>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-400 bg-emerald-900/60 px-2 py-1 rounded-lg border border-emerald-700/60">
+                      Safe Non-Stop
                     </span>
                   </div>
 
-                  <div className="absolute top-3 right-3">
-                    <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-md text-[10px] font-bold text-slate-800 shadow-xs border border-slate-200">
-                      {m.tag}
-                    </span>
+                  {/* Battery Progression Matrix */}
+                  <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">Departure Battery: <strong className="text-white">90% (38.2 kWh)</strong></span>
+                      <span className="text-slate-400">Arrival Reserve: <strong className="text-emerald-400">28% (11.9 kWh)</strong></span>
+                    </div>
+                    <div className="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden p-0.5">
+                      <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full w-[62%]" />
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/60">
+                      <span>Reserve Buffer: <strong className="text-white">+28 km cushion</strong></span>
+                      <span>AC Factor: <strong className="text-emerald-400">1.25× Summer Draw</strong></span>
+                    </div>
                   </div>
 
-                  <div className="absolute bottom-3 left-3 right-3 text-white">
-                    <h3 className="text-base sm:text-lg font-bold drop-shadow-md truncate">
-                      {m.name}
-                    </h3>
-                  </div>
-                </div>
-
-                {/* Vehicle Specs Grid */}
-                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
+                  {/* Charging & Backup Allocation */}
                   <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <BatteryCharging className="w-3 h-3 text-emerald-600" />
-                        <span>Battery Pack</span>
-                      </div>
-                      <div className="font-extrabold text-slate-900">{m.usableKwh}</div>
-                      <div className="text-[10px] text-slate-400">{m.grossKwh} gross</div>
+                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Primary Fast Stop</span>
+                      <strong className="text-white text-xs block truncate">Noida Expwy Superhub</strong>
+                      <span className="text-[10px] text-emerald-400 flex items-center gap-1 font-semibold">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span>120 kW • 4/4 Available</span>
+                      </span>
                     </div>
-
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <Route className="w-3 h-3 text-emerald-600" />
-                        <span>Highway Range</span>
-                      </div>
-                      <div className="font-extrabold text-emerald-700">{m.highwayRange}</div>
-                      <div className="text-[10px] text-slate-400">{m.claimedRange}</div>
+                    <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Contingency Backup</span>
+                      <strong className="text-white text-xs block truncate">Jewar Toll Plaza Hub</strong>
+                      <span className="text-[10px] text-teal-400 flex items-center gap-1 font-semibold">
+                        <ShieldCheck className="w-3 h-3 text-teal-400" />
+                        <span>60 kW • 2/2 Backup Ready</span>
+                      </span>
                     </div>
-
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <Zap className="w-3 h-3 text-emerald-600" />
-                        <span>DC Fast Speed</span>
-                      </div>
-                      <div className="font-extrabold text-slate-900">{m.dcSpeed}</div>
-                      <div className="text-[10px] text-slate-400">{m.chargeTime}</div>
-                    </div>
-
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 space-y-0.5">
-                      <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <Gauge className="w-3 h-3 text-emerald-600" />
-                        <span>Consumption</span>
-                      </div>
-                      <div className="font-extrabold text-slate-900">{m.consumption}</div>
-                      <div className="text-[10px] text-slate-400">Indian 40°C AC load</div>
-                    </div>
-                  </div>
-
-                  {/* Action Link */}
-                  <div className="pt-2 border-t border-slate-100">
-                    <Link
-                      href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
-                      className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-emerald-600 text-slate-700 hover:text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 group-hover:bg-emerald-600 group-hover:text-white"
-                    >
-                      <Sparkles className="w-3.5 h-3.5" />
-                      <span>{isAuthenticated ? "Select & Simulate Route" : "Sign In to Plan with this EV"}</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
                   </div>
                 </div>
+
+                {/* Footer Action */}
+                <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                  <span className="text-[11px] text-slate-400">
+                    Accessible at <code className="text-emerald-400 font-mono">/plan</code> after sign-in
+                  </span>
+                  <Link
+                    href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
+                    className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
+                  >
+                    <span>{isAuthenticated ? "Launch Interactive Planner" : "Sign In to Test Model"}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
-            ))}
+            </div>
+
+            {/* Studio Window 2: Custom Vehicle Builder & Engineering Physics */}
+            <div className="rounded-3xl border border-slate-800 bg-slate-900/90 overflow-hidden shadow-2xl flex flex-col group hover:border-emerald-500/50 transition-all">
+              {/* Studio Window Header */}
+              <div className="px-5 py-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
+                  <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+                  <span className="ml-2 text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                    <SlidersHorizontal className="w-3 h-3 text-emerald-400" />
+                    <span>chargeroute.ai/builder/custom-physics</span>
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold text-teal-400 bg-teal-950/80 border border-teal-800/80 px-2 py-0.5 rounded-md">
+                  User Requested Tool
+                </span>
+              </div>
+
+              {/* Console Body */}
+              <div className="p-6 space-y-5 flex-1 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 block">
+                        02 • Custom Vehicle Builder
+                      </span>
+                      <h3 className="text-lg sm:text-xl font-bold text-white">
+                        Calibrate Any Electric Vehicle
+                      </h3>
+                    </div>
+                    <span className="text-xs font-semibold text-slate-400 bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+                      Real Physics Math
+                    </span>
+                  </div>
+
+                  {/* Quick Pick Categories Matrix */}
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5 opacity-80">
+                      <span className="font-bold text-white block">City Hatchback</span>
+                      <span className="text-[10px] text-slate-400">28 kWh • ~200 km</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/60 space-y-0.5 relative shadow-xs">
+                      <span className="font-bold text-emerald-300 block">Compact SUV</span>
+                      <span className="text-[10px] text-emerald-400 font-medium">45 kWh • ~310 km</span>
+                      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5 opacity-80">
+                      <span className="font-bold text-white block">Mid / Large SUV</span>
+                      <span className="text-[10px] text-slate-400">60 kWh • ~380 km</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-0.5 opacity-80">
+                      <span className="font-bold text-white block">Long Range Luxury</span>
+                      <span className="text-[10px] text-slate-400">75+ kWh • ~460 km</span>
+                    </div>
+                  </div>
+
+                  {/* Engineering Parameters Breakdown */}
+                  <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 space-y-3">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">Gross Battery Pack:</span>
+                      <strong className="text-white">45.0 kWh</strong>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">Usable Capacity (94.4% Buffer):</span>
+                      <strong className="text-emerald-400 font-extrabold">42.5 kWh Net</strong>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">Highway Range (100 km/h + AC):</span>
+                      <strong className="text-white">~310 km Reference</strong>
+                    </div>
+                    <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-800/60">
+                      <span className="text-slate-400">DC Fast Charge Rating:</span>
+                      <strong className="text-teal-400">60 kW DC (10–80% in 45m)</strong>
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800 text-[11px] text-slate-400 leading-relaxed">
+                    💡 If your electric car is modified or not yet listed in our database, configure it in under 30 seconds using the builder modal inside the trip planner.
+                  </div>
+                </div>
+
+                {/* Footer Action */}
+                <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+                  <span className="text-[11px] text-slate-400">
+                    Use <code className="text-emerald-400 font-mono">+ Add Manual Car</code> in planner
+                  </span>
+                  <Link
+                    href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
+                    className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 transition-colors shadow-md shadow-emerald-500/20"
+                  >
+                    <span>{isAuthenticated ? "Configure Custom EV" : "Sign In to Build EV"}</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Studio Bar 3: Pan-India Corridor Telemetry & Verified Infrastructure */}
+          <div className="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                <Compass className="w-7 h-7" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-lg font-bold text-white">
+                  269+ Verified Charging Stations Across 35 States &amp; National Expressways
+                </h4>
+                <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+                  Real-time multi-gun telemetry, explainable 0–100 outage risk scoring, and zero speculative AI claims. Built with precision by <strong>KSVISUALSAGENCY</strong>.
+                </p>
+              </div>
+            </div>
+            <Link
+              href={isAuthenticated ? "/chargers" : "/login?redirect=/chargers"}
+              className="px-5 py-3 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs shrink-0 flex items-center gap-2 transition-colors"
+            >
+              <span>{isAuthenticated ? "Explore Charging Hubs" : "Sign In to Browse Hubs"}</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
@@ -807,6 +678,17 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+              <a
+                href="https://ksvisualsagency.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3.5 rounded-xl bg-white hover:bg-slate-100 text-slate-950 font-extrabold text-xs sm:text-sm transition-all shadow-md flex items-center gap-2"
+              >
+                <Globe className="w-4 h-4 text-emerald-600" />
+                <span>Visit KSVISUALSAGENCY ↗</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+
               <Link
                 href={isAuthenticated ? "/plan" : "/login?redirect=/plan"}
                 className="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/20 flex items-center gap-2"

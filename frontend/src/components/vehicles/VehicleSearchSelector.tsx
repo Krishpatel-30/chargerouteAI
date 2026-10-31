@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { VehicleModel } from "@/lib/types";
-import { getVehicleImage } from "@/lib/vehicleImages";
 import {
   Car,
   Search,
@@ -147,7 +146,7 @@ export const VehicleSearchSelector: React.FC<VehicleSearchSelectorProps> = ({
         </div>
       </div>
 
-      {/* Trigger Button: Shows Active Vehicle with Real Thumbnail */}
+      {/* Trigger Button: Shows Active Vehicle with Telemetry Badge */}
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
@@ -155,12 +154,8 @@ export const VehicleSearchSelector: React.FC<VehicleSearchSelectorProps> = ({
       >
         <div className="flex items-center gap-3 flex-1 min-w-0">
           {selectedVehicle && (
-            <div className="w-14 h-11 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
-              <img
-                src={getVehicleImage(selectedVehicle.manufacturer, selectedVehicle.model)}
-                alt={selectedVehicle.model}
-                className="w-full h-full object-cover"
-              />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-slate-900 via-slate-800 to-emerald-950 text-emerald-400 shrink-0 border border-slate-700/60 flex items-center justify-center shadow-2xs">
+              <Zap className="w-5 h-5 fill-emerald-400" />
             </div>
           )}
           <div className="flex-1 min-w-0">
@@ -336,13 +331,8 @@ export const VehicleSearchSelector: React.FC<VehicleSearchSelectorProps> = ({
                     }`}
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <div className="w-12 h-9 rounded-lg overflow-hidden bg-slate-900 shrink-0 border border-slate-200">
-                        <img
-                          src={getVehicleImage(veh.manufacturer, veh.model)}
-                          alt={veh.model}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 group-hover:bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-slate-200">
+                        <Zap className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">

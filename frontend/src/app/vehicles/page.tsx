@@ -5,7 +5,6 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import { VehicleModel } from "@/lib/types";
 import { AuthGate } from "@/components/auth/AuthGate";
-import { getVehicleImage } from "@/lib/vehicleImages";
 import {
   Car,
   Zap,
@@ -252,38 +251,41 @@ function VehiclesContent() {
                 key={veh.id}
                 className="p-4 sm:p-5 rounded-2xl border border-slate-200 bg-white hover:shadow-lg transition-all flex flex-col justify-between space-y-4 group overflow-hidden"
               >
-                {/* Real Vehicle Image Header */}
-                <div className="relative h-40 w-full overflow-hidden rounded-xl bg-slate-900 border border-slate-100">
-                  <img
-                    src={getVehicleImage(veh.manufacturer, veh.model)}
-                    alt={`${veh.manufacturer} ${veh.model}`}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-transparent" />
-                  <div className="absolute top-2.5 left-2.5">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-white bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/20">
-                      {veh.manufacturer}
-                    </span>
+                {/* Accurate EV Engineering & Telemetry Header */}
+                <div className="p-4 rounded-xl bg-gradient-to-r from-slate-900 via-slate-850 to-slate-900 text-white flex items-center justify-between border border-slate-800 shadow-xs">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-extrabold text-xs">
+                      <Zap className="w-5 h-5 fill-emerald-400" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-300">
+                          {veh.manufacturer}
+                        </span>
+                        {veh.is_custom ? (
+                          <span className="text-[9px] font-bold bg-amber-500/90 text-white px-1.5 py-0.2 rounded">
+                            Custom
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-semibold text-slate-400 bg-slate-800 px-1.5 py-0.2 rounded">
+                            {veh.model_year}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1 mt-0.5">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span>Calibrated Specs</span>
+                      </span>
+                    </div>
                   </div>
-                  {veh.is_custom ? (
-                    <div className="absolute top-2.5 right-2.5">
-                      <span className="text-[10px] font-bold bg-amber-500 text-white px-2 py-0.5 rounded shadow-xs">
-                        Custom
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="absolute top-2.5 right-2.5">
-                      <span className="text-[10px] font-semibold text-white/90 bg-black/50 px-2 py-0.5 rounded">
-                        Model Year {veh.model_year}
-                      </span>
-                    </div>
-                  )}
-                  <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-white text-xs">
-                    <span className="font-extrabold text-emerald-400">~{veh.range_reference_km} km Highway</span>
-                    <span className="text-[10px] bg-black/60 backdrop-blur-xs px-2 py-0.5 rounded border border-white/20">
-                      {veh.max_dc_power_kw} kW DC
+
+                  <div className="text-right">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">
+                      Highway Range
                     </span>
+                    <strong className="text-sm font-extrabold text-white">
+                      ~{veh.range_reference_km} km
+                    </strong>
                   </div>
                 </div>
 

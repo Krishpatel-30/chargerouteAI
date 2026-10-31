@@ -31,9 +31,15 @@ export const Footer = () => {
                 <MapPin className="w-3.5 h-3.5" />
                 Pan-India: 269 Hubs
               </div>
-              <div className="text-[11px] font-bold text-slate-300 bg-slate-800 border border-slate-700 rounded-md px-2.5 py-1">
-                Made by <span className="text-emerald-400 font-extrabold">KSVISUALSAGENCY</span>
-              </div>
+              <a
+                href="https://ksvisualsagency.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-md px-2.5 py-1 transition-colors flex items-center gap-1 group"
+              >
+                <span>Made by <span className="text-emerald-400 font-extrabold group-hover:text-emerald-300">KSVISUALSAGENCY</span></span>
+                <span className="text-emerald-400 text-[10px]">↗</span>
+              </a>
             </div>
           </div>
 
@@ -136,7 +142,7 @@ export const Footer = () => {
         </div>
 
         <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} ChargeRoute AI. Crafted &amp; Engineered by <strong className="text-slate-300">KSVISUALSAGENCY</strong>.</p>
+          <p>© {new Date().getFullYear()} ChargeRoute AI. Crafted &amp; Engineered by <a href="https://ksvisualsagency.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:underline font-bold">KSVISUALSAGENCY</a>.</p>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
             <span>Deterministic Physics &amp; Rule-Based Risk Scoring</span>

@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { AuthGate } from "@/components/auth/AuthGate";
-import { Zap, MapPin, Compass, ShieldCheck, ArrowRight } from "lucide-react";
+import { Zap, MapPin, Compass, ShieldCheck, ArrowRight, ExternalLink, Sparkles, Award, Globe } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -41,6 +41,70 @@ function AboutContent() {
           <p>
             ChargeRoute AI addresses this reality with transparent data quality tracking, provider adapters, and verified backup suggestions.
           </p>
+        </div>
+
+        {/* KSVISUALSAGENCY Agency Architecture Showcase */}
+        <div className="rounded-3xl border border-slate-900 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6 sm:p-10 text-white shadow-xl relative overflow-hidden space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Product Design &amp; Full-Stack Engineering Studio</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Crafted by <span className="text-emerald-400">KSVISUALSAGENCY</span>
+              </h2>
+              <p className="text-xs text-slate-400">
+                Architects of intelligent digital platforms, mathematical routing tools, and mobility interfaces.
+              </p>
+            </div>
+            <a
+              href="https://ksvisualsagency.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs sm:text-sm transition-all shadow-md shadow-emerald-500/20 shrink-0"
+            >
+              <Globe className="w-4 h-4" />
+              <span>Visit Agency Website</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs text-slate-300">
+            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="text-emerald-400 font-bold text-sm">Full-Stack Engineering</div>
+              <p className="text-slate-400 leading-relaxed">
+                Deterministic mathematical routing, battery degradation models, real elevation physics, and RESTful Python/Next.js architectures.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="text-emerald-400 font-bold text-sm">Design &amp; UI/UX Systems</div>
+              <p className="text-slate-400 leading-relaxed">
+                Modern, accessible product interfaces tailored for high-speed highway drivers, interactive cartography, and emergency workflows.
+              </p>
+            </div>
+            <div className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
+              <div className="text-emerald-400 font-bold text-sm">Clean Mobility Innovation</div>
+              <p className="text-slate-400 leading-relaxed">
+                Empowering India&apos;s transition to sustainable electric transportation with reliable data telemetry and zero range anxiety.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between text-xs text-slate-400 pt-2 border-t border-slate-800/80">
+            <span>
+              Official Agency Portal:{" "}
+              <a
+                href="https://ksvisualsagency.vercel.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-emerald-400 hover:underline font-semibold"
+              >
+                https://ksvisualsagency.vercel.app/
+              </a>
+            </span>
+            <span className="text-slate-400 font-medium">Pan-India &amp; Global Delivery</span>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

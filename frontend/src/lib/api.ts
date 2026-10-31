@@ -18,17 +18,19 @@ export function getApiBaseUrl(): string {
   if (typeof window !== "undefined") {
     // If an explicit non-localhost production API is provided, use it
     const envApi = process.env.NEXT_PUBLIC_API_URL;
-    if (envApi && !envApi.includes("localhost") && !envApi.includes("127.0.0.1")) {
+    if (envApi && envApi.startsWith("http") && !envApi.includes("localhost") && !envApi.includes("127.0.0.1")) {
       return envApi;
     }
-    // In any browser environment (whether localhost, mobile device on LAN, or domain):
-    // Next.js rewrites /api/v1/:path* to FastAPI on port 8000.
-    // Using relative "/api/v1" ensures all requests hit the origin serving the page,
-    // eliminating cross-device network errors, firewall blocks, and CORS restrictions.
-    return "/api/v1";
+    // In any browser environment (localhost, LAN mobile IP, or custom domain):
+    // Use window.location.origin + /api/v1 to eliminate relative URL resolution stripping.
+    return `${window.location.origin}/api/v1`;
   }
   // Server-side (Node.js / SSR):
-  return process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+  const envApi = process.env.NEXT_PUBLIC_API_URL;
+  if (envApi && envApi.startsWith("http")) {
+    return envApi;
+  }
+  return "http://127.0.0.1:8000/api/v1";
 }
 
 const apiClient = axios.create({
@@ -42,7 +44,18 @@ const apiClient = axios.create({
 // Attach token and dynamically set base URL in browser
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
-    config.baseURL = getApiBaseUrl();
+    const base = getApiBaseUrl().replace(/\/+$/, "");
+    config.baseURL = `${base}/`;
+    
+    // Normalize path to prevent leading slash from stripping /api/v1
+    if (config.url && !config.url.startsWith("http")) {
+      let path = config.url.replace(/^\/+/, "");
+      if (path.startsWith("api/v1/")) {
+        path = path.replace(/^api\/v1\//, "");
+      }
+      config.url = path;
+    }
+
     const token = localStorage.getItem("voltplan_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

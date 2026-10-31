@@ -62,216 +62,270 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. HERO SECTION WITH FUTURISTIC EV HOLOGRAPHIC TELEMETRY BACKGROUND */}
-      <section className="relative overflow-hidden py-12 sm:py-20 lg:py-24 border-b border-slate-800 bg-slate-950 min-h-[680px] lg:min-h-[740px] flex items-center">
-        {/* Background Image Container with Crisp Full Artwork Visibility */}
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-          <img
-            src="/images/hero-bg.jpg"
-            alt="ChargeRoute AI EV Holographic Telemetry, Vehicle and Charging Station"
-            className="w-full h-full object-cover object-[center_right] sm:object-center select-none"
-          />
-          {/* Directional studio vignette ONLY over the left side (0% to 45%) so copy is crisp, while center and right (HUD, car, charger) remain 100% visible and vivid */}
-          <div className="absolute inset-y-0 left-0 w-full lg:w-[46%] bg-gradient-to-r from-slate-950/92 via-slate-950/65 to-transparent" />
-          {/* Subtle bottom edge transition */}
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-950 to-transparent" />
-        </div>
+      {/* 1. HERO SECTION (NO BACKGROUND IMAGE - TWO CARDS LAYOUT) */}
+      <section className="relative overflow-hidden py-12 sm:py-20 lg:py-24 border-b border-slate-800 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.12),rgba(2,6,23,0))]">
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          {/* Content Anchored Strictly to the Left Side to Leave Car, HUD, and Charger Unobstructed */}
-          <div className="max-w-xl lg:max-w-lg space-y-5 text-left">
-            {/* Attribution Pill */}
-            <a
-              href="https://ksvisualsagency.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-950/80 hover:bg-slate-900 text-emerald-300 border border-emerald-500/40 backdrop-blur-md shadow-lg transition-colors group"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Made by <strong className="underline group-hover:text-emerald-200">KSVISUALSAGENCY</strong> ↗ • Pan-India EV Planning Platform</span>
-            </a>
-
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-[1.12] drop-shadow-md">
-              Plan Your EV Journey.{" "}
-              <span className="text-emerald-400 block mt-1">Predict Range &amp; Outage Backups.</span>
-            </h1>
-
-            <p className="text-xs sm:text-sm lg:text-base text-slate-200 leading-relaxed drop-shadow-sm max-w-lg">
-              India&apos;s intelligent electric vehicle navigation platform. Calculate deterministic battery range, discover verified charging stations across 35 states, and secure safe backup stops before you hit the road.
-            </p>
-
-            {/* Key Features Quick Grid */}
-            <div className="grid grid-cols-3 gap-2.5 pt-3 pb-1 border-t border-slate-700/60 text-xs">
-              <div className="space-y-0.5">
-                <div className="text-emerald-400 font-black text-lg drop-shadow">141+</div>
-                <strong className="block text-white font-bold text-[11px] drop-shadow">Indian EVs</strong>
-                <span className="text-slate-300 text-[10px] block">With custom builder</span>
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-emerald-400 font-black text-lg drop-shadow">269</div>
-                <strong className="block text-white font-bold text-[11px] drop-shadow">Station Hubs</strong>
-                <span className="text-slate-300 text-[10px] block">Verified 24/7 chargers</span>
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-emerald-400 font-black text-lg drop-shadow">0–100</div>
-                <strong className="block text-white font-bold text-[11px] drop-shadow">Risk Score</strong>
-                <span className="text-slate-300 text-[10px] block">Outage &amp; queue safety</span>
-              </div>
-            </div>
-
-            {/* DRIVER AUTHENTICATION / COMMAND CENTER (Compact Left Dark Frosted Glass Box) */}
-            {!isAuthenticated ? (
-              /* Unauthenticated View: Sign In with Google Device ID or Email */
-              <div className="bg-slate-950/85 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 sm:p-5 shadow-2xl space-y-3.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center">
-                      <Zap className="w-3.5 h-3.5 fill-current" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-xs sm:text-sm text-white">Driver Sign In</h3>
-                      <p className="text-[10px] text-slate-400">Unlock trip planner &amp; telemetry</p>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-semibold text-emerald-400 bg-emerald-950/60 border border-emerald-800/80 px-2 py-0.5 rounded-full">
-                    Full Access
-                  </span>
-                </div>
-
-                {/* Google 1-Click Sign-In (Direct Device Account Chooser) */}
-                <GoogleAuthButton redirectUrl="/plan" buttonText="Continue with Device Google ID" />
-
-                <div className="relative flex py-0.5 items-center">
-                  <div className="flex-grow border-t border-slate-800"></div>
-                  <span className="flex-shrink mx-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    or driver email
-                  </span>
-                  <div className="flex-grow border-t border-slate-800"></div>
-                </div>
-
-                {loginError && (
-                  <div className="p-2 bg-red-950/70 border border-red-800/80 rounded-xl text-xs text-red-300 font-medium">
-                    ⚠️ {loginError}
-                  </div>
-                )}
-
-                {/* Compact Dark Slate Email / Password Form */}
-                <form onSubmit={handleInlineLogin} className="space-y-2.5">
-                  <div className="relative">
-                    <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                    <input
-                      type="email"
-                      required
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="driver@example.com"
-                      className="w-full pl-8 pr-3 py-1.5 sm:py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
-                    />
-                  </div>
-
-                  <div className="relative">
-                    <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full pl-8 pr-9 py-1.5 sm:py-2 rounded-xl bg-slate-900/90 border border-slate-700 text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-2 text-slate-400 hover:text-slate-200"
-                    >
-                      {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoggingIn}
-                    className="w-full py-2 sm:py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition-all shadow-md shadow-emerald-600/30 flex items-center justify-center gap-2 disabled:opacity-60"
-                  >
-                    {isLoggingIn ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Signing In &amp; Launching...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Sign In &amp; Launch Planner</span>
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </>
-                    )}
-                  </button>
-                </form>
-
-                <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-                  <span>Don&apos;t have an account?</span>
-                  <Link
-                    href="/register?redirect=/plan"
-                    className="font-bold text-emerald-400 hover:text-emerald-300 underline"
-                  >
-                    Create Account
-                  </Link>
-                </div>
-              </div>
-            ) : (
-              /* Authenticated View: Active Driver Command Center */
-              <div className="bg-slate-950/85 backdrop-blur-md rounded-2xl border border-slate-700/60 p-4 sm:p-5 shadow-2xl space-y-3.5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-emerald-600/30">
-                      {(user?.full_name || user?.email || "D")[0].toUpperCase()}
-                    </div>
-                    <div>
-                      <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                        <span>Driver Authenticated</span>
-                      </div>
-                      <h3 className="text-sm sm:text-base font-bold text-white truncate">
-                        {user?.full_name || user?.email?.split("@")[0]}
-                      </h3>
-                      <div className="text-[11px] text-slate-400 truncate">{user?.email}</div>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => logout()}
-                    className="text-xs text-slate-400 hover:text-rose-400 transition-colors font-medium"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-
-                <Link
-                  href="/plan"
-                  className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm transition-all shadow-md shadow-emerald-600/30 flex items-center justify-center gap-2 group"
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+            {/* Left Card: Value Proposition & Platform Telemetry Overview */}
+            <div className="lg:col-span-7 p-7 sm:p-9 lg:p-10 rounded-3xl bg-slate-900/95 border border-slate-800 shadow-2xl flex flex-col justify-between space-y-6 text-left">
+              <div className="space-y-5">
+                {/* Attribution Pill */}
+                <a
+                  href="https://ksvisualsagency.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-950/80 hover:bg-slate-800 text-emerald-300 border border-emerald-500/40 shadow-xs transition-colors group w-fit"
                 >
-                  <Zap className="w-4 h-4 fill-white transition-transform group-hover:scale-110" />
-                  <span>Launch Interactive Trip Planner</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Made by <strong className="underline group-hover:text-emerald-200">KSVISUALSAGENCY</strong> ↗ • Pan-India EV Planning Platform</span>
+                </a>
 
-                <div className="grid grid-cols-2 gap-2 pt-1 text-xs">
+                <h1 className="text-3xl sm:text-5xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
+                  Plan Your EV Journey.{" "}
+                  <span className="text-emerald-400 block mt-1">Predict Range &amp; Outage Backups.</span>
+                </h1>
+
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
+                  India&apos;s intelligent electric vehicle navigation platform. Calculate deterministic battery range, discover verified charging stations across 35 states, and secure safe backup stops before you hit the road.
+                </p>
+              </div>
+
+              {/* Key Features Quick Grid */}
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-6 border-t border-slate-800 text-xs">
+                <div className="space-y-1">
+                  <div className="text-emerald-400 font-extrabold text-xl sm:text-2xl">141+</div>
+                  <strong className="block text-white font-bold text-xs">Indian EV Models</strong>
+                  <span className="text-slate-400 text-[11px] block">With custom car builder</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-emerald-400 font-extrabold text-xl sm:text-2xl">269</div>
+                  <strong className="block text-white font-bold text-xs">City &amp; Highway Hubs</strong>
+                  <span className="text-slate-400 text-[11px] block">Verified 24/7 chargers</span>
+                </div>
+                <div className="space-y-1">
+                  <div className="text-emerald-400 font-extrabold text-xl sm:text-2xl">0–100</div>
+                  <strong className="block text-white font-bold text-xs">Explainable Risk</strong>
+                  <span className="text-slate-400 text-[11px] block">Outage &amp; queue safety</span>
+                </div>
+              </div>
+
+              {/* Secondary links - ONLY VISIBLE AFTER USER LOGIN */}
+              {isAuthenticated && (
+                <div className="flex flex-wrap items-center gap-3 pt-2 text-xs">
                   <Link
                     href="/chargers"
-                    className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700/80 transition-colors flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold border border-slate-700 transition-colors shadow-xs flex items-center gap-1.5"
                   >
                     <Compass className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="truncate">269 Chargers</span>
+                    <span>Browse 269 Charging Stations</span>
                   </Link>
                   <Link
                     href="/vehicles"
-                    className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700/80 transition-colors flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold border border-slate-700 transition-colors shadow-xs flex items-center gap-1.5"
                   >
                     <Car className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="truncate">141 EV Specs</span>
+                    <span>141 EV Directory &amp; Specs</span>
                   </Link>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* Right Card: DRIVER AUTHENTICATION & ACCESS CARD */}
+            <div className="lg:col-span-5 flex">
+              {!isAuthenticated ? (
+                /* Unauthenticated View: Sign In with Google Device ID or Email */
+                <div className="w-full bg-white rounded-3xl border border-slate-100 shadow-2xl p-7 sm:p-9 flex flex-col justify-between space-y-5 text-slate-900">
+                  <div className="space-y-4">
+                    <div className="text-center space-y-1.5 pb-1">
+                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-600 text-white shadow-md shadow-emerald-600/30 mb-1">
+                        <Zap className="w-6 h-6 fill-white" />
+                      </div>
+                      <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                        Sign In to Access Trip Planner
+                      </h2>
+                      <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                        Sign in with Google credentials on this device or your driver email to unlock planning.
+                      </p>
+                    </div>
+
+                    {/* Google 1-Click Sign-In (Direct Device Account Chooser) */}
+                    <div className="space-y-3">
+                      <GoogleAuthButton redirectUrl="/plan" buttonText="Continue with Device Google ID" />
+
+                      <div className="relative flex py-1 items-center">
+                        <div className="flex-grow border-t border-slate-200"></div>
+                        <span className="flex-shrink mx-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          or sign in with driver email
+                        </span>
+                        <div className="flex-grow border-t border-slate-200"></div>
+                      </div>
+                    </div>
+
+                    {loginError && (
+                      <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-1.5 font-medium">
+                        <span>⚠️ {loginError}</span>
+                      </div>
+                    )}
+
+                    {/* Inline Email / Password Form */}
+                    <form onSubmit={handleInlineLogin} className="space-y-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                          DRIVER EMAIL
+                        </label>
+                        <div className="relative">
+                          <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3.5" />
+                          <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="driver@example.com"
+                            className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                          PASSWORD
+                        </label>
+                        <div className="relative">
+                          <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3.5" />
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+                          >
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={isLoggingIn}
+                        className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/40 flex items-center justify-center gap-2 disabled:opacity-60"
+                      >
+                        {isLoggingIn ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Signing In &amp; Launching...</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>Sign In &amp; Launch Trip Planner</span>
+                            <ArrowRight className="w-4 h-4" />
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <span>Don&apos;t have an account?</span>
+                    <Link
+                      href="/register?redirect=/plan"
+                      className="font-bold text-emerald-600 hover:text-emerald-700 underline"
+                    >
+                      Create Account
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                /* Authenticated View: Active Driver Command Center */
+                <div className="w-full bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl p-7 sm:p-9 flex flex-col justify-between space-y-6 text-white">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center shadow-md shadow-emerald-600/30">
+                          {(user?.full_name || user?.email || "D")[0].toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Driver Authenticated</span>
+                          </div>
+                          <h2 className="text-base sm:text-lg font-bold text-white truncate">
+                            {user?.full_name || user?.email?.split("@")[0]}
+                          </h2>
+                          <div className="text-[11px] text-slate-400 truncate">{user?.email}</div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => logout()}
+                        className="text-xs text-slate-400 hover:text-rose-400 transition-colors font-medium"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+
+                    {/* Primary CTA: Launch Trip Planner */}
+                    <div className="space-y-3">
+                      <Link
+                        href="/plan"
+                        className="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm transition-all shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/40 flex items-center justify-center gap-2 group"
+                      >
+                        <Zap className="w-4 h-4 fill-white transition-transform group-hover:scale-110" />
+                        <span>Launch Interactive Trip Planner</span>
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      </Link>
+
+                      <Link
+                        href="/dashboard/trips"
+                        className="w-full py-2.5 px-4 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-950/60 hover:bg-slate-950 text-slate-300 font-bold text-xs transition-colors flex items-center justify-center gap-2"
+                      >
+                        <History className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>View My Saved Trips &amp; History</span>
+                      </Link>
+                    </div>
+
+                    {/* Quick Route Starters */}
+                    <div className="pt-2 border-t border-slate-800 space-y-2">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        Popular Corridors Ready:
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-[11px]">
+                        {[
+                          { label: "Delhi → Agra", route: "Yamuna Expwy" },
+                          { label: "Mumbai → Pune", route: "Mumbai Expwy" },
+                          { label: "Bengaluru → Mysuru", route: "10-Lane Expwy" },
+                          { label: "Ahmedabad → Surat", route: "NE-1 Expressway" },
+                        ].map((c) => (
+                          <Link
+                            key={c.label}
+                            href="/plan"
+                            className="p-2 rounded-lg bg-slate-950/60 hover:bg-emerald-950/40 border border-slate-800 hover:border-emerald-500/40 transition-colors"
+                          >
+                            <div className="font-bold text-white">{c.label}</div>
+                            <div className="text-[10px] text-slate-400">{c.route}</div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                    <Link href="/dashboard" className="text-emerald-400 hover:underline font-semibold">
+                      Driver Dashboard
+                    </Link>
+                    <span className="text-[11px] text-slate-500">
+                      Platform by KSVISUALSAGENCY
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>

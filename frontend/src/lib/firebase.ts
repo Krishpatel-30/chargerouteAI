@@ -12,16 +12,15 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 
-// Firebase client configuration
-// Users can provide their credentials in frontend/.env.local (or root .env)
+// Firebase client configuration for ChargeRoute AI
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB3l6422OAEtn_7nATYOeyzWRjenApeVys",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "chargeroute-ai-2a7d7.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "chargeroute-ai-2a7d7",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "chargeroute-ai-2a7d7.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "570737859603",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:570737859603:web:2046ce315b968846b833e6",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "G-38FEW7JFXQ",
 };
 
 export const isFirebaseConfigured = (): boolean => {
@@ -127,3 +126,4 @@ export async function logoutFirebase(): Promise<void> {
     await signOut(auth);
   }
 }
+

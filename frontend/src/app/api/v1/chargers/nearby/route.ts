@@ -76,3 +76,4 @@ export async function GET(req: Request) {
     return NextResponse.json({ detail: error?.message || "Failed nearby search" }, { status: 500 });
   }
 }
+

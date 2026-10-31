@@ -133,7 +133,7 @@ function TripsListContent() {
                     ? `${trip.destination_lat},${trip.destination_lng}`
                     : trip.destination_name
                 );
-                let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving`;
+                let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving&dir_action=navigate`;
                 if (trip.charging_stops && trip.charging_stops.length > 0) {
                   const waypoints = trip.charging_stops
                     .map((s: any) => `${s.latitude},${s.longitude}`)

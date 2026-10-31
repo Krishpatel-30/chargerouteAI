@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ChargingStopDetail } from "@/lib/types";
 import { formatDuration, formatINR, getRiskColorClass } from "@/lib/utils";
 import { BackupStopCard } from "./BackupStopCard";
-import { Zap, Clock, Battery, BatteryCharging, ChevronDown, ChevronUp, Shield, ExternalLink } from "lucide-react";
+import { Zap, Clock, Battery, BatteryCharging, ChevronDown, ChevronUp, Shield, ExternalLink, Navigation } from "lucide-react";
 
 interface ChargingStopCardProps {
   stop: ChargingStopDetail;
@@ -29,12 +29,27 @@ export const ChargingStopCard: React.FC<ChargingStopCardProps> = ({ stop }) => {
           </div>
         </div>
 
-        {/* Risk Badge */}
+        {/* Risk Badge & Action */}
         <div className="flex items-center gap-2">
           <span className={`px-2.5 py-1 rounded-full text-xs font-bold border ${riskColors.badge}`}>
             Stop Risk: {stop.station_risk.score}/100
           </span>
         </div>
+      </div>
+
+      {/* Direct Google Maps Auto-Directions to this Charging Station */}
+      <div className="pt-2.5 pb-1">
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}&travelmode=driving&dir_action=navigate`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full py-2 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition-all hover:scale-[1.01]"
+          title={`Start turn-by-turn Google Maps driving navigation to ${stop.station_name}`}
+        >
+          <Navigation className="w-3.5 h-3.5" />
+          <span>Start Directions to this Station in Google Maps</span>
+          <ExternalLink className="w-3 h-3 opacity-75" />
+        </a>
       </div>
 
       {/* Battery & Charging Metrics Grid */}

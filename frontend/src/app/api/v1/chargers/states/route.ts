@@ -62,3 +62,4 @@ export async function GET() {
 
   return NextResponse.json(FALLBACK_STATES);
 }
+

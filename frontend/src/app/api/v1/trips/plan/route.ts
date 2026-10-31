@@ -16,6 +16,35 @@ function haversineDistanceKm(lat1: number, lon1: number, lat2: number, lon2: num
   return R * c;
 }
 
+async function fetchOsrmRoadRoute(coords: { lat: number; lng: number }[]): Promise<{
+  coordinates: [number, number][];
+  distanceKm: number;
+  durationMin: number;
+} | null> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 4000);
+    const coordsStr = coords.map((c) => `${c.lng},${c.lat}`).join(";");
+    const res = await fetch(
+      `https://router.project-osrm.org/route/v1/driving/${coordsStr}?overview=full&geometries=geojson`,
+      { signal: controller.signal }
+    );
+    clearTimeout(timeoutId);
+    if (!res.ok) return null;
+    const json = await res.json();
+    if (json.code === "Ok" && json.routes?.[0]?.geometry?.coordinates) {
+      return {
+        coordinates: json.routes[0].geometry.coordinates,
+        distanceKm: Math.round(json.routes[0].distance / 1000),
+        durationMin: Math.round(json.routes[0].duration / 60),
+      };
+    }
+  } catch (e) {
+    // Fallback if network or timeout
+  }
+  return null;
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -36,16 +65,40 @@ export async function POST(req: Request) {
     const vehicle =
       vehicles.find((v) => v.id === vehicle_id) || vehicles[0];
 
-    // Estimate road distance with winding factor 1.28
+    // 1. Initial Road Route Query via OSRM
+    const initialRoute = await fetchOsrmRoadRoute([
+      { lat: origin_lat, lng: origin_lng },
+      { lat: destination_lat, lng: destination_lng },
+    ]);
+
     const directDist = haversineDistanceKm(
       origin_lat,
       origin_lng,
       destination_lat,
       destination_lng
     );
-    const totalDistanceKm = Math.round(directDist * 1.28);
+
+    let totalDistanceKm = initialRoute
+      ? initialRoute.distanceKm
+      : Math.round(directDist * 1.28);
     const avgSpeedKmh = 68;
-    const drivingTimeMin = Math.round((totalDistanceKm / avgSpeedKmh) * 60);
+    let drivingTimeMin = initialRoute
+      ? initialRoute.durationMin
+      : Math.round((totalDistanceKm / avgSpeedKmh) * 60);
+
+    let routeGeometry: [number, number][] = initialRoute
+      ? initialRoute.coordinates
+      : [];
+
+    if (routeGeometry.length === 0) {
+      const steps = 30;
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps;
+        const lat = origin_lat + (destination_lat - origin_lat) * t;
+        const lng = origin_lng + (destination_lng - origin_lng) * t;
+        routeGeometry.push([Number(lng.toFixed(5)), Number(lat.toFixed(5))]);
+      }
+    }
 
     const usableKwh = vehicle.usable_battery_capacity_kwh || 43;
     const consumptionKwhPer100 = vehicle.consumption_kwh_100km || 15;
@@ -53,26 +106,20 @@ export async function POST(req: Request) {
     const safeUsableRangeKm =
       fullRangeKm * ((start_battery_pct - min_arrival_battery_pct) / 100);
 
-    // Generate polyline coordinates between origin and destination
-    const steps = 25;
-    const routeGeometry: [number, number][] = [];
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const lat = origin_lat + (destination_lat - origin_lat) * t;
-      const lng = origin_lng + (destination_lng - origin_lng) * t;
-      routeGeometry.push([Number(lng.toFixed(5)), Number(lat.toFixed(5))]);
-    }
-
     const chargers = seedChargers as any[];
     const stops: any[] = [];
 
-    // If trip distance exceeds safe range, add charging stop(s)
+    // 2. If trip distance exceeds safe EV range, discover charging stop along actual road
     if (totalDistanceKm > safeUsableRangeKm) {
-      const midpointT = 0.52;
-      const stopLat = origin_lat + (destination_lat - origin_lat) * midpointT;
-      const stopLng = origin_lng + (destination_lng - origin_lng) * midpointT;
+      const midpointIndex = Math.floor(routeGeometry.length * 0.52);
+      const targetPoint = routeGeometry[midpointIndex] || [
+        origin_lng + (destination_lng - origin_lng) * 0.52,
+        origin_lat + (destination_lat - origin_lat) * 0.52,
+      ];
+      const stopLng = targetPoint[0];
+      const stopLat = targetPoint[1];
 
-      // Find closest charger in catalog
+      // Find closest fast DC charger near road point
       let bestCharger = chargers[0];
       let bestDist = 99999;
       for (const c of chargers) {
@@ -83,7 +130,20 @@ export async function POST(req: Request) {
         }
       }
 
-      const chargeDist = Math.round(totalDistanceKm * midpointT);
+      // Re-route through the charging station to get exact highway road geometry
+      const viaRoute = await fetchOsrmRoadRoute([
+        { lat: origin_lat, lng: origin_lng },
+        { lat: bestCharger?.latitude || stopLat, lng: bestCharger?.longitude || stopLng },
+        { lat: destination_lat, lng: destination_lng },
+      ]);
+
+      if (viaRoute) {
+        routeGeometry = viaRoute.coordinates;
+        totalDistanceKm = viaRoute.distanceKm;
+        drivingTimeMin = viaRoute.durationMin;
+      }
+
+      const chargeDist = Math.round(totalDistanceKm * 0.52);
       const energyAddedKwh = Math.round(usableKwh * 0.65);
       const chargeTimeMin = 35;
       const costInr = Math.round(energyAddedKwh * 19.5);
@@ -101,7 +161,7 @@ export async function POST(req: Request) {
         target_departure_battery_pct: 85,
         energy_added_kwh: energyAddedKwh,
         charging_duration_min: chargeTimeMin,
-        charging_power_kw: 60,
+        charging_power_kw: bestCharger?.max_power_kw || 60,
         estimated_cost_inr: costInr,
         station_risk: {
           score: 14,
@@ -120,8 +180,8 @@ export async function POST(req: Request) {
           station_id: "stn_backup_01",
           name: "Jio-bp Pulse Expressway Rest Plaza",
           operator: "Jio-bp Pulse",
-          latitude: Number((stopLat + 0.04).toFixed(4)),
-          longitude: Number((stopLng + 0.03).toFixed(4)),
+          latitude: Number((bestCharger?.latitude ? bestCharger.latitude + 0.03 : stopLat + 0.04).toFixed(4)),
+          longitude: Number((bestCharger?.longitude ? bestCharger.longitude + 0.02 : stopLng + 0.03).toFixed(4)),
           detour_km: 2.8,
           detour_time_min: 5,
           max_power_kw: 60,
@@ -135,8 +195,8 @@ export async function POST(req: Request) {
             station_id: "stn_backup_01",
             name: "Jio-bp Pulse Expressway Rest Plaza",
             operator: "Jio-bp Pulse",
-            latitude: Number((stopLat + 0.04).toFixed(4)),
-            longitude: Number((stopLng + 0.03).toFixed(4)),
+            latitude: Number((bestCharger?.latitude ? bestCharger.latitude + 0.03 : stopLat + 0.04).toFixed(4)),
+            longitude: Number((bestCharger?.longitude ? bestCharger.longitude + 0.02 : stopLng + 0.03).toFixed(4)),
             detour_km: 2.8,
             detour_time_min: 5,
             max_power_kw: 60,

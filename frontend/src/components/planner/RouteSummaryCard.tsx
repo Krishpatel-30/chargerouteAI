@@ -106,37 +106,55 @@ export const RouteSummaryCard: React.FC<RouteSummaryCardProps> = ({
       )}
 
       {/* Actions: Navigate in Google Maps & Save Route */}
-      <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100">
-        <a
-          href={(() => {
-            const originParam = encodeURIComponent(
-              plan.origin_lat && plan.origin_lng
-                ? `${plan.origin_lat},${plan.origin_lng}`
-                : plan.origin_name
-            );
-            const destParam = encodeURIComponent(
-              plan.destination_lat && plan.destination_lng
-                ? `${plan.destination_lat},${plan.destination_lng}`
-                : plan.destination_name
-            );
-            let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving`;
-            if (plan.charging_stops && plan.charging_stops.length > 0) {
-              const waypoints = plan.charging_stops
-                .map((s) => `${s.latitude},${s.longitude}`)
-                .join("|");
-              url += `&waypoints=${encodeURIComponent(waypoints)}`;
-            }
-            return url;
-          })()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-xs flex items-center gap-1.5"
-          title="Open complete EV route with planned charging stops in Google Maps"
-        >
-          <Navigation className="w-3.5 h-3.5" />
-          <span>Navigate in Google Maps</span>
-          <ExternalLink className="w-3 h-3 opacity-75" />
-        </a>
+      <div className="pt-2 flex flex-wrap items-center justify-between gap-2.5 border-t border-slate-100">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Main Button: Start Full EV Route Navigation (with Charging Stops) */}
+          <a
+            href={(() => {
+              const originParam = encodeURIComponent(
+                plan.origin_lat && plan.origin_lng
+                  ? `${plan.origin_lat},${plan.origin_lng}`
+                  : plan.origin_name
+              );
+              const destParam = encodeURIComponent(
+                plan.destination_lat && plan.destination_lng
+                  ? `${plan.destination_lat},${plan.destination_lng}`
+                  : plan.destination_name
+              );
+              let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving&dir_action=navigate`;
+              if (plan.charging_stops && plan.charging_stops.length > 0) {
+                const waypoints = plan.charging_stops
+                  .map((s) => `${s.latitude},${s.longitude}`)
+                  .join("|");
+                url += `&waypoints=${encodeURIComponent(waypoints)}`;
+              }
+              return url;
+            })()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors shadow-xs flex items-center gap-1.5"
+            title="Open complete EV route with planned charging stops in Google Maps with automatic navigation"
+          >
+            <Navigation className="w-3.5 h-3.5" />
+            <span>Start Full Route in Google Maps</span>
+            <ExternalLink className="w-3 h-3 opacity-75" />
+          </a>
+
+          {/* Quick Direct Button to Stop 1 if stops exist */}
+          {plan.charging_stops && plan.charging_stops.length > 0 && (
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${plan.charging_stops[0].latitude},${plan.charging_stops[0].longitude}&travelmode=driving&dir_action=navigate`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold text-xs transition-colors shadow-xs flex items-center gap-1.5"
+              title={`Start direct GPS turn-by-turn navigation to ${plan.charging_stops[0].station_name}`}
+            >
+              <Zap className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Navigate to Stop 1 ({plan.charging_stops[0].station_name.split("-")[0].trim()})</span>
+              <ExternalLink className="w-3 h-3 text-emerald-600 opacity-75" />
+            </a>
+          )}
+        </div>
 
         {onSave && (
           <button

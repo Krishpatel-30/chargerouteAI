@@ -30,3 +30,4 @@ export async function GET(
     return NextResponse.json({ detail: error?.message || "Failed to load charger" }, { status: 500 });
   }
 }
+

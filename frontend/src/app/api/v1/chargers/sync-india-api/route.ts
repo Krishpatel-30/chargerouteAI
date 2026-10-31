@@ -13,3 +13,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ detail: error?.message || "Sync failed" }, { status: 500 });
   }
 }
+

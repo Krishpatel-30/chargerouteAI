@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { ChargingStopDetail, BackupStopCandidate, ChargingStation } from "@/lib/types";
-import { Navigation, ExternalLink } from "lucide-react";
+import { Navigation, ExternalLink, Zap } from "lucide-react";
 
 // Fix standard Leaflet default marker icons in webpack / Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -39,15 +39,61 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layerGroupRef = useRef<L.LayerGroup | null>(null);
   const tileLayerRef = useRef<L.TileLayer | null>(null);
+  const [activeGeometry, setActiveGeometry] = useState<[number, number][]>(routeGeometry || []);
 
-  // Build Turn-by-Turn Google Maps Navigation Link
+  // Sync or fetch high-resolution road geometry (following actual highway and street networks)
+  useEffect(() => {
+    // If dense road geometry (>40 points) is already present, use it directly
+    if (routeGeometry && routeGeometry.length > 40) {
+      setActiveGeometry(routeGeometry);
+      return;
+    }
+
+    if (!origin || !destination) {
+      if (routeGeometry) setActiveGeometry(routeGeometry);
+      return;
+    }
+
+    let isMounted = true;
+    const fetchRoadGeometry = async () => {
+      try {
+        const waypointsList = [
+          `${origin.lng},${origin.lat}`,
+          ...(chargingStops || []).map((s) => `${s.longitude},${s.latitude}`),
+          `${destination.lng},${destination.lat}`,
+        ];
+        const res = await fetch(
+          `https://router.project-osrm.org/route/v1/driving/${waypointsList.join(";")}?overview=full&geometries=geojson`
+        );
+        if (res.ok) {
+          const data = await res.json();
+          if (data?.routes?.[0]?.geometry?.coordinates && isMounted) {
+            setActiveGeometry(data.routes[0].geometry.coordinates);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Could not fetch road geometry from OSRM:", err);
+      }
+      if (isMounted && routeGeometry) {
+        setActiveGeometry(routeGeometry);
+      }
+    };
+
+    fetchRoadGeometry();
+    return () => {
+      isMounted = false;
+    };
+  }, [routeGeometry, origin, destination, chargingStops]);
+
+  // Build Turn-by-Turn Google Maps Navigation Link with automatic direction start (dir_action=navigate)
   const googleMapsNavUrl = useMemo(() => {
     if (!origin || !destination) return "https://www.google.com/maps";
 
     const originParam = encodeURIComponent(`${origin.lat},${origin.lng}`);
     const destParam = encodeURIComponent(`${destination.lat},${destination.lng}`);
 
-    let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving`;
+    let url = `https://www.google.com/maps/dir/?api=1&origin=${originParam}&destination=${destParam}&travelmode=driving&dir_action=navigate`;
 
     if (chargingStops && chargingStops.length > 0) {
       const waypoints = chargingStops.map((s) => `${s.latitude},${s.longitude}`).join("|");
@@ -139,15 +185,15 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
         `);
         circleMarker.addTo(layers);
 
-        if (!routeGeometry || routeGeometry.length === 0) {
+        if (!activeGeometry || activeGeometry.length === 0) {
           bounds.extend([ch.latitude, ch.longitude]);
         }
       });
     }
 
-    // 2. Draw route polyline if coordinates available
-    if (routeGeometry && routeGeometry.length > 1) {
-      const latLngs: [number, number][] = routeGeometry.map((pt) => [pt[1], pt[0]]);
+    // 2. Draw actual highway road polyline along street/expressway network
+    if (activeGeometry && activeGeometry.length > 1) {
+      const latLngs: [number, number][] = activeGeometry.map((pt) => [pt[1], pt[0]]);
 
       // Shadow casing line
       L.polyline(latLngs, {
@@ -250,6 +296,15 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
                 </div>`
               : ""
           }
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=${stop.latitude},${stop.longitude}&travelmode=driving&dir_action=navigate"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-2.5 w-full py-2 px-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] flex items-center justify-center gap-1.5 shadow-sm text-center"
+            title="Open in Google Maps and start turn-by-turn navigation directly to this station"
+          >
+            <span>📍 Start Navigation in Google Maps &rarr;</span>
+          </a>
         </div>
       `);
       bounds.extend([stop.latitude, stop.longitude]);
@@ -276,7 +331,15 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
           <div class="bg-amber-50 p-1.5 rounded border border-amber-200 text-amber-900 text-[11px] mb-1 font-medium">
             Detour: +${backup.detour_km} km (~${backup.detour_time_min} min)
           </div>
-          <div class="text-slate-600 text-[10px]">${backup.feasibility_notes}</div>
+          <div class="text-slate-600 text-[10px] mb-2">${backup.feasibility_notes}</div>
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=${backup.latitude},${backup.longitude}&travelmode=driving&dir_action=navigate"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-1 text-[11px] font-bold text-blue-700 hover:text-blue-800 flex items-center gap-1 hover:underline"
+          >
+            <span>Start Navigation to Backup in Google Maps &rarr;</span>
+          </a>
         </div>
       `);
       bounds.extend([backup.latitude, backup.longitude]);
@@ -286,24 +349,39 @@ export const RouteMapInner: React.FC<RouteMapProps> = ({
     if (bounds.isValid()) {
       map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
     }
-  }, [routeGeometry, origin, destination, chargingStops, backupStops, allChargers]);
+  }, [activeGeometry, origin, destination, chargingStops, backupStops, allChargers]);
 
   return (
     <div className={`relative rounded-xl overflow-hidden shadow-md border border-slate-200/90 ${className}`}>
       <div ref={mapContainerRef} className="w-full h-full" />
 
-      {/* Top Floating Controls: Navigate in Google Maps & Tile Switcher */}
+      {/* Top Floating Controls: Navigate in Google Maps & Direct Station Navigation */}
       <div className="absolute top-3 right-3 z-[400] flex flex-wrap items-center gap-2">
-        {/* Turn-by-Turn Google Maps Navigation Link */}
+        {/* Direct to Stop 1 Navigation Shortcut */}
+        {chargingStops && chargingStops.length > 0 && (
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${chargingStops[0].latitude},${chargingStops[0].longitude}&travelmode=driving&dir_action=navigate`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all flex items-center gap-1.5 hover:scale-102"
+            title={`Direct turn-by-turn navigation to ${chargingStops[0].station_name}`}
+          >
+            <Zap className="w-3.5 h-3.5" />
+            <span>Navigate to Stop 1 ({chargingStops[0].station_name.split("-")[0].trim()})</span>
+            <ExternalLink className="w-3 h-3 opacity-75" />
+          </a>
+        )}
+
+        {/* Turn-by-Turn Google Maps Navigation Link for Full Route */}
         <a
           href={googleMapsNavUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all flex items-center gap-1.5 hover:scale-102"
-          title="Open complete route with charging stops in Google Maps"
+          title="Open complete route with charging stops in Google Maps with automatic navigation"
         >
           <Navigation className="w-3.5 h-3.5" />
-          <span>Navigate in Google Maps</span>
+          <span>Start Full Route in Google Maps</span>
           <ExternalLink className="w-3 h-3 opacity-75" />
         </a>
       </div>

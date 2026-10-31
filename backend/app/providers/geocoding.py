@@ -161,6 +161,8 @@ INDIA_LOCATIONS_DIRECTORY: List[Dict[str, Any]] = [
     {"name": "Somnath", "category": "pilgrimage_city", "district": "Gir Somnath", "state": "Gujarat", "lat": 20.8880, "lng": 70.4012},
     {"name": "Dwarka", "category": "pilgrimage_city", "district": "Devbhumi Dwarka", "state": "Gujarat", "lat": 22.2442, "lng": 68.9685},
     {"name": "Sasan Gir", "category": "wildlife_ecotourism", "district": "Gir Somnath", "state": "Gujarat", "lat": 21.1644, "lng": 70.5986},
+    {"name": "Bajud", "category": "village", "district": "Bhavnagar", "state": "Gujarat", "lat": 21.7360, "lng": 71.8292},
+    {"name": "Chikhli", "category": "village", "district": "Navsari", "state": "Gujarat", "lat": 20.7602, "lng": 73.0633},
     {"name": "Dholera", "category": "smart_city_village", "district": "Ahmedabad", "state": "Gujarat", "lat": 22.2472, "lng": 72.1956},
     {"name": "Modasa", "category": "town", "district": "Aravalli", "state": "Gujarat", "lat": 23.4633, "lng": 73.2983},
     {"name": "Sanand", "category": "auto_hub_town", "district": "Ahmedabad", "state": "Gujarat", "lat": 22.9867, "lng": 72.3814},

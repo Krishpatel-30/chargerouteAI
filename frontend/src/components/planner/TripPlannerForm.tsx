@@ -47,7 +47,7 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
   const [highwayFactor, setHighwayFactor] = useState(1.15);
   const [acFactor, setAcFactor] = useState(1.10);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [routePresetTab, setRoutePresetTab] = useState<"highway" | "city">("highway");
+  const [routePresetTab, setRoutePresetTab] = useState<"highway" | "rural" | "city">("highway");
 
   // Sync vehicle id from URL query param or props
   React.useEffect(() => {
@@ -103,7 +103,7 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
       <div className="rounded-xl bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 border border-emerald-200/70 p-3 flex items-start gap-2.5">
         <Sparkles className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
         <div className="text-xs text-slate-700 leading-relaxed">
-          <strong className="text-slate-900 font-semibold">Google Maps &amp; Pan-India Geocoding Active:</strong> Search any Indian city, town, expressway toll, or highway hub across Delhi-NCR, Maharashtra, Karnataka, Tamil Nadu, Telangana, Rajasthan, Gujarat, etc.
+          <strong className="text-slate-900 font-semibold">Google Maps &amp; All Indian States Villages Active:</strong> Search any Indian village, taluka, town, city, or expressway across all 28 states &amp; 8 UTs (e.g. Bajud, Kadi, Chikhli, Navsari, Sasan Gir, Bardoli, Lonavala, Neemrana, etc.).
         </div>
       </div>
 
@@ -114,7 +114,7 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
           icon={<MapPin className="w-3.5 h-3.5 text-slate-500" />}
           value={origin}
           onChange={setOrigin}
-          placeholder="Type origin city, highway or town (e.g. New Delhi, Mumbai, Bengaluru)..."
+          placeholder="Type origin village, town or city (e.g. Surat, New Delhi, Mumbai)..."
         />
 
         <LocationAutocomplete
@@ -122,7 +122,7 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
           icon={<MapPin className="w-3.5 h-3.5 text-emerald-600" />}
           value={destination}
           onChange={setDestination}
-          placeholder="Type destination city or hub (e.g. Agra, Jaipur, Pune, Mysuru)..."
+          placeholder="Type destination village or city (e.g. Bajud, Sasan Gir, Agra, Pune)..."
         />
       </div>
 
@@ -143,6 +143,17 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
               }`}
             >
               🛣️ Highway Corridors
+            </button>
+            <button
+              type="button"
+              onClick={() => setRoutePresetTab("rural")}
+              className={`px-2 py-0.5 rounded-md font-semibold transition-all ${
+                routePresetTab === "rural"
+                  ? "bg-white text-emerald-700 shadow-2xs"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              🌾 Villages &amp; Rural
             </button>
             <button
               type="button"
@@ -183,6 +194,31 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
               </button>
             ))}
           </div>
+        ) : routePresetTab === "rural" ? (
+          <div className="flex flex-wrap items-center gap-1.5 text-xs">
+            {[
+              { label: "Surat → Bajud (Bhavnagar, Gujarat)", o: { name: "Surat, Gujarat", lat: 21.1702, lng: 72.8311 }, d: { name: "Bajud, Bhavnagar, Gujarat", lat: 21.7360, lng: 71.8292 } },
+              { label: "Ahmedabad → Sasan Gir (Lion Sanctuary)", o: { name: "Ahmedabad, Gujarat", lat: 23.0225, lng: 72.5714 }, d: { name: "Sasan Gir, Gir Somnath, Gujarat", lat: 21.1644, lng: 70.5986 } },
+              { label: "Ahmedabad → Kadi (Mehsana)", o: { name: "Ahmedabad, Gujarat", lat: 23.0225, lng: 72.5714 }, d: { name: "Kadi, Mehsana, Gujarat", lat: 23.2982, lng: 72.3323 } },
+              { label: "Surat → Chikhli (Navsari)", o: { name: "Surat, Gujarat", lat: 21.1702, lng: 72.8311 }, d: { name: "Chikhli, Navsari, Gujarat", lat: 20.7602, lng: 73.0633 } },
+              { label: "Vadodara → Kevadia (Statue of Unity)", o: { name: "Vadodara, Gujarat", lat: 22.3072, lng: 73.1812 }, d: { name: "Kevadia, Narmada, Gujarat", lat: 21.8380, lng: 73.7191 } },
+              { label: "Delhi → Neemrana (Rajasthan)", o: { name: "New Delhi, Delhi", lat: 28.6139, lng: 77.2090 }, d: { name: "Neemrana, Kotputli-Behror, Rajasthan", lat: 27.9888, lng: 76.3883 } },
+              { label: "Mumbai → Alibaug (Coastal Maharashtra)", o: { name: "Mumbai, Maharashtra", lat: 19.0760, lng: 72.8777 }, d: { name: "Alibaug, Raigad, Maharashtra", lat: 18.6414, lng: 72.8722 } },
+              { label: "Bengaluru → Channapatna (Karnataka)", o: { name: "Bengaluru, Karnataka", lat: 12.9716, lng: 77.5946 }, d: { name: "Channapatna, Ramanagara, Karnataka", lat: 12.6518, lng: 77.2089 } },
+            ].map((route) => (
+              <button
+                key={route.label}
+                type="button"
+                onClick={() => {
+                  setOrigin(route.o);
+                  setDestination(route.d);
+                }}
+                className="px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-medium transition-colors border border-emerald-200"
+              >
+                {route.label}
+              </button>
+            ))}
+          </div>
         ) : (
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
             {[
@@ -202,7 +238,7 @@ export const TripPlannerForm: React.FC<TripPlannerFormProps> = ({
                   setOrigin(route.o);
                   setDestination(route.d);
                 }}
-                className="px-2.5 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-medium transition-colors border border-emerald-200"
+                className="px-2.5 py-1 rounded-md bg-teal-50 hover:bg-teal-100 text-teal-800 text-[11px] font-medium transition-colors border border-teal-200"
               >
                 {route.label}
               </button>

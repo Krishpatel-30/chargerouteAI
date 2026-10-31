@@ -107,9 +107,10 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
   };
 
   const handleSelectLocation = (loc: LocationSearchResult) => {
-    const cleanName = loc.village
-      ? `${loc.village}, ${loc.district || "Gujarat"}`
-      : loc.name;
+    const titlePart = loc.village || loc.name.split(",")[0].trim();
+    const regionParts = [loc.district, loc.state].filter(Boolean);
+    const cleanName = regionParts.length > 0 ? `${titlePart}, ${regionParts.join(", ")}` : titlePart;
+
     setInputValue(cleanName);
     onChange({
       name: cleanName,
@@ -118,6 +119,25 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
     });
     setIsOpen(false);
     setSuggestions([]);
+  };
+
+  const handleBlur = () => {
+    // Timeout allows onMouseDown / click events on dropdown items to execute first
+    setTimeout(() => {
+      if (suggestions.length > 0 && inputValue.trim().length > 1) {
+        const top = suggestions[0];
+        const lowerInput = inputValue.trim().toLowerCase();
+        if (
+          top &&
+          (top.village?.toLowerCase().includes(lowerInput) ||
+            top.name.toLowerCase().includes(lowerInput) ||
+            lowerInput.includes(top.name.split(",")[0].toLowerCase()))
+        ) {
+          handleSelectLocation(top);
+        }
+      }
+      setIsOpen(false);
+    }, 250);
   };
 
   const handleDetectCurrentLocation = () => {
@@ -173,9 +193,11 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
       e.preventDefault();
       setSelectedIndex((prev) => (prev > 0 ? prev - 1 : list.length - 1));
     } else if (e.key === "Enter") {
+      e.preventDefault();
       if (selectedIndex >= 0 && selectedIndex < list.length) {
-        e.preventDefault();
         handleSelectLocation(list[selectedIndex]);
+      } else if (list.length > 0) {
+        handleSelectLocation(list[0]);
       }
     } else if (e.key === "Escape") {
       setIsOpen(false);
@@ -214,14 +236,21 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
   const getProviderPill = (provider: string) => {
     if (provider === "google_maps") {
       return (
-        <span className="text-[9px] font-bold tracking-tight text-blue-600 bg-blue-50 px-1 rounded border border-blue-200">
+        <span className="text-[9px] font-bold tracking-tight text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200">
           Google Maps
         </span>
       );
     }
+    if (provider === "nominatim" || provider === "openstreetmap") {
+      return (
+        <span className="text-[9px] font-medium text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+          OSM Village Map
+        </span>
+      );
+    }
     return (
-      <span className="text-[9px] font-medium text-slate-500 bg-slate-50 px-1 rounded border border-slate-200">
-        India Geocoder
+      <span className="text-[9px] font-medium text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-200">
+        India Directory
       </span>
     );
   };
@@ -245,6 +274,7 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
           value={inputValue}
           onChange={handleInputChange}
           onFocus={() => setIsOpen(true)}
+          onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="w-full pl-9 pr-16 py-2.5 text-sm rounded-lg border border-slate-300 bg-white text-slate-900 placeholder:text-slate-400 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all shadow-xs"
@@ -302,13 +332,17 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
           {suggestions.length > 0 ? (
             <div className="py-1">
               <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-50 border-b border-slate-100 flex items-center justify-between">
-                <span>Gujarat Locations & Villages</span>
+                <span>Pan-India Locations, Towns & Villages</span>
                 <span>{suggestions.length} found</span>
               </div>
               {suggestions.map((item, idx) => (
                 <button
                   key={item.id}
                   type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSelectLocation(item);
+                  }}
                   onClick={() => handleSelectLocation(item)}
                   className={`w-full text-left px-3 py-2 text-sm flex items-start gap-2.5 transition-colors border-b border-slate-50 last:border-b-0 ${
                     idx === selectedIndex ? "bg-emerald-50/80" : "hover:bg-slate-50"
@@ -338,7 +372,7 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
                 No exact village match found for &ldquo;{inputValue}&rdquo;.
               </p>
               <p className="text-[11px] text-slate-400 mt-1">
-                Try searching with district name (e.g. &ldquo;Mehsana&rdquo;, &ldquo;Aravalli&rdquo;, &ldquo;Banaskantha&rdquo;) or select a popular village below.
+                Try searching with state or district name (e.g. &ldquo;Bhavnagar, Gujarat&rdquo;, &ldquo;Satara, Maharashtra&rdquo;, &ldquo;Rewari, Haryana&rdquo;) or select a destination below.
               </p>
             </div>
           ) : null}
@@ -354,6 +388,10 @@ export const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({
                 <button
                   key={`pop_${item.id}`}
                   type="button"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleSelectLocation(item);
+                  }}
                   onClick={() => handleSelectLocation(item)}
                   className={`w-full text-left px-3 py-2 text-sm flex items-start gap-2.5 transition-colors border-b border-slate-50 last:border-b-0 ${
                     idx === selectedIndex ? "bg-emerald-50/80" : "hover:bg-slate-50"

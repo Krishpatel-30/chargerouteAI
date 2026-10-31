@@ -1,4 +1,5 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
+import { getAnalytics, isSupported, Analytics } from "firebase/analytics";
 import {
   getAuth,
   GoogleAuthProvider,
@@ -14,7 +15,7 @@ import {
 } from "firebase/auth";
 
 // Firebase client configuration for ChargeRoute AI
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyB3l6422OAEtn_7nATYOeyzWRjenApeVys",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "chargeroute-ai-2a7d7.firebaseapp.com",
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "chargeroute-ai-2a7d7",
@@ -36,6 +37,7 @@ export const isFirebaseConfigured = (): boolean => {
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
 let googleProvider: GoogleAuthProvider | null = null;
+let analytics: Analytics | null = null;
 
 if (typeof window !== "undefined") {
   if (isFirebaseConfigured()) {
@@ -44,13 +46,22 @@ if (typeof window !== "undefined") {
       auth = getAuth(app);
       googleProvider = new GoogleAuthProvider();
       googleProvider.setCustomParameters({ prompt: "select_account" });
+
+      // Initialize Firebase Analytics safely when supported in browser
+      isSupported()
+        .then((supported) => {
+          if (supported && app) {
+            analytics = getAnalytics(app);
+          }
+        })
+        .catch(() => {});
     } catch (err) {
       console.warn("Failed to initialize Firebase Auth:", err);
     }
   }
 }
 
-export { app, auth, googleProvider };
+export { app, auth, googleProvider, analytics };
 
 /**
  * 1-Click Google Sign-In with official Google OAuth Popup via Firebase

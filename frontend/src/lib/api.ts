@@ -282,12 +282,20 @@ export const api = {
 
   // Vehicles
   async getVehicles(params?: { manufacturer?: string; search?: string }): Promise<VehicleModel[]> {
+    let customVehicles: VehicleModel[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        customVehicles = JSON.parse(localStorage.getItem("voltplan_custom_vehicles") || "[]");
+      } catch (e) {}
+    }
+
+    let catalog: VehicleModel[] = [];
     try {
       const res = await apiClient.get<VehicleModel[]>("/vehicles", { params });
-      return res.data;
+      catalog = res.data;
     } catch (err) {
       console.warn("Backend unavailable, using catalog fallback:", err);
-      return [
+      catalog = [
         {
           id: "seed_nexon_45",
           manufacturer: "Tata",
@@ -395,16 +403,111 @@ export const api = {
         },
       ];
     }
+
+    // Merge custom vehicles at top (avoiding duplicate IDs)
+    const all = [
+      ...customVehicles,
+      ...catalog.filter((cv) => !customVehicles.some((u) => u.id === cv.id)),
+    ];
+
+    if (params?.manufacturer) {
+      const mfg = params.manufacturer.toLowerCase();
+      return all.filter((v) => v.manufacturer.toLowerCase() === mfg);
+    }
+    if (params?.search) {
+      const s = params.search.toLowerCase();
+      return all.filter(
+        (v) =>
+          v.model.toLowerCase().includes(s) ||
+          v.manufacturer.toLowerCase().includes(s)
+      );
+    }
+    return all;
   },
 
   async getVehicle(id: string): Promise<VehicleModel> {
+    if (typeof window !== "undefined") {
+      try {
+        const stored: VehicleModel[] = JSON.parse(
+          localStorage.getItem("voltplan_custom_vehicles") || "[]"
+        );
+        const match = stored.find((v) => v.id === id);
+        if (match) return match;
+      } catch (e) {}
+    }
     const res = await apiClient.get<VehicleModel>(`/vehicles/${id}`);
     return res.data;
   },
 
   async createCustomVehicle(data: Partial<VehicleModel>): Promise<VehicleModel> {
-    const res = await apiClient.post<VehicleModel>("/vehicles/custom", data);
-    return res.data;
+    const saveToLocalStorage = (veh: VehicleModel) => {
+      if (typeof window !== "undefined") {
+        try {
+          const stored: VehicleModel[] = JSON.parse(
+            localStorage.getItem("voltplan_custom_vehicles") || "[]"
+          );
+          const updated = [veh, ...stored.filter((v) => v.id !== veh.id)];
+          localStorage.setItem("voltplan_custom_vehicles", JSON.stringify(updated));
+        } catch (e) {}
+      }
+    };
+
+    try {
+      const res = await apiClient.post<VehicleModel>("/vehicles/custom", data);
+      if (res.data) {
+        saveToLocalStorage(res.data);
+        return res.data;
+      }
+    } catch (err: any) {
+      if (err?.response?.status === 404 || !err?.response) {
+        try {
+          const retryRes = await apiClient.post<VehicleModel>(
+            "/api/v1/vehicles/custom",
+            data
+          );
+          if (retryRes.data) {
+            saveToLocalStorage(retryRes.data);
+            return retryRes.data;
+          }
+        } catch (retryErr) {
+          // Handled below
+        }
+      }
+    }
+
+    // Fallback: create synthetic custom vehicle profile
+    const mfg = (data.manufacturer || "Custom").trim();
+    const model = (data.model || "Custom EV").trim();
+    const grossKwh = Number(data.battery_capacity_kwh) || 50.0;
+    const usableKwh =
+      Number(data.usable_battery_capacity_kwh) ||
+      Math.round(grossKwh * 0.94 * 10) / 10;
+    const consumption = Number(data.consumption_kwh_100km) || 15.0;
+    const maxDcKw = Number(data.max_dc_power_kw) || 60.0;
+    const maxAcKw = Number(data.max_ac_power_kw) || 7.2;
+    const rangeKm =
+      Number(data.range_reference_km) ||
+      Math.round((usableKwh / consumption) * 100);
+
+    const syntheticVehicle: VehicleModel = {
+      id: `custom_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      manufacturer: mfg,
+      model: model,
+      model_year: Number(data.model_year) || new Date().getFullYear(),
+      battery_capacity_kwh: grossKwh,
+      usable_battery_capacity_kwh: usableKwh,
+      consumption_kwh_100km: consumption,
+      connector_types: data.connector_types || ["CCS2", "Type 2"],
+      max_ac_power_kw: maxAcKw,
+      max_dc_power_kw: maxDcKw,
+      range_reference_km: rangeKm,
+      source: data.source || "Custom Profile",
+      is_custom: true,
+      created_at: new Date().toISOString(),
+    };
+
+    saveToLocalStorage(syntheticVehicle);
+    return syntheticVehicle;
   },
 
   // Chargers

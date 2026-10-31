@@ -73,21 +73,33 @@ function VehiclesContent() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await api.createCustomVehicle({
-        manufacturer,
-        model,
-        model_year: modelYear,
-        battery_capacity_kwh: grossKwh,
-        usable_battery_capacity_kwh: usableKwh,
-        consumption_kwh_100km: consumption,
-        max_dc_power_kw: maxDcKw,
-        range_reference_km: rangeRef,
-        source: sourceNote,
+      const created = await api.createCustomVehicle({
+        manufacturer: manufacturer.trim() || "Custom",
+        model: model.trim() || "Custom EV",
+        model_year: Number(modelYear) || 2024,
+        battery_capacity_kwh: Number(grossKwh) || 45.0,
+        usable_battery_capacity_kwh: Number(usableKwh) || 42.5,
+        consumption_kwh_100km: Number(consumption) || 15.0,
+        max_dc_power_kw: Number(maxDcKw) || 60.0,
+        range_reference_km: Number(rangeRef) || 350.0,
+        source: sourceNote || "Owner custom test data",
         connector_types: ["CCS2", "Type 2"],
       });
       setShowCustomModal(false);
-      loadVehicles();
+      setVehicles((prev) => [created, ...prev.filter((v) => v.id !== created.id)]);
+      setFilterBrand("all");
+      setSearchQuery("");
+      // Reset form fields
+      setManufacturer("");
+      setModel("");
+      setGrossKwh(45.0);
+      setUsableKwh(42.5);
+      setConsumption(15.0);
+      setMaxDcKw(60.0);
+      setRangeRef(350.0);
+      await loadVehicles();
     } catch (err) {
+      console.error("Failed to create custom vehicle:", err);
       alert("Failed to create custom vehicle profile. Please check parameters.");
     } finally {
       setIsSubmitting(false);

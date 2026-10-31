@@ -62,8 +62,18 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. HERO SECTION (NO BACKGROUND IMAGE - TWO CARDS LAYOUT) */}
-      <section className="relative overflow-hidden py-12 sm:py-20 lg:py-24 border-b border-slate-800 bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.12),rgba(2,6,23,0))]">
+      {/* 1. HERO SECTION WITH SUBTLE AMBIENT BACKGROUND IMAGE */}
+      <section className="relative overflow-hidden py-12 sm:py-20 lg:py-24 border-b border-slate-800 bg-slate-950">
+        {/* Very Light Background Image Container */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <img
+            src="/images/hero-bg.jpg"
+            alt="ChargeRoute AI EV Telemetry Backdrop"
+            className="w-full h-full object-cover object-center opacity-25"
+          />
+          {/* Subtle gradient vignette to blend edges cleanly */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/40" />
+        </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">

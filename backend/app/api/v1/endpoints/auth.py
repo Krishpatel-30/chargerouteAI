@@ -51,18 +51,25 @@ async def get_current_user(
 
 @router.post("/register", response_model=Token)
 async def register(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
-    stmt = select(User).where(User.email == user_in.email.lower().strip())
+    email = user_in.email.lower().strip()
+    stmt = select(User).where(User.email == email)
     res = await db.execute(stmt)
-    if res.scalar_one_or_none():
+    existing_user = res.scalar_one_or_none()
+
+    if existing_user:
+        # If the password matches, smoothly log the existing user in
+        if verify_password(user_in.password, existing_user.hashed_password):
+            token = create_access_token(subject=existing_user.id)
+            return Token(access_token=token, user=UserResponse.model_validate(existing_user))
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="An account with this email address already exists.",
+            detail="An account with this email address already exists. Please sign in with your password.",
         )
 
     user = User(
-        email=user_in.email.lower().strip(),
+        email=email,
         hashed_password=get_password_hash(user_in.password),
-        full_name=user_in.full_name,
+        full_name=user_in.full_name.strip() if user_in.full_name else email.split("@")[0].title(),
         is_active=True,
         is_admin=False,
     )

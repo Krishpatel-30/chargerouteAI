@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Zap, Lock, Mail, User, Eye, EyeOff, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { extractErrorMessage } from "@/lib/utils";
 
 function RegisterForm() {
   const router = useRouter();
@@ -45,14 +46,14 @@ function RegisterForm() {
 
     try {
       await register({
-        email,
+        email: email.trim().toLowerCase(),
         password,
         full_name: fullName.trim() || undefined,
       });
       router.push(redirectUrl);
     } catch (err: any) {
       console.error("Registration failed:", err);
-      const detail = err?.response?.data?.detail || "Registration failed. Please try a different email.";
+      const detail = extractErrorMessage(err, "Registration failed. Please check your inputs.");
       setErrorMessage(detail);
     } finally {
       setIsLoading(false);

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Zap, Lock, Mail, Eye, EyeOff, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { extractErrorMessage } from "@/lib/utils";
 
 function LoginForm() {
   const router = useRouter();
@@ -31,11 +32,11 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      await login({ email, password });
+      await login({ email: email.trim().toLowerCase(), password });
       router.push(redirectUrl);
     } catch (err: any) {
       console.error("Login failed:", err);
-      const detail = err?.response?.data?.detail || "Invalid email or password. Please try again.";
+      const detail = extractErrorMessage(err, "Invalid email or password. Please try again.");
       setErrorMessage(detail);
     } finally {
       setIsLoading(false);

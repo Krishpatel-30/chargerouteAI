@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { extractErrorMessage } from "@/lib/utils";
 import {
   Zap,
   ShieldCheck,
@@ -19,6 +20,7 @@ import {
   Compass,
   Lock,
   Mail,
+  User,
   Eye,
   EyeOff,
   Sparkles,
@@ -36,27 +38,62 @@ import {
 
 export default function LandingPage() {
   const router = useRouter();
-  const { user, isAuthenticated, login, logout, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, login, register, logout, isLoading: authLoading } = useAuth();
 
-  // Inline Sign-In state for unauthenticated users on homepage
+  // Inline Auth state (Sign In & Account Creation) for unauthenticated users on homepage
+  const [authMode, setAuthMode] = useState<"signin" | "register">("signin");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  const handleInlineLogin = async (e: React.FormEvent) => {
+  const handleInlineAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoginError(null);
-    setIsLoggingIn(true);
+    setAuthError(null);
+
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes("@")) {
+      setAuthError("Please enter a valid driver email address.");
+      return;
+    }
+
+    if (authMode === "register") {
+      if (password.length < 6) {
+        setAuthError("Password must be at least 6 characters long.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setAuthError("Passwords do not match. Please verify.");
+        return;
+      }
+    }
+
+    setIsSubmitting(true);
     try {
-      await login({ email, password });
+      if (authMode === "signin") {
+        await login({ email: cleanEmail, password });
+      } else {
+        await register({
+          email: cleanEmail,
+          password,
+          full_name: fullName.trim() || undefined,
+        });
+      }
       router.push("/plan");
     } catch (err: any) {
-      console.error("Login failed:", err);
-      setLoginError(err?.response?.data?.detail || "Invalid email or password. Please try again.");
+      console.error(`${authMode} failed:`, err);
+      const msg = extractErrorMessage(
+        err,
+        authMode === "signin"
+          ? "Invalid email or password. Please try again or create an account."
+          : "Registration failed. Please check your inputs and try again."
+      );
+      setAuthError(msg);
     } finally {
-      setIsLoggingIn(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -144,7 +181,7 @@ export default function LandingPage() {
             {/* Right Card: DRIVER AUTHENTICATION & ACCESS CARD */}
             <div className="lg:col-span-5 flex">
               {!isAuthenticated ? (
-                /* Unauthenticated View: Sign In with Google Device ID or Email */
+                /* Unauthenticated View: Sign In or Create Account directly on card */
                 <div className="w-full bg-white rounded-3xl border border-slate-100 shadow-2xl p-7 sm:p-9 flex flex-col justify-between space-y-5 text-slate-900">
                   <div className="space-y-4">
                     <div className="text-center space-y-1.5 pb-1">
@@ -152,34 +189,104 @@ export default function LandingPage() {
                         <Zap className="w-6 h-6 fill-white" />
                       </div>
                       <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                        Sign In to Access Trip Planner
+                        {authMode === "signin" ? "Sign In to Access Trip Planner" : "Create New Driver Account"}
                       </h2>
                       <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                        Sign in with Google credentials on this device or your driver email to unlock planning.
+                        {authMode === "signin"
+                          ? "Sign in with Google credentials on this device or your driver email to unlock planning."
+                          : "Register in seconds to unlock smart route planning, EV telemetry, and safe backup stops."}
                       </p>
                     </div>
 
-                    {/* Google 1-Click Sign-In (Direct Device Account Chooser) */}
+                    {/* Tab Switcher: [ Sign In ] | [ Create Account ] */}
+                    <div className="flex p-1 bg-slate-100 rounded-xl">
+                      <button
+                        type="button"
+                        onClick={() => { setAuthMode("signin"); setAuthError(null); }}
+                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                          authMode === "signin"
+                            ? "bg-white text-emerald-800 shadow-xs"
+                            : "text-slate-500 hover:text-slate-900"
+                        }`}
+                      >
+                        Sign In
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => { setAuthMode("register"); setAuthError(null); }}
+                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                          authMode === "register"
+                            ? "bg-white text-emerald-800 shadow-xs"
+                            : "text-slate-500 hover:text-slate-900"
+                        }`}
+                      >
+                        Create Account
+                      </button>
+                    </div>
+
+                    {/* Google 1-Click Sign-In / Sign-Up */}
                     <div className="space-y-3">
-                      <GoogleAuthButton redirectUrl="/plan" buttonText="Continue with Device Google ID" />
+                      <GoogleAuthButton
+                        redirectUrl="/plan"
+                        buttonText={authMode === "signin" ? "Continue with Device Google ID" : "Sign Up with Device Google ID"}
+                      />
 
                       <div className="relative flex py-1 items-center">
                         <div className="flex-grow border-t border-slate-200"></div>
                         <span className="flex-shrink mx-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                          or sign in with driver email
+                          {authMode === "signin" ? "or sign in with driver email" : "or register with driver email"}
                         </span>
                         <div className="flex-grow border-t border-slate-200"></div>
                       </div>
                     </div>
 
-                    {loginError && (
-                      <div className="p-2.5 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-center gap-1.5 font-medium">
-                        <span>⚠️ {loginError}</span>
+                    {authError && (
+                      <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex flex-col gap-1.5 font-medium">
+                        <div className="flex items-start gap-1.5">
+                          <span className="shrink-0">⚠️</span>
+                          <span>{authError}</span>
+                        </div>
+                        {authMode === "signin" && (
+                          <button
+                            type="button"
+                            onClick={() => { setAuthMode("register"); setAuthError(null); }}
+                            className="text-left text-emerald-700 font-bold hover:underline text-[11px] mt-0.5"
+                          >
+                            → New driver? Click here to create an account
+                          </button>
+                        )}
+                        {authMode === "register" && authError.toLowerCase().includes("already exists") && (
+                          <button
+                            type="button"
+                            onClick={() => { setAuthMode("signin"); setAuthError(null); }}
+                            className="text-left text-emerald-700 font-bold hover:underline text-[11px] mt-0.5"
+                          >
+                            → Already have an account? Click here to sign in
+                          </button>
+                        )}
                       </div>
                     )}
 
-                    {/* Inline Email / Password Form */}
-                    <form onSubmit={handleInlineLogin} className="space-y-3">
+                    {/* Inline Form */}
+                    <form onSubmit={handleInlineAuth} className="space-y-3">
+                      {authMode === "register" && (
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                            FULL NAME
+                          </label>
+                          <div className="relative">
+                            <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3.5" />
+                            <input
+                              type="text"
+                              value={fullName}
+                              onChange={(e) => setFullName(e.target.value)}
+                              placeholder="Rahul Sharma"
+                              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       <div>
                         <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
                           DRIVER EMAIL
@@ -208,7 +315,7 @@ export default function LandingPage() {
                             required
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="••••••••"
+                            placeholder={authMode === "register" ? "At least 6 characters" : "••••••••"}
                             className="w-full pl-9 pr-9 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
                           />
                           <button
@@ -221,19 +328,38 @@ export default function LandingPage() {
                         </div>
                       </div>
 
+                      {authMode === "register" && (
+                        <div>
+                          <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+                            CONFIRM PASSWORD
+                          </label>
+                          <div className="relative">
+                            <Lock className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3.5" />
+                            <input
+                              type={showPassword ? "text" : "password"}
+                              required
+                              value={confirmPassword}
+                              onChange={(e) => setConfirmPassword(e.target.value)}
+                              placeholder="Confirm your password"
+                              className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-300 text-xs sm:text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium"
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       <button
                         type="submit"
-                        disabled={isLoggingIn}
+                        disabled={isSubmitting}
                         className="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition-all shadow-md shadow-emerald-600/30 hover:shadow-emerald-600/40 flex items-center justify-center gap-2 disabled:opacity-60"
                       >
-                        {isLoggingIn ? (
+                        {isSubmitting ? (
                           <>
                             <Loader2 className="w-4 h-4 animate-spin" />
-                            <span>Signing In &amp; Launching...</span>
+                            <span>{authMode === "signin" ? "Signing In & Launching..." : "Creating Account & Launching..."}</span>
                           </>
                         ) : (
                           <>
-                            <span>Sign In &amp; Launch Trip Planner</span>
+                            <span>{authMode === "signin" ? "Sign In & Launch Trip Planner" : "Create Account & Launch Trip Planner"}</span>
                             <ArrowRight className="w-4 h-4" />
                           </>
                         )}
@@ -242,13 +368,29 @@ export default function LandingPage() {
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span>Don&apos;t have an account?</span>
-                    <Link
-                      href="/register?redirect=/plan"
-                      className="font-bold text-emerald-600 hover:text-emerald-700 underline"
-                    >
-                      Create Account
-                    </Link>
+                    {authMode === "signin" ? (
+                      <>
+                        <span>Don&apos;t have an account?</span>
+                        <button
+                          type="button"
+                          onClick={() => { setAuthMode("register"); setAuthError(null); }}
+                          className="font-bold text-emerald-600 hover:text-emerald-700 underline"
+                        >
+                          Create Account
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <span>Already have an account?</span>
+                        <button
+                          type="button"
+                          onClick={() => { setAuthMode("signin"); setAuthError(null); }}
+                          className="font-bold text-emerald-600 hover:text-emerald-700 underline"
+                        >
+                          Sign In
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ) : (

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Loader2, X, Mail, User, ShieldCheck, Laptop, Sparkles, Trash2 } from "lucide-react";
+import { extractErrorMessage } from "@/lib/utils";
 
 interface GoogleAuthButtonProps {
   redirectUrl?: string;
@@ -100,7 +101,7 @@ export function GoogleAuthButton({
       router.push(redirectUrl);
     } catch (err: any) {
       console.error("Google sign-in failed:", err);
-      setError(err?.response?.data?.detail || "Google authentication failed. Please try again.");
+      setError(extractErrorMessage(err, "Google authentication failed. Please try again."));
     } finally {
       setIsLoading(false);
     }
@@ -172,7 +173,7 @@ export function GoogleAuthButton({
                   />
                 </svg>
                 <span className="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight">
-                  Sign in with Google
+                  Sign In or Create Account with Google
                 </span>
               </div>
               <button
@@ -188,7 +189,7 @@ export function GoogleAuthButton({
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-600">
               <Laptop className="w-4 h-4 text-emerald-600 shrink-0" />
               <span>
-                Enter your Google account credentials to sign in instantly.
+                Enter your Google account credentials to sign in or register instantly.
               </span>
             </div>
 

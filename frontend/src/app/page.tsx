@@ -62,57 +62,61 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* 1. HERO SECTION WITH CLEAR CINEMATIC EV BACKGROUND (ZERO FADE) */}
+      {/* 1. HERO SECTION WITH FUTURISTIC EV HOLOGRAPHIC TELEMETRY BACKGROUND */}
       <section className="relative overflow-hidden py-14 sm:py-24 border-b border-slate-800 bg-slate-950">
-        {/* Real Authentic Background Image with Zero Fade */}
+        {/* Background Image Container with Balanced Directional Fade */}
         <div className="absolute inset-0 z-0">
           <img
             src="/images/hero-bg.jpg"
-            alt="ChargeRoute AI EV Highway Corridor Sunset"
+            alt="ChargeRoute AI EV Holographic Telemetry and Highway Corridor"
             className="w-full h-full object-cover object-center"
           />
+          {/* Directional studio fade: smooth contrast on left for copy, clear view of holographic HUD, car & charger in center/right */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/45 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-transparent" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-            {/* Left Hero Copy - Sleek frosted glass panel showcasing clear image behind */}
-            <div className="lg:col-span-7 space-y-6 text-left bg-slate-950/65 backdrop-blur-md p-6 sm:p-9 rounded-3xl border border-white/15 shadow-2xl">
+            {/* Left Hero Copy */}
+            <div className="lg:col-span-7 space-y-6 text-left">
               {/* Attribution Pill */}
               <a
                 href="https://ksvisualsagency.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md shadow-lg transition-colors group"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-slate-950/70 hover:bg-slate-900/80 text-emerald-300 border border-emerald-500/30 backdrop-blur-md shadow-lg transition-colors group"
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span>Made by <strong className="underline group-hover:text-emerald-200">KSVISUALSAGENCY</strong> ↗ • Pan-India EV Planning Platform</span>
               </a>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] drop-shadow-md">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.15] drop-shadow-lg">
                 Plan Your EV Journey.{" "}
                 <span className="text-emerald-400 block mt-1">Predict Range &amp; Outage Backups.</span>
               </h1>
 
-              <p className="text-sm sm:text-base lg:text-lg text-slate-300 max-w-xl leading-relaxed drop-shadow-xs">
+              <p className="text-sm sm:text-base lg:text-lg text-slate-200 max-w-xl leading-relaxed drop-shadow-md">
                 India&apos;s intelligent electric vehicle navigation platform. Calculate deterministic battery range, discover verified charging stations across 35 states, and secure safe backup stops before you hit the road.
               </p>
 
               {/* Key Features Quick Grid */}
               <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-slate-700/80 text-xs">
                 <div className="space-y-1">
-                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl">141+</div>
-                  <strong className="block text-white font-bold text-xs">Indian EV Models</strong>
-                  <span className="text-slate-400 text-[11px] block">With custom car builder</span>
+                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl drop-shadow">141+</div>
+                  <strong className="block text-white font-bold text-xs drop-shadow">Indian EV Models</strong>
+                  <span className="text-slate-300 text-[11px] block">With custom car builder</span>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl">269</div>
-                  <strong className="block text-white font-bold text-xs">City &amp; Highway Hubs</strong>
-                  <span className="text-slate-400 text-[11px] block">Verified 24/7 chargers</span>
+                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl drop-shadow">269</div>
+                  <strong className="block text-white font-bold text-xs drop-shadow">City &amp; Highway Hubs</strong>
+                  <span className="text-slate-300 text-[11px] block">Verified 24/7 chargers</span>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl">0–100</div>
-                  <strong className="block text-white font-bold text-xs">Explainable Risk</strong>
-                  <span className="text-slate-400 text-[11px] block">Outage &amp; queue safety</span>
+                  <div className="text-emerald-400 font-extrabold text-lg sm:text-xl drop-shadow">0–100</div>
+                  <strong className="block text-white font-bold text-xs drop-shadow">Explainable Risk</strong>
+                  <span className="text-slate-300 text-[11px] block">Outage &amp; queue safety</span>
                 </div>
               </div>
 

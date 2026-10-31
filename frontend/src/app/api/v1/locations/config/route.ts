@@ -8,3 +8,4 @@ export async function GET() {
     total_rural_locations_indexed: 144,
   });
 }
+

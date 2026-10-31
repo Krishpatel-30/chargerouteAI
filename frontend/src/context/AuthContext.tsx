@@ -40,58 +40,62 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    const token = localStorage.getItem("voltplan_token");
-    if (!token) {
-      setUser(null);
-      setIsLoading(false);
-      return;
-    }
-
     try {
-      const currentUser = await api.getMe();
-      if (currentUser) {
-        setUser(currentUser);
+      const token = localStorage.getItem("voltplan_token");
+      if (!token) {
+        setUser(null);
         return;
       }
-    } catch (err) {
-      console.warn("Failed to reach auth me endpoint:", err);
-    }
 
-    // Client session restoration if serverless or offline
-    if (token.startsWith("vt_")) {
       try {
-        const json = atob(token.replace(/^vt_/, ""));
-        const parsed = JSON.parse(json);
-        if (parsed?.email) {
-          setUser(parsed);
+        const currentUser = await api.getMe();
+        if (currentUser) {
+          setUser(currentUser);
           return;
         }
-      } catch (e) {
-        // Continue
+      } catch (err) {
+        console.warn("Failed to reach auth me endpoint:", err);
       }
-    }
 
-    // Default driver fallback if valid token exists in storage
-    const storedUserJson = localStorage.getItem("voltplan_user_profile");
-    if (storedUserJson) {
-      try {
-        const parsedUser = JSON.parse(storedUserJson);
-        setUser(parsedUser);
-        return;
-      } catch (e) {}
-    }
+      // Client session restoration if serverless or offline
+      if (token.startsWith("vt_")) {
+        try {
+          const json = atob(token.replace(/^vt_/, ""));
+          const parsed = JSON.parse(json);
+          if (parsed?.email) {
+            setUser(parsed);
+            return;
+          }
+        } catch (e) {
+          // Continue
+        }
+      }
 
-    setUser({
-      id: "driver_active",
-      email: "driver@voltplan.ai",
-      full_name: "EV Driver",
-      role: "driver",
-      is_admin: false,
-      is_active: true,
-      is_verified: true,
-      created_at: new Date().toISOString(),
-    });
-    setIsLoading(false);
+      // Default driver fallback if valid token exists in storage
+      const storedUserJson = localStorage.getItem("voltplan_user_profile");
+      if (storedUserJson) {
+        try {
+          const parsedUser = JSON.parse(storedUserJson);
+          if (parsedUser?.email) {
+            setUser(parsedUser);
+            return;
+          }
+        } catch (e) {}
+      }
+
+      setUser({
+        id: "driver_active",
+        email: "driver@voltplan.ai",
+        full_name: "EV Driver",
+        role: "driver",
+        is_admin: false,
+        is_active: true,
+        is_verified: true,
+        created_at: new Date().toISOString(),
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {

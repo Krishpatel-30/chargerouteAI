@@ -4,6 +4,7 @@ import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
+import { confirmPasswordResetFirebase } from "@/lib/firebase";
 import { extractErrorMessage } from "@/lib/utils";
 import { Zap, Lock, Eye, EyeOff, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 
@@ -11,6 +12,8 @@ function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token") || "";
+  const oobCode = searchParams.get("oobCode") || "";
+  const activeCode = oobCode || token;
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,7 +26,7 @@ function ResetPasswordForm() {
     e.preventDefault();
     setErrorMessage(null);
 
-    if (!token) {
+    if (!activeCode) {
       setErrorMessage("Missing or invalid password reset token. Please request a new link.");
       return;
     }
@@ -40,11 +43,15 @@ function ResetPasswordForm() {
 
     setIsLoading(true);
     try {
-      await api.resetPassword({ token, password });
+      if (oobCode) {
+        await confirmPasswordResetFirebase(oobCode, password);
+      } else {
+        await api.resetPassword({ token, password });
+      }
       setIsSuccess(true);
     } catch (err: any) {
       console.error("Password reset failed:", err);
-      const msg = extractErrorMessage(err, "Failed to reset password. The link may have expired.");
+      const msg = extractErrorMessage(err, "Failed to reset password. The link may have expired or is invalid.");
       setErrorMessage(msg);
     } finally {
       setIsLoading(false);
@@ -97,7 +104,7 @@ function ResetPasswordForm() {
         ) : (
           /* Reset Password Form */
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-5">
-            {!token ? (
+            {!activeCode ? (
               <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 space-y-3">
                 <p>
                   No password reset token was found in the link. Please request a new password reset link below.

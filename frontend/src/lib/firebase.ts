@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  confirmPasswordReset,
   signOut,
   updateProfile,
   Auth,
@@ -116,6 +117,21 @@ export async function sendPasswordResetFirebase(email: string): Promise<void> {
     );
   }
   await sendPasswordResetEmail(auth, email.trim());
+}
+
+/**
+ * Confirms password reset with Firebase oobCode
+ */
+export async function confirmPasswordResetFirebase(
+  oobCode: string,
+  newPass: string
+): Promise<void> {
+  if (!auth) {
+    throw new Error(
+      "Firebase is not yet configured. Please add your Firebase credentials in frontend/.env.local"
+    );
+  }
+  await confirmPasswordReset(auth, oobCode, newPass);
 }
 
 /**
